@@ -3,6 +3,9 @@
 [![License](https://img.shields.io/:license-Apache%202-red.svg)](https://www.apache.org/licenses/LICENSE-2.0.txt)
 [![Actions Status](https://github.com/SwissBorg/akka-persistence-postgres/workflows/Scala%20CI/badge.svg)](https://github.com/SwissBorg/akka-persistence-postgres/actions)
 
+> [!WARNING]  
+> This Pekko fork is a work in progress.
+
 The Akka Persistence Postgres plugin allows for using [PostgreSQL 11](https://www.postgresql.org/) and [Amazon Aurora](https://aws.amazon.com/rds/aurora/) databases as backend for Akka Persistence and Akka Persistence Query.
 
 It’s been originally created as a fork of [Akka Persistence JDBC plugin](https://github.com/akka/akka-persistence-jdbc), focused on PostgreSQL features such as partitions, arrays, BRIN indexes and others.
