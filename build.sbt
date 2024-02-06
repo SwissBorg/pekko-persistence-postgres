@@ -1,6 +1,6 @@
 import com.typesafe.tools.mima.plugin.MimaKeys.mimaBinaryIssueFilters
 
-lazy val `akka-persistence-postgres` = project
+lazy val `pekko-persistence-postgres` = project
   .in(file("."))
   .enablePlugins(ScalaUnidocPlugin)
   .disablePlugins(MimaPlugin)
@@ -11,7 +11,7 @@ lazy val core = project
   .in(file("core"))
   .enablePlugins(MimaPlugin)
   .settings(
-    name := "akka-persistence-postgres",
+    name := "pekko-persistence-postgres",
     libraryDependencies ++= Dependencies.Libraries,
     mimaBinaryIssueFilters ++= Seq())
 
@@ -19,7 +19,7 @@ lazy val migration = project
   .in(file("migration"))
   .disablePlugins(MimaPlugin)
   .settings(
-    name := "akka-persistence-postgres-migration",
+    name := "pekko-persistence-postgres-migration",
     libraryDependencies ++= Dependencies.Migration,
     Test / parallelExecution := false)
   .dependsOn(core)
