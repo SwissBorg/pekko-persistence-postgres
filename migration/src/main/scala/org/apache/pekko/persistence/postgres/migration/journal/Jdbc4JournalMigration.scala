@@ -1,16 +1,16 @@
-package akka.persistence.postgres.migration.journal
+package org.apache.pekko.persistence.postgres.migration.journal
 
-import akka.Done
-import akka.actor.ActorSystem
-import akka.persistence.postgres.JournalRow
-import akka.persistence.postgres.config.JournalConfig
-import akka.persistence.postgres.db.SlickExtension
-import akka.persistence.postgres.journal.dao._
-import akka.persistence.postgres.migration.PgSlickSupport
-import akka.persistence.postgres.tag.{ CachedTagIdResolver, SimpleTagDao }
-import akka.serialization.{ Serialization, SerializationExtension }
-import akka.stream.Materializer
-import akka.stream.scaladsl.Source
+import org.apache.pekko.Done
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.persistence.postgres.JournalRow
+import org.apache.pekko.persistence.postgres.config.JournalConfig
+import org.apache.pekko.persistence.postgres.db.SlickExtension
+import org.apache.pekko.persistence.postgres.journal.dao._
+import org.apache.pekko.persistence.postgres.migration.PgSlickSupport
+import org.apache.pekko.persistence.postgres.tag.{ CachedTagIdResolver, SimpleTagDao }
+import org.apache.pekko.serialization.{ Serialization, SerializationExtension }
+import org.apache.pekko.stream.Materializer
+import org.apache.pekko.stream.scaladsl.Source
 import com.typesafe.config.Config
 import slick.jdbc.{ JdbcBackend, ResultSetConcurrency, ResultSetType }
 
@@ -23,7 +23,7 @@ class Jdbc4JournalMigration(globalConfig: Config, tempTableName: String = "tmp_j
     mat: Materializer)
     extends PgSlickSupport {
 
-  import akka.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
   import system.dispatcher
 
   private val db = {
@@ -45,7 +45,7 @@ class Jdbc4JournalMigration(globalConfig: Config, tempTableName: String = "tmp_j
     new CachedTagIdResolver(tagDao, journalConfig.tagsConfig)
   }
 
-  private val migrationConf: Config = globalConfig.getConfig("akka-persistence-postgres.migration")
+  private val migrationConf: Config = globalConfig.getConfig("pekko-persistence-postgres.migration")
   private val migrationBatchSize: Int = migrationConf.getInt("batchSize")
 
   def run(): Future[Done] = {

@@ -1,7 +1,7 @@
-package akka.persistence.postgres.migration.journal
+package org.apache.pekko.persistence.postgres.migration.journal
 
-import akka.persistence.PersistentRepr
-import akka.serialization.Serialization
+import org.apache.pekko.persistence.PersistentRepr
+import org.apache.pekko.serialization.Serialization
 
 import scala.util.Try
 

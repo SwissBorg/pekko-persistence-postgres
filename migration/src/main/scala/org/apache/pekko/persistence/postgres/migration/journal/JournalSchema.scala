@@ -1,9 +1,9 @@
-package akka.persistence.postgres.migration.journal
+package org.apache.pekko.persistence.postgres.migration.journal
 
-import akka.actor.{ ActorSystem, ExtendedActorSystem }
-import akka.persistence.postgres.config.{ JournalConfig, JournalPartitionsConfiguration, JournalTableConfiguration }
-import akka.persistence.postgres.db.ExtendedPostgresProfile.api._
-import akka.persistence.postgres.journal.dao.{ JournalDao, NestedPartitionsJournalDao, PartitionedJournalDao }
+import org.apache.pekko.actor.{ ActorSystem, ExtendedActorSystem }
+import org.apache.pekko.persistence.postgres.config.{ JournalConfig, JournalPartitionsConfiguration, JournalTableConfiguration }
+import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+import org.apache.pekko.persistence.postgres.journal.dao.{ JournalDao, NestedPartitionsJournalDao, PartitionedJournalDao }
 import org.slf4j.{ Logger, LoggerFactory }
 
 import scala.concurrent.ExecutionContext

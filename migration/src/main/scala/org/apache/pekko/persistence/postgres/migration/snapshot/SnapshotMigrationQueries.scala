@@ -1,8 +1,8 @@
-package akka.persistence.postgres.migration.snapshot
+package org.apache.pekko.persistence.postgres.migration.snapshot
 
-import akka.persistence.postgres.config.SnapshotTableConfiguration
-import akka.persistence.postgres.db.ExtendedPostgresProfile.api._
-import akka.persistence.postgres.snapshot.dao.SnapshotTables.SnapshotRow
+import org.apache.pekko.persistence.postgres.config.SnapshotTableConfiguration
+import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+import org.apache.pekko.persistence.postgres.snapshot.dao.SnapshotTables.SnapshotRow
 import io.circe.Json
 
 import scala.concurrent.ExecutionContext
