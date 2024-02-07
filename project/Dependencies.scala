@@ -4,7 +4,7 @@ object Dependencies {
   val Scala213 = "2.13.12"
   val ScalaVersions = Seq(Scala213)
 
-  val AkkaVersion = "2.6.16"
+  val PekkoVersion = "1.0.2"
   val FlywayVersion = "9.20.0"
   val ScaffeineVersion = "5.2.1"
   val ScalaTestVersion = "3.2.17"
@@ -21,23 +21,23 @@ object Dependencies {
     "com.github.blemale" %% "scaffeine" % ScaffeineVersion,
     "com.github.tminglei" %% "slick-pg" % SlickPgVersion,
     "com.github.tminglei" %% "slick-pg_circe-json" % SlickPgVersion,
-    "com.typesafe.akka" %% "akka-slf4j" % AkkaVersion % Test,
-    "com.typesafe.akka" %% "akka-persistence-tck" % AkkaVersion % Test,
-    "com.typesafe.akka" %% "akka-stream-testkit" % AkkaVersion % Test,
-    "com.typesafe.akka" %% "akka-testkit" % AkkaVersion % Test,
-    "com.typesafe.akka" %% "akka-persistence-query" % AkkaVersion % Provided,
+    "org.apache.pekko" %% "pekko-slf4j" % PekkoVersion % Test,
+    "org.apache.pekko" %% "pekko-persistence-tck" % PekkoVersion % Test,
+    "org.apache.pekko" %% "pekko-stream-testkit" % PekkoVersion % Test,
+    "org.apache.pekko" %% "pekko-testkit" % PekkoVersion % Test,
+    "org.apache.pekko" %% "pekko-persistence-query" % PekkoVersion % Provided,
     "com.typesafe.slick" %% "slick" % SlickVersion,
     "com.typesafe.slick" %% "slick-hikaricp" % SlickVersion,
     "org.scalatest" %% "scalatest" % ScalaTestVersion % Test) ++ JdbcDrivers.map(_ % Test)
 
   val Migration: Seq[ModuleID] =
     Seq(
-      ("com.typesafe.akka" %% "akka-persistence-query" % AkkaVersion).exclude("com.typesafe", "ssl-config-core"),
+      ("org.apache.pekko" %% "pekko-persistence-query" % PekkoVersion).exclude("com.typesafe", "ssl-config-core"),
       "com.typesafe" %% "ssl-config-core" % SslConfigVersion).map(_ % Compile) ++ (Seq(
       "org.scalatest" %% "scalatest" % ScalaTestVersion,
-      "com.typesafe.akka" %% "akka-testkit" % AkkaVersion,
+      "org.apache.pekko" %% "pekko-testkit" % PekkoVersion,
       "ch.qos.logback" % "logback-classic" % LogbackVersion,
-      "com.typesafe.akka" %% "akka-slf4j" % AkkaVersion,
-      "com.typesafe.akka" %% "akka-serialization-jackson" % AkkaVersion,
+      "org.apache.pekko" %% "pekko-slf4j" % PekkoVersion,
+      "org.apache.pekko" %% "pekko-serialization-jackson" % PekkoVersion,
       "org.flywaydb" % "flyway-core" % FlywayVersion) ++ JdbcDrivers).map(_ % Test)
 }
