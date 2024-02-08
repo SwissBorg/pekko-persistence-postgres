@@ -7,14 +7,14 @@ nav_order: 20
 
 # Tagging events
 
-To tag events you'll need to create an [Event Adapter](https://doc.akka.io/docs/akka/current/persistence.html#event-adapters) that will wrap the event in a [akka.persistence.journal.Tagged](https://doc.akka.io/api/akka/current/akka/persistence/journal/Tagged.html) class with the given tags. The `Tagged` class will instruct `akka-persistence-postgres` to tag the event with the given set of tags.
+To tag events you'll need to create an [Event Adapter](https://pekko.apache.org/docs/pekko/current/typed/persistence.html#event-adapters) that will wrap the event in a [org.apache.pekko.persistence.journal.Tagged](https://javadoc.io/doc/org.apache.pekko/pekko-persistence_2.13/latest/org/apache/pekko/persistence/journal/Tagged.html) class with the given tags. The `Tagged` class will instruct `pekko-persistence-postgres` to tag the event with the given set of tags.
 
 The persistence plugin will __not__ store the `Tagged` class in the journal. It will strip the `tags` and `payload` from the `Tagged` class, and use the class only as an instruction to tag the event with the given tags and store the `payload` in the `message` field of the journal table.
 
 ```scala
 package com.swissborg.example
 
-import akka.persistence.journal.{ Tagged, WriteEventAdapter }
+import org.apache.pekko.persistence.journal.{ Tagged, WriteEventAdapter }
 import com.swissborg.example.Person.{ LastNameChanged, FirstNameChanged, PersonCreated }
 
 class TaggingEventAdapter extends WriteEventAdapter {

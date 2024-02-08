@@ -56,7 +56,7 @@ This means that query planner will examine the definition of each partition and 
 
 ## BRIN index on the ordering column
 This plugin has been re-designed in terms of handling very large journals.
-The original plugin (akka-persistence-jdbc) uses B-Tree indexes on three columns: `ordering`, `persistence_id` and `sequence_number`. They are great in terms of the query performance and guarding column(s) data uniqueness, but they require relatively a lot of memory.
+The original plugin (pekko-persistence-jdbc) uses B-Tree indexes on three columns: `ordering`, `persistence_id` and `sequence_number`. They are great in terms of the query performance and guarding column(s) data uniqueness, but they require relatively a lot of memory.
 
 
 Wherever it makes sense, we decided to use more lightweight [BRIN indexes](https://www.postgresql.org/docs/11/brin-intro.html).
@@ -64,7 +64,7 @@ Wherever it makes sense, we decided to use more lightweight [BRIN indexes](https
 > [Journal partitioned by ordering](http://localhost:4000/features#journal-partitioned-by-ordering-offset-values) column still uses B-Tree index since partition keys has to be included in primary key which must be unique. Unfortunately BRIN indices cannot guard uniqueness.
 
 ## Tags as an array of int
-Akka-persistence-jdbc stores all tags in a single column as String separated by an arbitrary separator (by default it’s a comma character).
+Pekko-persistence-jdbc stores all tags in a single column as String separated by an arbitrary separator (by default it’s a comma character).
 
 This solution is quite portable, but not perfect. Queries rely on the `LIKE ‘%tag_name%`’ condition and some additional work needs to be done in order to filter out tags that don't fully match the input `tag_name` (imagine a case when you have the following tags: _healthy_, _unhealthy_ and _neutral_ and want to find all events tagged with _healthy_. The query will return events tagged with both, _healthy_ and _unhealthy_ tags).
 

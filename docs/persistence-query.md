@@ -18,22 +18,22 @@ nav_order: 30
 
 ### How to get the ReadJournal using Scala
 
-The `ReadJournal` is retrieved via the `akka.persistence.query.PersistenceQuery` extension:
+The `ReadJournal` is retrieved via the `org.apache.pekko.persistence.query.PersistenceQuery` extension:
 
 ```scala
-import akka.persistence.query.PersistenceQuery
-import akka.persistence.postgres.query.scaladsl.PostgresReadJournal
+import org.apache.pekko.persistence.query.PersistenceQuery
+import org.apache.pekko.persistence.postgres.query.scaladsl.PostgresReadJournal
 
 val readJournal: PostgresReadJournal = PersistenceQuery(system).readJournalFor[PostgresReadJournal](PostgresReadJournal.Identifier)
 ```
 
 ### How to get the ReadJournal using Java
 
-The `ReadJournal` is retrieved via the `akka.persistence.query.PersistenceQuery` extension:
+The `ReadJournal` is retrieved via the `org.apache.pekko.persistence.query.PersistenceQuery` extension:
 
 ```java
-import akka.persistence.query.PersistenceQuery
-import akka.persistence.postgres.query.javadsl.PostgresReadJournal
+import org.apache.pekko.persistence.query.PersistenceQuery;
+import org.apache.pekko.persistence.postgres.query.javadsl.PostgresReadJournal;
 
 final PostgresReadJournal readJournal = PersistenceQuery.get(system).getReadJournalFor(PostgresReadJournal.class, PostgresReadJournal.Identifier());
 ```
@@ -47,11 +47,11 @@ The plugin supports the following queries:
 `allPersistenceIds` and `currentPersistenceIds` are used for retrieving all persistenceIds of all persistent actors.
 
 ```scala
-import akka.actor.ActorSystem
-import akka.stream.{Materializer, ActorMaterializer}
-import akka.stream.scaladsl.Source
-import akka.persistence.query.PersistenceQuery
-import akka.persistence.postgres.query.scaladsl.PostgresReadJournal
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.{Materializer, ActorMaterializer}
+import org.apache.pekko.stream.scaladsl.Source
+import org.apache.pekko.persistence.query.PersistenceQuery
+import org.apache.pekko.persistence.postgres.query.scaladsl.PostgresReadJournal
 
 implicit val system: ActorSystem = ActorSystem()
 implicit val mat: Materializer = ActorMaterializer()(system)
@@ -78,11 +78,11 @@ The stream is completed with failure if there is a failure in executing the quer
 a specific PersistentActor identified by persistenceId.
 
 ```scala
-import akka.actor.ActorSystem
-import akka.stream.{Materializer, ActorMaterializer}
-import akka.stream.scaladsl.Source
-import akka.persistence.query.{ PersistenceQuery, EventEnvelope }
-import akka.persistence.postgres.query.scaladsl.PostgresReadJournal
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.{Materializer, ActorMaterializer}
+import org.apache.pekko.stream.scaladsl.Source
+import org.apache.pekko.persistence.query.{ PersistenceQuery, EventEnvelope }
+import org.apache.pekko.persistence.postgres.query.scaladsl.PostgresReadJournal
 
 implicit val system: ActorSystem = ActorSystem()
 implicit val mat: Materializer = ActorMaterializer()(system)
@@ -105,11 +105,11 @@ The stream is completed with failure if there is a failure in executing the quer
 `tag`, e.g. all domain events of an Aggregate Root type.
 
 ```scala
-import akka.actor.ActorSystem
-import akka.stream.{Materializer, ActorMaterializer}
-import akka.stream.scaladsl.Source
-import akka.persistence.query.{ PersistenceQuery, EventEnvelope }
-import akka.persistence.postgres.query.scaladsl.PostgresReadJournal
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.{Materializer, ActorMaterializer}
+import org.apache.pekko.stream.scaladsl.Source
+import org.apache.pekko.persistence.query.{ PersistenceQuery, EventEnvelope }
+import org.apache.pekko.persistence.postgres.query.scaladsl.PostgresReadJournal
 
 implicit val system: ActorSystem = ActorSystem()
 implicit val mat: Materializer = ActorMaterializer()(system)
