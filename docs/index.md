@@ -18,7 +18,7 @@ The main goal is to keep index size and memory consumption on a moderate level w
 To use `pekko-persistence-postgres` in your SBT project, add the following to your `build.sbt`:
 
 ```scala
-libraryDependencies += "com.swissborg" %% "pekko-persistence-postgres" % "0.6.0"
+libraryDependencies += "com.swissborg" %% "pekko-persistence-postgres" % "0.1.0"
 ```
 
 For a maven project add:
@@ -26,7 +26,7 @@ For a maven project add:
 <dependency>
     <groupId>com.swissborg</groupId>
     <artifactId>pekko-persistence-postgres_2.13</artifactId>
-    <version>0.6.0</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 to your `pom.xml`.
