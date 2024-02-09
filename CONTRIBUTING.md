@@ -1,12 +1,12 @@
-# Contributing to Akka Persistence Postgres
+# Contributing to Pekko Persistence Postgres
 
 ## General Workflow
 
 This is the process for committing code into master.
 
-1. Before starting to work on a feature or a fix, make sure that there is a ticket for your work in the [issue tracker](https://github.com/SwissBorg/akka-persistence-postgres/issues). If not, create it first.
+1. Before starting to work on a feature or a fix, make sure that there is a ticket for your work in the [issue tracker](https://github.com/SwissBorg/pekko-persistence-postgres/issues). If not, create it first.
 2. Perform your work according to the [pull request requirements](#pull-request-requirements).
-3. When the feature or fix is completed you should open a [Pull Request](https://help.github.com/articles/using-pull-requests) on [GitHub](https://github.com/SwissBorg/akka-persistence-postgres/pulls).
+3. When the feature or fix is completed you should open a [Pull Request](https://help.github.com/articles/using-pull-requests) on [GitHub](https://github.com/SwissBorg/pekko-persistence-postgres/pulls).
 4. The Pull Request should be reviewed by other maintainers (as many as feasible/practical). Outside contributors are encouraged to participate in the review process, it is not a closed process.
 5. After the review you should fix the issues (review comments, CI failures) by pushing a new commit for new review, iterating until the reviewers give their thumbs up and CI tests pass.
 6. If the branch merge conflicts with its target, rebase your branch onto the target branch.
@@ -73,5 +73,5 @@ Example:
 
 ## How To Enforce These Guidelines?
 
-1. [GitHub Actions](https://github.com/SwissBorg/akka-persistence-postgres/actions) automatically builds the code, runs the tests and sets Pull Request status accordingly of results in GitHub.
+1. [GitHub Actions](https://github.com/SwissBorg/pekko-persistence-postgres/actions) automatically builds the code, runs the tests and sets Pull Request status accordingly of results in GitHub.
 2. [Scalafmt](https://scalameta.org/scalafmt/) enforces some of the code style rules.

@@ -17,14 +17,14 @@ has_toc: true
 
 ---
 
-## Enabling Akka Persistence Postgres plugin
+## Enabling Pekko Persistence Postgres plugin
 
 The plugin relies on [Slick-pg](https://github.com/tminglei/slick-pg) to do create the SQL dialect for the database in use, therefore the following must be configured in `application.conf`
 
-Configure `akka-persistence`:
+Configure `pekko-persistence`:
 
-- instruct akka persistence to use the `postgres-journal` plugin,
-- instruct akka persistence to use the `postgres-snapshot-store` plugin,
+- instruct pekko persistence to use the `postgres-journal` plugin,
+- instruct pekko persistence to use the `postgres-snapshot-store` plugin,
 
 Configure `slick.db`:
  
@@ -40,7 +40,7 @@ Depending on the journal variant, choose the appropriate schema:
 
 ## Reference Configuration
 
-akka-persistence-postgres provides the defaults as part of the [reference.conf]({{ site.repo }}/core/src/main/resources/reference.conf). This file documents all the values which can be configured.
+pekko-persistence-postgres provides the defaults as part of the [reference.conf]({{ site.repo }}/core/src/main/resources/reference.conf). This file documents all the values which can be configured.
 
 There are several possible ways to configure loading your database connections. Options will be explained below.
 
@@ -57,7 +57,7 @@ In order to create only one connection pool which is shared between all journals
 ### Customized loading of the db connection
 
 It is also possible to load a custom database connection. 
-In order to do so a custom implementation of [SlickDatabaseProvider]({{ site.repo }}/core/src/main/scala/akka/persistence/postgres/db/SlickExtension.scala#L46-L54)
+In order to do so a custom implementation of [SlickDatabaseProvider]({{ site.repo }}/core/src/main/scala/org/apache/pekko/persistence/postgres/db/SlickExtension.scala#L46-L54)
 needs to be created. The method that need to be implemented supply the Slick `Database` to the journals.
 
 To enable your custom `SlickDatabaseProvider`, the fully qualified class name of the `SlickDatabaseProvider`
@@ -65,7 +65,7 @@ needs to be configured in the application.conf. In addition, you might want to c
 the database to be closed automatically:
 
 ```hocon
-akka-persistence-postgres {
+pekko-persistence-postgres {
   database-provider-fqcn = "com.mypackage.CustomSlickDatabaseProvider"
 }
 postgres-journal {
@@ -93,7 +93,7 @@ postgres-journal {
 When using the `use-shared-db = slick` setting, the follow configuration can serve as an example:
 
 ```hocon
-akka-persistence-postgres {
+pekko-persistence-postgres {
   shared-databases {
     slick {
       jndiName = "java:/jboss/datasources/bla"
@@ -119,19 +119,19 @@ You can find the schema [here]({{ site.repo }}/core/src/test/resources/schema/po
 
 ### Using flat journal
 
-This is the default variant, a [schema without any partitions]({{ site.repo }}/core/src/test/resources/schema/postgres/plain-schema.sql) similar to what's used by Akka Persistence JDBC.
+This is the default variant, a [schema without any partitions]({{ site.repo }}/core/src/test/resources/schema/postgres/plain-schema.sql) similar to what's used by Pekko Persistence JDBC.
 
 You do not have to override anything in order to start using it, although if you'd like to set it up explicitly, here's the necessary config:
 
 ```hocon
-postgres-journal.dao = "akka.persistence.postgres.journal.dao.FlatJournalDao"
+postgres-journal.dao = "org.apache.pekko.persistence.postgres.journal.dao.FlatJournalDao"
 ```
 
 ### Using journal partitioned by persistence id and sequence number
 
 In order to start using journal with nested partitions, you have to create a table with nested partitions (here is [the schema]({{ site.repo }}/core/src/test/resources/schema/postgres/nested-partitions-schema.sql)) and set the Journal DAO FQCN:
 ```hocon
-postgres-journal.dao = "akka.persistence.postgres.journal.dao.NestedPartitionsJournalDao"
+postgres-journal.dao = "org.apache.pekko.persistence.postgres.journal.dao.NestedPartitionsJournalDao"
 ```
 
 #### Partition size
@@ -156,7 +156,7 @@ Keep in mind that the default maximum length for a table name in Postgres is 63 
 
 In order to start using partitioned journal, you have to apply [this schema]({{ site.repo }}/core/src/test/resources/schema/postgres/partitioned-schema.sql) and set the Journal DAO FQCN:
 ```hocon
-postgres-journal.dao = "akka.persistence.postgres.journal.dao.PartitionedJournalDao"
+postgres-journal.dao = "org.apache.pekko.persistence.postgres.journal.dao.PartitionedJournalDao"
 ```
 
 #### Partition size
@@ -184,4 +184,4 @@ Default value is **1 hour**.
 ## Explicitly shutting down the database connections
 
 The plugin automatically shuts down the HikariCP connection pool when the ActorSystem is terminated.
-This is done using [ActorSystem.registerOnTermination](https://doc.akka.io/api/akka/current/akka/actor/ActorSystem.html).
+This is done using [ActorSystem.registerOnTermination](https://pekko.apache.org/api/pekko/current/org/apache/pekko/actor/ActorSystem.html#registerOnTermination(code:Runnable):Unit).

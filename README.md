@@ -1,12 +1,12 @@
-![Akka Persistence Postgres](./docs/assets/project-logo.png)
+![Pekko Persistence Postgres](./docs/assets/project-logo.png)
 
 [![License](https://img.shields.io/:license-Apache%202-red.svg)](https://www.apache.org/licenses/LICENSE-2.0.txt)
-[![Actions Status](https://github.com/SwissBorg/akka-persistence-postgres/workflows/Scala%20CI/badge.svg)](https://github.com/SwissBorg/akka-persistence-postgres/actions)
+[![Actions Status](https://github.com/SwissBorg/pekko-persistence-postgres/workflows/Scala%20CI/badge.svg)](https://github.com/SwissBorg/pekko-persistence-postgres/actions)
 
 > [!WARNING]  
 > This Pekko fork is a work in progress.
 
-The Akka Persistence Postgres plugin allows for using [PostgreSQL 11](https://www.postgresql.org/) and [Amazon Aurora](https://aws.amazon.com/rds/aurora/) databases as backend for Akka Persistence and Akka Persistence Query.
+The Pekko Persistence Postgres plugin allows for using [PostgreSQL 11](https://www.postgresql.org/) and [Amazon Aurora](https://aws.amazon.com/rds/aurora/) databases as backend for Pekko Persistence and Pekko Persistence Query.
 
 It’s been originally created as a fork of [Akka Persistence JDBC plugin](https://github.com/akka/akka-persistence-jdbc), focused on PostgreSQL features such as partitions, arrays, BRIN indexes and others.
 
@@ -17,30 +17,30 @@ This plugin supports different schema variants for different use-cases: from sma
 through the ones with a small, finite number of persistent actors but each with huge and still growing journals,
 to the services with an increasing number of unique persistent actors.
 
-You can read more about DAOs and schema variants in [the official documentation](https://swissborg.github.io/akka-persistence-postgres/features#support-for-partitioned-tables).
+You can read more about DAOs and schema variants in [the official documentation](https://swissborg.github.io/pekko-persistence-postgres/features#support-for-partitioned-tables).
 
-## Adding Akka Persistence Postgres to your project
+## Adding Pekko Persistence Postgres to your project
 
-To use `akka-persistence-postgres` in your SBT project, add the following to your `build.sbt`:
+To use `pekko-persistence-postgres` in your SBT project, add the following to your `build.sbt`:
 
 ```scala
-libraryDependencies += "com.swissborg" %% "akka-persistence-postgres" % "0.6.0"
+libraryDependencies += "com.swissborg" %% "pekko-persistence-postgres" % "0.1.0"
 ```
 
 For a maven project add:
 ```xml
 <dependency>
     <groupId>com.swissborg</groupId>
-    <artifactId>akka-persistence-postgres_2.13</artifactId>
-    <version>0.6.0</version>
+    <artifactId>pekko-persistence-postgres_2.13</artifactId>
+    <version>0.1.0</version>
 </dependency>
 ```
 to your `pom.xml`.
 
-## Enabling Akka Persistence Postgres in your project
+## Enabling Pekko Persistence Postgres in your project
 To use this plugin instead of the default one, add the following to application.conf:
 ```hocon
-akka.persistence {
+pekko.persistence {
   journal.plugin = "postgres-journal"
   snapshot-store.plugin = "postgres-snapshot-store"
 }
@@ -51,20 +51,22 @@ PersistenceQuery(system).readJournalFor[PostgresReadJournal](PostgresReadJournal
 ```
 
 ## Documentation
-* [Akka Persistence Postgres documentation](https://swissborg.github.io/akka-persistence-postgres/)
+* [Pekko Persistence Postgres documentation](https://swissborg.github.io/pekko-persistence-postgres/)
 * [demo-akka-persistence-postgres](https://github.com/mkubala/demo-akka-persistence-postgres)
+> :warning: Please note that this library is based on Pekko, but demo uses an older version of `akka-persistence-postgres` and there might be inconsistencies between the documentation and the provided code
 
-## Key features when compared to the original Akka Persistence JDBC plugin
+
+## Key features when compared to the original Pekko Persistence JDBC plugin
 
 ### BRIN index on the ordering column
 This plugin has been re-designed in terms of handling very large journals.
-The original plugin (akka-persistence-jdbc) uses B-Tree indexes on three columns: `ordering`, `persistence_id` and `sequence_number`. They are great in terms of the query performance and guarding column(s) data uniqueness, but they require relatively a lot of memory.
+The original plugin (pekko-persistence-jdbc) uses B-Tree indexes on three columns: `ordering`, `persistence_id` and `sequence_number`. They are great in terms of the query performance and guarding column(s) data uniqueness, but they require relatively a lot of memory.
 
 
 Wherever it makes sense, we decided to use more lightweight [BRIN indexes](https://www.postgresql.org/docs/11/brin-intro.html).
 
 ### Tags as an array of int
-Akka-persistence-jdbc stores all tags in a single column as String separated by an arbitrary separator (by default it’s a comma character).
+Pekko-persistence-jdbc stores all tags in a single column as String separated by an arbitrary separator (by default it’s a comma character).
 
 This solution is quite portable, but not perfect. Queries rely on the `LIKE ‘%tag_name%`’ condition and some additional work needs to be done in order to filter out tags that don't fully match the input `tag_name` (imagine a case when you have the following tags: _healthy_, _unhealthy_ and _neutral_ and want to find all events tagged with _healthy_. The query will return events tagged with both, _healthy_ and _unhealthy_ tags).
 
@@ -77,7 +79,7 @@ When you have big volumes of data and they keep growing, appending events to the
 Postgres allows you to split your data between smaller tables (logical partitions) and attach new partitions on demand. Partitioning also applies to indexes, so instead of a one huge B-Tree you can have a number of capped tables with smaller indexes.
 
 
-You can read more on how Akka Persistence Postgres leverages partitioning in the _Supported journal schema variants_ section below.
+You can read more on how Pekko Persistence Postgres leverages partitioning in the _Supported journal schema variants_ section below.
 
 ### Minor PostgreSQL optimizations
 Beside the aforementioned major changes we did some minor optimizations, like changing the column ordering for [more efficient space utilization](https://www.2ndquadrant.com/en/blog/on-rocks-and-sand/).
@@ -99,7 +101,7 @@ This variant is aimed for services that have a finite and/or small number of uni
 
 In order to start using partitioned journal, you have to create either a partitioned table (here is [the schema](core/src/test/resources/schema/postgres/nested-partitions-schema.sql)) and set the Journal DAO FQCN:
 ```
-postgres-journal.dao = "akka.persistence.postgres.journal.dao.NestedPartitionsJournalDao"
+postgres-journal.dao = "org.apache.pekko.persistence.postgres.journal.dao.NestedPartitionsJournalDao"
 ```
 
 The size of the nested partitions (`sequence_number`’s range) can be changed by setting `postgres-journal.tables.journal.partitions.size`. By default partition size is set to `10000000` (10M).
@@ -119,19 +121,19 @@ Keep in mind that the default maximum length for a table name in Postgres is 63 
 
 ## Migration
 
-Please see the documentation regarding migrations [here](https://swissborg.github.io/akka-persistence-postgres/migration).
+Please see the documentation regarding migrations [here](https://swissborg.github.io/pekko-persistence-postgres/migration).
 
 ## Contributing
-We are also always looking for contributions and new ideas, so if you’d like to join the project, check out the [open issues](https://github.com/SwissBorg/akka-persistence-postgres/issues), or post your own suggestions!
+We are also always looking for contributions and new ideas, so if you’d like to join the project, check out the [open issues](https://github.com/SwissBorg/pekko-persistence-postgres/issues), or post your own suggestions!
 
 ## Sponsors
 
-Development and maintenance of akka-persistence-postgres is sponsored by:
+Development and maintenance of pekko-persistence-postgres is sponsored by:
 
-![SoftwareMill](https://raw.githubusercontent.com/SwissBorg/akka-persistence-postgres/master/docs/assets/softwaremill-logo.png)
+![SoftwareMill](https://raw.githubusercontent.com/SwissBorg/pekko-persistence-postgres/master/docs/assets/softwaremill-logo.png)
 
 [SoftwareMill](https://softwaremill.com) is a software development and consulting company. We help clients scale their business through software. Our areas of expertise include backends, distributed systems, blockchain, machine learning and data analytics.
 
-![SwissBorg](https://raw.githubusercontent.com/SwissBorg/akka-persistence-postgres/master/docs/assets/swissborg-logo.png)
+![SwissBorg](https://raw.githubusercontent.com/SwissBorg/pekko-persistence-postgres/master/docs/assets/swissborg-logo.png)
 
 [SwissBorg](https://swissborg.com) makes managing your crypto investment easy and helps control your wealth.
