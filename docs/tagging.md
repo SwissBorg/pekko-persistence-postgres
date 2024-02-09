@@ -35,6 +35,7 @@ class TaggingEventAdapter extends WriteEventAdapter {
 ```
 
 The `EventAdapter` must be registered by adding the following to the root of `application.conf` Please see the  [demo-akka-persistence-postgres](https://github.com/mkubala/demo-akka-persistence-postgres) project for more information.
+> :warning: Please note that this library is based on Pekko, but demo uses an older version of `akka-persistence-postgres` and there might be inconsistencies between the documentation and the provided code
 
 ```bash
 postgres-journal {

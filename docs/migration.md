@@ -7,6 +7,12 @@ nav_order: 60
 
 # Migrations
 
+## Migration from pekko-persistence-jdbc 1.0.0
+
+> :warning: The `akka-persistence-postgres-migration` package was only compatible with `akka-persistence-jdbc` version
+> 4.0.0. The `pekko-persistence-jdbc` is based on `akka-persistence-jdbc` version 5.0.0, and as a result, it has been
+> temporarily removed from the current project.
+
 ## Migration from akka-persistence-postgres to pekko-persistence-postgres
 
 **This guide will walk you through the process of migrating from akka-persistence-postgres to

@@ -53,6 +53,8 @@ PersistenceQuery(system).readJournalFor[PostgresReadJournal](PostgresReadJournal
 ## Documentation
 * [Pekko Persistence Postgres documentation](https://swissborg.github.io/pekko-persistence-postgres/)
 * [demo-akka-persistence-postgres](https://github.com/mkubala/demo-akka-persistence-postgres)
+> :warning: Please note that this library is based on Pekko, but demo uses an older version of `akka-persistence-postgres` and there might be inconsistencies between the documentation and the provided code
+
 
 ## Key features when compared to the original Pekko Persistence JDBC plugin
 
