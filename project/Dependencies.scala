@@ -29,15 +29,4 @@ object Dependencies {
     "com.typesafe.slick" %% "slick" % SlickVersion,
     "com.typesafe.slick" %% "slick-hikaricp" % SlickVersion,
     "org.scalatest" %% "scalatest" % ScalaTestVersion % Test) ++ JdbcDrivers.map(_ % Test)
-
-  val Migration: Seq[ModuleID] =
-    Seq(
-      ("org.apache.pekko" %% "pekko-persistence-query" % PekkoVersion).exclude("com.typesafe", "ssl-config-core"),
-      "com.typesafe" %% "ssl-config-core" % SslConfigVersion).map(_ % Compile) ++ (Seq(
-      "org.scalatest" %% "scalatest" % ScalaTestVersion,
-      "org.apache.pekko" %% "pekko-testkit" % PekkoVersion,
-      "ch.qos.logback" % "logback-classic" % LogbackVersion,
-      "org.apache.pekko" %% "pekko-slf4j" % PekkoVersion,
-      "org.apache.pekko" %% "pekko-serialization-jackson" % PekkoVersion,
-      "org.flywaydb" % "flyway-core" % FlywayVersion) ++ JdbcDrivers).map(_ % Test)
 }
