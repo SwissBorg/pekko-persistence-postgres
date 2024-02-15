@@ -5,8 +5,7 @@
 
 package org.apache.pekko.persistence.postgres.util
 
-import java.sql.Statement
-import org.apache.pekko.persistence.postgres.config.{ JournalMetadataTableConfiguration, JournalTableConfiguration }
+import org.apache.pekko.persistence.postgres.config.{JournalMetadataTableConfiguration, JournalTableConfiguration}
 import org.apache.pekko.persistence.postgres.journal.dao.{
   FlatJournalTable,
   JournalMetadataTable,
@@ -15,8 +14,10 @@ import org.apache.pekko.persistence.postgres.journal.dao.{
   PartitionedJournalTable
 }
 import org.apache.pekko.persistence.postgres.util.Schema.SchemaType
-import slick.jdbc.JdbcBackend.{ Database, Session }
+import slick.jdbc.JdbcBackend.{Database, Session}
 import slick.lifted.TableQuery
+
+import java.sql.Statement
 
 object Schema {
 
@@ -25,8 +26,8 @@ object Schema {
     lazy val schema: String = s"schema/postgres/$resourceNamePrefix-schema.sql"
     lazy val configName: String = s"${resourceNamePrefix}-application.conf"
     def table(journalTableCfg: JournalTableConfiguration): TableQuery[JournalTable]
-    def metadataTable(journalMetadataTableCfg: JournalMetadataTableConfiguration)
-        : TableQuery[JournalMetadataTable] = JournalMetadataTable.apply(journalMetadataTableCfg)
+    def metadataTable(journalMetadataTableCfg: JournalMetadataTableConfiguration): TableQuery[JournalMetadataTable] =
+      JournalMetadataTable.apply(journalMetadataTableCfg)
   }
 
   case object Plain extends SchemaType {

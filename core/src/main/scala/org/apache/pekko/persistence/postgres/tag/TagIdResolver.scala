@@ -1,9 +1,9 @@
 package org.apache.pekko.persistence.postgres.tag
 
+import com.github.blemale.scaffeine.{AsyncLoadingCache, Scaffeine}
 import org.apache.pekko.persistence.postgres.config.TagsConfig
-import com.github.blemale.scaffeine.{ AsyncLoadingCache, Scaffeine }
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Success
 
 trait TagIdResolver {

@@ -15,12 +15,14 @@ package object postgres {
       sequenceNumber: Long,
       message: Array[Byte],
       tags: List[Int],
-      metadata: Json)
+      metadata: Json
+  )
 
   final case class JournalMetadataRow(
       id: Long,
       persistenceId: String,
       maxSequenceNumber: Long,
       minOrdering: Long,
-      maxOrdering: Long)
+      maxOrdering: Long
+  )
 }

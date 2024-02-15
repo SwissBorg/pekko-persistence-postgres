@@ -8,7 +8,8 @@ class ReadJournalMetadataQueries(journalMetadataTable: TableQuery[JournalMetadat
   import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
 
   private def _minAndMaxOrderingForPersistenceId(
-      persistenceId: Rep[String]): Query[(Rep[Long], Rep[Long]), (Long, Long), Seq] =
+      persistenceId: Rep[String]
+  ): Query[(Rep[Long], Rep[Long]), (Long, Long), Seq] =
     journalMetadataTable.filter(_.persistenceId === persistenceId).take(1).map(r => (r.minOrdering, r.maxOrdering))
 
   val minAndMaxOrderingForPersistenceId = Compiled(_minAndMaxOrderingForPersistenceId _)

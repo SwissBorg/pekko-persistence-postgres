@@ -16,27 +16,27 @@ import scala.util.Try
 
 trait ReadJournalDao extends JournalDaoWithReadMessages {
 
-  /**
-   * Returns distinct stream of persistenceIds
-   */
+  /** Returns distinct stream of persistenceIds
+    */
   def allPersistenceIdsSource(max: Long): Source[String, NotUsed]
 
-  /**
-   * Returns a Source of deserialized data for certain tag from an offset. The result is sorted by
-   * the global ordering of the events.
-   * Each element with be a try with a PersistentRepr, set of tags, and a Long representing the global ordering of events
-   */
+  /** Returns a Source of deserialized data for certain tag from an offset. The result is sorted by the global ordering
+    * of the events. Each element with be a try with a PersistentRepr, set of tags, and a Long representing the global
+    * ordering of events
+    */
   def eventsByTag(tag: String, offset: Long, maxOffset: Long, max: Long): Source[Try[(PersistentRepr, Long)], NotUsed]
 
-  /**
-   * @param offset Minimum value to retrieve
-   * @param limit Maximum number of values to retrieve
-   * @return A Source of journal event sequence numbers (corresponding to the Ordering column)
-   */
+  /** @param offset
+    *   Minimum value to retrieve
+    * @param limit
+    *   Maximum number of values to retrieve
+    * @return
+    *   A Source of journal event sequence numbers (corresponding to the Ordering column)
+    */
   def journalSequence(offset: Long, limit: Long): Source[Long, NotUsed]
 
-  /**
-   * @return The value of the maximum (ordering) id in the journal
-   */
+  /** @return
+    *   The value of the maximum (ordering) id in the journal
+    */
   def maxJournalSequence(): Future[Long]
 }

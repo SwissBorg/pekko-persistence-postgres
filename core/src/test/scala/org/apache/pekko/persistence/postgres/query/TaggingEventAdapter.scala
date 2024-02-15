@@ -5,17 +5,15 @@
 
 package org.apache.pekko.persistence.postgres.query
 
+import org.apache.pekko.persistence.journal.{Tagged, WriteEventAdapter}
 import org.apache.pekko.persistence.postgres.query.TaggingEventAdapter.TagEvent
-import org.apache.pekko.persistence.journal.{ Tagged, WriteEventAdapter }
 
 object TaggingEventAdapter {
   case class TagEvent(payload: Any, tags: Set[String])
 }
 
-/**
- * The TaggingEventAdapter will instruct persistence
- * to tag the received event.
- */
+/** The TaggingEventAdapter will instruct persistence to tag the received event.
+  */
 class TaggingEventAdapter extends WriteEventAdapter {
   override def manifest(event: Any): String = ""
 

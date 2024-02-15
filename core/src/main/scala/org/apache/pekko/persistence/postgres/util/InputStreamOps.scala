@@ -5,8 +5,7 @@
 
 package org.apache.pekko.persistence.postgres.util
 
-import java.io.{ ByteArrayOutputStream, InputStream }
-
+import java.io.{ByteArrayOutputStream, InputStream}
 import scala.concurrent.blocking
 
 object InputStreamOps {

@@ -14,7 +14,8 @@ class JournalTablesTest extends TablesTestSpec {
     (journalName, journalTable) <- List(
       ("FlatJournalTable", FlatJournalTable(journalTableConfiguration)),
       ("PartitionedJournalTable", PartitionedJournalTable(journalTableConfiguration)),
-      ("NestedPartitionsJournalTable", NestedPartitionsJournalTable(journalTableConfiguration)))
+      ("NestedPartitionsJournalTable", NestedPartitionsJournalTable(journalTableConfiguration))
+    )
   } {
     journalName should "be configured with a schema name" in {
       journalTable.baseTableRow.schemaName shouldBe journalTableConfiguration.schemaName
@@ -28,10 +29,12 @@ class JournalTablesTest extends TablesTestSpec {
     it should "be configured with column names" in {
       val colName = toColumnName(journalTableConfiguration.tableName)(_)
       journalTable.baseTableRow.persistenceId.toString shouldBe colName(
-        journalTableConfiguration.columnNames.persistenceId)
+        journalTableConfiguration.columnNames.persistenceId
+      )
       journalTable.baseTableRow.deleted.toString shouldBe colName(journalTableConfiguration.columnNames.deleted)
       journalTable.baseTableRow.sequenceNumber.toString shouldBe colName(
-        journalTableConfiguration.columnNames.sequenceNumber)
+        journalTableConfiguration.columnNames.sequenceNumber
+      )
       journalTable.baseTableRow.tags.toString shouldBe colName(journalTableConfiguration.columnNames.tags)
     }
   }
@@ -50,12 +53,16 @@ class JournalTablesTest extends TablesTestSpec {
   it should "be configured with column names" in {
     val colName = toColumnName(journalMetadataTableConfiguration.tableName)(_)
     journalMetadataTable.baseTableRow.persistenceId.toString shouldBe colName(
-      journalMetadataTableConfiguration.columnNames.persistenceId)
+      journalMetadataTableConfiguration.columnNames.persistenceId
+    )
     journalMetadataTable.baseTableRow.maxSequenceNumber.toString shouldBe colName(
-      journalMetadataTableConfiguration.columnNames.maxSequenceNumber)
+      journalMetadataTableConfiguration.columnNames.maxSequenceNumber
+    )
     journalMetadataTable.baseTableRow.maxOrdering.toString shouldBe colName(
-      journalMetadataTableConfiguration.columnNames.maxOrdering)
+      journalMetadataTableConfiguration.columnNames.maxOrdering
+    )
     journalMetadataTable.baseTableRow.minOrdering.toString shouldBe colName(
-      journalMetadataTableConfiguration.columnNames.minOrdering)
+      journalMetadataTableConfiguration.columnNames.minOrdering
+    )
   }
 }

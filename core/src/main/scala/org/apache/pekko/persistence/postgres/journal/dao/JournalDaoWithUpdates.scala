@@ -9,14 +9,12 @@ import org.apache.pekko.Done
 
 import scala.concurrent.Future
 
-/**
- * A [[JournalDao]] with extended capabilities, such as updating payloads and tags of existing events.
- * These operations should be used sparingly, for example for migrating data from un-encrypted to encrypted formats
- */
+/** A [[JournalDao]] with extended capabilities, such as updating payloads and tags of existing events. These operations
+  * should be used sparingly, for example for migrating data from un-encrypted to encrypted formats
+  */
 trait JournalDaoWithUpdates extends JournalDao {
 
-  /**
-   * Update (!) an existing event with the passed in data.
-   */
+  /** Update (!) an existing event with the passed in data.
+    */
   def update(persistenceId: String, sequenceNr: Long, payload: AnyRef): Future[Done]
 }

@@ -23,15 +23,15 @@ class JournalQueries(journalTable: TableQuery[JournalTable]) {
     journalTable.filter(_.persistenceId === persistenceId).filter(_.sequenceNumber <= toSequenceNr).delete
   }
 
-  /**
-   * Updates (!) a payload stored in a specific events row.
-   * Intended to be used sparingly, e.g. moving all events to their encrypted counterparts.
-   */
+  /** Updates (!) a payload stored in a specific events row. Intended to be used sparingly, e.g. moving all events to
+    * their encrypted counterparts.
+    */
   def update(
       persistenceId: String,
       seqNr: Long,
       replacement: Array[Byte],
-      metadata: Json): FixedSqlAction[Int, NoStream, Effect.Write] = {
+      metadata: Json
+  ): FixedSqlAction[Int, NoStream, Effect.Write] = {
     val baseQuery = journalTable.filter(_.persistenceId === persistenceId).filter(_.sequenceNumber === seqNr)
 
     baseQuery.map(r => (r.message, r.metadata)).update((replacement, metadata))
@@ -59,7 +59,8 @@ class JournalQueries(journalTable: TableQuery[JournalTable]) {
       persistenceId: Rep[String],
       fromSequenceNr: Rep[Long],
       toSequenceNr: Rep[Long],
-      max: ConstColumn[Long]) =
+      max: ConstColumn[Long]
+  ) =
     journalTable
       .filter(_.persistenceId === persistenceId)
       .filter(_.deleted === false)
@@ -73,7 +74,8 @@ class JournalQueries(journalTable: TableQuery[JournalTable]) {
       fromSequenceNr: Rep[Long],
       toSequenceNr: Rep[Long],
       max: ConstColumn[Long],
-      minOrdering: Rep[Long]): Query[JournalTable, JournalRow, Seq] =
+      minOrdering: Rep[Long]
+  ): Query[JournalTable, JournalRow, Seq] =
     journalTable
       .filter(_.persistenceId === persistenceId)
       .filter(_.deleted === false)

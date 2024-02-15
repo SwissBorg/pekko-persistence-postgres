@@ -4,21 +4,21 @@ import org.apache.pekko.NotUsed
 import org.apache.pekko.persistence.PersistentRepr
 import org.apache.pekko.persistence.postgres.JournalRow
 import org.apache.pekko.persistence.postgres.config.JournalConfig
-import org.apache.pekko.persistence.postgres.db.DbErrors.{ withHandledIndexErrors, withHandledPartitionErrors }
+import org.apache.pekko.persistence.postgres.db.DbErrors.{withHandledIndexErrors, withHandledPartitionErrors}
 import org.apache.pekko.serialization.Serialization
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.stream.scaladsl.Source
 import slick.jdbc.JdbcBackend.Database
 
 import java.util.concurrent.atomic.AtomicReference
-import scala.collection.immutable.{ Nil, Seq }
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.collection.immutable.{Nil, Seq}
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
-class PartitionedJournalDao(db: Database, journalConfig: JournalConfig, serialization: Serialization)(
-    implicit ec: ExecutionContext,
-    mat: Materializer)
-    extends FlatJournalDao(db, journalConfig, serialization) {
+class PartitionedJournalDao(db: Database, journalConfig: JournalConfig, serialization: Serialization)(implicit
+    ec: ExecutionContext,
+    mat: Materializer
+) extends FlatJournalDao(db, journalConfig, serialization) {
   override val queries = new JournalQueries(PartitionedJournalTable(journalConfig.journalTableConfiguration))
   private val journalTableCfg = journalConfig.journalTableConfiguration
   private val partitionSize = journalConfig.partitionsConfig.size
@@ -93,7 +93,8 @@ class PartitionedJournalDao(db: Database, journalConfig: JournalConfig, serializ
       persistenceId: String,
       fromSequenceNr: Long,
       toSequenceNr: Long,
-      max: Long): Source[Try[(PersistentRepr, Long)], NotUsed] = {
+      max: Long
+  ): Source[Try[(PersistentRepr, Long)], NotUsed] = {
 
     // This behaviour override is only applied here, because it is only useful on the PartitionedJournal strategy.
     val query = if (journalConfig.useJournalMetadata) {

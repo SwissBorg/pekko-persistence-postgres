@@ -1,7 +1,5 @@
 package org.apache.pekko.persistence.postgres.journal.dao
 
-import java.util.concurrent.ConcurrentHashMap
-
 import org.apache.pekko.persistence.postgres.JournalRow
 import org.apache.pekko.persistence.postgres.config.JournalConfig
 import org.apache.pekko.persistence.postgres.db.DbErrors.withHandledPartitionErrors
@@ -10,13 +8,14 @@ import org.apache.pekko.serialization.Serialization
 import org.apache.pekko.stream.Materializer
 import slick.jdbc.JdbcBackend.Database
 
-import scala.collection.immutable.{ List, Nil, Seq }
-import scala.concurrent.{ ExecutionContext, Future }
+import java.util.concurrent.ConcurrentHashMap
+import scala.collection.immutable.{List, Nil, Seq}
+import scala.concurrent.{ExecutionContext, Future}
 
-class NestedPartitionsJournalDao(db: Database, journalConfig: JournalConfig, serialization: Serialization)(
-    implicit ec: ExecutionContext,
-    mat: Materializer)
-    extends FlatJournalDao(db, journalConfig, serialization) {
+class NestedPartitionsJournalDao(db: Database, journalConfig: JournalConfig, serialization: Serialization)(implicit
+    ec: ExecutionContext,
+    mat: Materializer
+) extends FlatJournalDao(db, journalConfig, serialization) {
   override val queries = new JournalQueries(NestedPartitionsJournalTable(journalConfig.journalTableConfiguration))
   private val journalTableCfg = journalConfig.journalTableConfiguration
   private val partitionSize = journalConfig.partitionsConfig.size

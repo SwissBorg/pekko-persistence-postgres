@@ -5,34 +5,34 @@
 
 package org.apache.pekko.persistence.postgres.query
 
-import java.lang.management.{ ManagementFactory, MemoryMXBean }
-import java.util.UUID
-
-import org.apache.pekko.actor.{ ActorSystem, ExtendedActorSystem }
+import com.typesafe.config.{ConfigValue, ConfigValueFactory}
+import org.apache.pekko.actor.{ActorSystem, ExtendedActorSystem}
+import org.apache.pekko.persistence.{AtomicWrite, PersistentRepr}
 import org.apache.pekko.persistence.postgres.config.JournalConfig
 import org.apache.pekko.persistence.postgres.journal.dao.JournalDao
-import org.apache.pekko.persistence.postgres.util.Schema.{ NestedPartitions, Partitioned, Plain, SchemaType }
-import org.apache.pekko.persistence.{ AtomicWrite, PersistentRepr }
-import org.apache.pekko.serialization.{ Serialization, SerializationExtension }
-import org.apache.pekko.stream.scaladsl.{ Sink, Source }
+import org.apache.pekko.persistence.postgres.util.Schema.{NestedPartitions, Partitioned, Plain, SchemaType}
+import org.apache.pekko.serialization.{Serialization, SerializationExtension}
+import org.apache.pekko.stream.{Materializer, SystemMaterializer}
+import org.apache.pekko.stream.scaladsl.{Sink, Source}
 import org.apache.pekko.stream.testkit.scaladsl.TestSink
-import org.apache.pekko.stream.{ Materializer, SystemMaterializer }
-import com.typesafe.config.{ ConfigValue, ConfigValueFactory }
 import org.scalatest.concurrent.PatienceConfiguration.Timeout
 import org.scalatest.matchers.should
 import org.slf4j.LoggerFactory
 import slick.jdbc.JdbcBackend.Database
 
+import java.lang.management.{ManagementFactory, MemoryMXBean}
+import java.util.UUID
 import scala.collection.immutable
 import scala.collection.immutable.Seq
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 import scala.concurrent.duration._
-import scala.concurrent.{ ExecutionContext, ExecutionContextExecutor }
-import scala.util.{ Failure, Success }
+import scala.util.{Failure, Success}
 
 object JournalDaoStreamMessagesMemoryTest {
 
   val configOverrides: Map[String, ConfigValue] = Map(
-    "postgres-journal.fetch-size" -> ConfigValueFactory.fromAnyRef("100"))
+    "postgres-journal.fetch-size" -> ConfigValueFactory.fromAnyRef("100")
+  )
 
   val MB = 1024 * 1024
 }
@@ -69,7 +69,8 @@ abstract class JournalDaoStreamMessagesMemoryTest(val schemaType: SchemaType)
             (classOf[JournalConfig], journalConfig),
             (classOf[Serialization], SerializationExtension(system)),
             (classOf[ExecutionContext], ec),
-            (classOf[Materializer], mat))
+            (classOf[Materializer], mat)
+          )
           system.asInstanceOf[ExtendedActorSystem].dynamicAccess.createInstanceFor[JournalDao](fqcn, args) match {
             case Success(dao)   => dao
             case Failure(cause) => throw cause
@@ -88,7 +89,8 @@ abstract class JournalDaoStreamMessagesMemoryTest(val schemaType: SchemaType)
         val totalMessages = numberOfInsertBatches * eventsPerBatch
         val totalMessagePayload = totalMessages * payloadSize
         log.info(
-          s"batches: $numberOfInsertBatches (with $eventsPerBatch events), total messages: $totalMessages, total msgs size: $totalMessagePayload")
+          s"batches: $numberOfInsertBatches (with $eventsPerBatch events), total messages: $totalMessages, total msgs size: $totalMessagePayload"
+        )
 
         // payload can be the same when inserting to avoid unnecessary memory usage
         val payload = Array.fill(payloadSize)('a'.toByte)

@@ -6,26 +6,25 @@
 package org.apache.pekko.persistence.postgres
 package journal.dao
 
+import org.apache.pekko.{Done, NotUsed}
 import org.apache.pekko.actor.Scheduler
+import org.apache.pekko.persistence.{AtomicWrite, PersistentRepr}
 import org.apache.pekko.persistence.postgres.config.JournalConfig
 import org.apache.pekko.persistence.postgres.serialization.FlowPersistentReprSerializer
 import org.apache.pekko.persistence.postgres.tag.TagIdResolver
-import org.apache.pekko.persistence.{ AtomicWrite, PersistentRepr }
-import org.apache.pekko.stream.scaladsl.{ Keep, Sink, Source }
-import org.apache.pekko.stream.{ Materializer, OverflowStrategy, QueueOfferResult }
-import org.apache.pekko.{ Done, NotUsed }
-import org.slf4j.{ Logger, LoggerFactory }
+import org.apache.pekko.stream.{Materializer, OverflowStrategy, QueueOfferResult}
+import org.apache.pekko.stream.scaladsl.{Keep, Sink, Source}
+import org.slf4j.{Logger, LoggerFactory}
 import slick.dbio.DBIOAction
 import slick.jdbc.JdbcBackend._
 
 import scala.collection.immutable._
+import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.concurrent.duration.FiniteDuration
-import scala.concurrent.{ ExecutionContext, Future, Promise }
-import scala.util.{ Failure, Success, Try }
+import scala.util.{Failure, Success, Try}
 
-/**
- * The DefaultJournalDao contains all the knowledge to persist and load serialized journal entries
- */
+/** The DefaultJournalDao contains all the knowledge to persist and load serialized journal entries
+  */
 trait BaseByteArrayJournalDao extends JournalDaoWithUpdates with BaseJournalDaoWithReadMessages {
   val db: Database
   val queries: JournalQueries
@@ -35,13 +34,14 @@ trait BaseByteArrayJournalDao extends JournalDaoWithUpdates with BaseJournalDaoW
   implicit val ec: ExecutionContext
   implicit val mat: Materializer
 
+  import journalConfig.daoConfig.{batchSize, bufferSize, logicalDelete, parallelism}
   import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
-  import journalConfig.daoConfig.{ batchSize, bufferSize, logicalDelete, parallelism }
 
   val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
   lazy val metadataQueries: JournalMetadataQueries = new JournalMetadataQueries(
-    JournalMetadataTable(journalConfig.journalMetadataTableConfiguration))
+    JournalMetadataTable(journalConfig.journalMetadataTableConfiguration)
+  )
 
   // This logging may block since we don't control how the user will configure logback
   // We can't use a Pekko logging neither because we don't have an ActorSystem in scope and
@@ -50,7 +50,8 @@ trait BaseByteArrayJournalDao extends JournalDaoWithUpdates with BaseJournalDaoW
   lazy val logWarnAboutLogicalDeletionDeprecation: Unit = {
     logger.warn(
       "Logical deletion of events is deprecated and will be removed. " +
-      "To disable it in this current version you must set the property 'pekko-persistence-postgres.logicalDeletion.enable' to false.")
+        "To disable it in this current version you must set the property 'pekko-persistence-postgres.logicalDeletion.enable' to false."
+    )
   }
 
   private val writeQueue = Source
@@ -74,8 +75,11 @@ trait BaseByteArrayJournalDao extends JournalDaoWithUpdates with BaseJournalDaoW
       case QueueOfferResult.Failure(t) =>
         Future.failed(new Exception("Failed to write journal row batch", t))
       case QueueOfferResult.Dropped =>
-        Future.failed(new Exception(
-          s"Failed to enqueue journal row batch write, the queue buffer was full ($bufferSize elements) please check the postgres-journal.bufferSize setting"))
+        Future.failed(
+          new Exception(
+            s"Failed to enqueue journal row batch write, the queue buffer was full ($bufferSize elements) please check the postgres-journal.bufferSize setting"
+          )
+        )
       case QueueOfferResult.QueueClosed =>
         Future.failed(new Exception("Failed to enqueue journal row batch write, the queue was closed"))
     }
@@ -86,9 +90,9 @@ trait BaseByteArrayJournalDao extends JournalDaoWithUpdates with BaseJournalDaoW
     db.run(queries.writeJournalRows(xs).transactionally).map(_ => ())
   }
 
-  /**
-   * @see [[org.apache.pekko.persistence.journal.AsyncWriteJournal.asyncWriteMessages(messages)]]
-   */
+  /** @see
+    *   [[org.apache.pekko.persistence.journal.AsyncWriteJournal.asyncWriteMessages(messages)]]
+    */
   def asyncWriteMessages(messages: Seq[AtomicWrite]): Future[Seq[Try[Unit]]] =
     Future
       .sequence {
@@ -134,7 +138,8 @@ trait BaseByteArrayJournalDao extends JournalDaoWithUpdates with BaseJournalDaoW
       case Success(t) => db.run(queries.update(persistenceId, sequenceNr, t.message, t.metadata).map(_ => Done))
       case Failure(_) =>
         throw new IllegalArgumentException(
-          s"Failed to serialize ${write.getClass} for update of [$persistenceId] @ [$sequenceNr]")
+          s"Failed to serialize ${write.getClass} for update of [$persistenceId] @ [$sequenceNr]"
+        )
     }
   }
 
@@ -162,7 +167,8 @@ trait BaseByteArrayJournalDao extends JournalDaoWithUpdates with BaseJournalDaoW
       persistenceId: String,
       fromSequenceNr: Long,
       toSequenceNr: Long,
-      max: Long): Source[Try[(PersistentRepr, Long)], NotUsed] =
+      max: Long
+  ): Source[Try[(PersistentRepr, Long)], NotUsed] =
     Source
       .fromPublisher(db.stream(queries.messagesQuery(persistenceId, fromSequenceNr, toSequenceNr, max).result))
       .via(serializer.deserializeFlow)
@@ -179,7 +185,8 @@ trait BaseJournalDaoWithReadMessages extends JournalDaoWithReadMessages {
       fromSequenceNr: Long,
       toSequenceNr: Long,
       batchSize: Int,
-      refreshInterval: Option[(FiniteDuration, Scheduler)]): Source[Try[(PersistentRepr, Long)], NotUsed] = {
+      refreshInterval: Option[(FiniteDuration, Scheduler)]
+  ): Source[Try[(PersistentRepr, Long)], NotUsed] = {
 
     Source
       .unfoldAsync[(Long, FlowControl), Seq[Try[(PersistentRepr, Long)]]]((Math.max(1, fromSequenceNr), Continue)) {

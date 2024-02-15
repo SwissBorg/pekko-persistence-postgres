@@ -5,8 +5,8 @@
 
 package org.apache.pekko.persistence.postgres.config
 
-import org.apache.pekko.persistence.postgres.util.ConfigOps._
 import com.typesafe.config.Config
+import org.apache.pekko.persistence.postgres.util.ConfigOps._
 
 import scala.concurrent.duration._
 
@@ -169,14 +169,16 @@ object JournalSequenceRetrievalConfig {
       maxTries = config.asInt("journal-sequence-retrieval.max-tries", 10),
       queryDelay = config.asFiniteDuration("journal-sequence-retrieval.query-delay", 1.second),
       maxBackoffQueryDelay = config.asFiniteDuration("journal-sequence-retrieval.max-backoff-query-delay", 1.minute),
-      askTimeout = config.asFiniteDuration("journal-sequence-retrieval.ask-timeout", 1.second))
+      askTimeout = config.asFiniteDuration("journal-sequence-retrieval.ask-timeout", 1.second)
+    )
 }
 case class JournalSequenceRetrievalConfig(
     batchSize: Int,
     maxTries: Int,
     queryDelay: FiniteDuration,
     maxBackoffQueryDelay: FiniteDuration,
-    askTimeout: FiniteDuration)
+    askTimeout: FiniteDuration
+)
 
 class ReadJournalConfig(config: Config) {
   val journalTableConfiguration = new JournalTableConfiguration(config)

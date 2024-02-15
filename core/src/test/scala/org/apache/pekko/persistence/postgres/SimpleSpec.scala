@@ -5,11 +5,11 @@
 
 package org.apache.pekko.persistence.postgres
 
-import org.apache.pekko.actor.{ ActorRef, ActorSystem }
+import org.apache.pekko.actor.{ActorRef, ActorSystem}
 import org.apache.pekko.persistence.postgres.util.ClasspathResources
 import org.apache.pekko.testkit.TestProbe
 import org.scalatest._
-import org.scalatest.concurrent.{ Eventually, ScalaFutures }
+import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -25,9 +25,8 @@ trait SimpleSpec
     with BeforeAndAfterEach
     with GivenWhenThen {
 
-  /**
-   * Sends the PoisonPill command to an actor and waits for it to die
-   */
+  /** Sends the PoisonPill command to an actor and waits for it to die
+    */
   def killActors(actors: ActorRef*)(implicit system: ActorSystem): Unit = {
     val tp = TestProbe()
     actors.foreach { (actor: ActorRef) =>

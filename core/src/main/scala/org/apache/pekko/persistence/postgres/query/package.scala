@@ -8,6 +8,7 @@ package org.apache.pekko.persistence.postgres
 import org.apache.pekko.NotUsed
 import org.apache.pekko.persistence.query._
 import org.apache.pekko.stream.scaladsl.Source
+
 import scala.language.implicitConversions
 
 package object query {
@@ -17,7 +18,8 @@ package object query {
       case NoOffset              => 0L
       case _ =>
         throw new IllegalArgumentException(
-          "pekko-persistence-postgres does not support " + that.getClass.getName + " offsets")
+          "pekko-persistence-postgres does not support " + that.getClass.getName + " offsets"
+        )
     }
   }
 }

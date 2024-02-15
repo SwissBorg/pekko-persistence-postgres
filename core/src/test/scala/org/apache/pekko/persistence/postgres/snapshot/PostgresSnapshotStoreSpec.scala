@@ -5,12 +5,12 @@
 
 package org.apache.pekko.persistence.postgres.snapshot
 
+import com.typesafe.config.ConfigFactory
 import org.apache.pekko.persistence.postgres.config._
 import org.apache.pekko.persistence.postgres.db.SlickDatabase
-import org.apache.pekko.persistence.postgres.util.Schema._
 import org.apache.pekko.persistence.postgres.util.{ClasspathResources, DropCreate}
+import org.apache.pekko.persistence.postgres.util.Schema._
 import org.apache.pekko.persistence.snapshot.SnapshotStoreSpec
-import com.typesafe.config.ConfigFactory
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.concurrent.ScalaFutures
 

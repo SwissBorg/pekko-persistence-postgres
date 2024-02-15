@@ -6,7 +6,7 @@
 package org.apache.pekko.persistence.postgres.query
 
 import org.apache.pekko.pattern._
-import org.apache.pekko.persistence.postgres.util.Schema.{ NestedPartitions, Partitioned, Plain, SchemaType }
+import org.apache.pekko.persistence.postgres.util.Schema.{NestedPartitions, Partitioned, Plain, SchemaType}
 import org.apache.pekko.persistence.query.NoOffset
 import org.scalatest.matchers.should.Matchers
 

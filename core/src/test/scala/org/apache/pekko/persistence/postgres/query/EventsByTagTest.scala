@@ -5,13 +5,18 @@
 
 package org.apache.pekko.persistence.postgres.query
 
+import com.typesafe.config.{ConfigValue, ConfigValueFactory}
 import org.apache.pekko.Done
 import org.apache.pekko.pattern.ask
-import org.apache.pekko.persistence.postgres.query.EventAdapterTest.{ Event, EventRestored, TaggedAsyncEvent, TaggedEvent }
+import org.apache.pekko.persistence.postgres.query.EventAdapterTest.{
+  Event,
+  EventRestored,
+  TaggedAsyncEvent,
+  TaggedEvent
+}
 import org.apache.pekko.persistence.postgres.query.EventsByTagTest._
-import org.apache.pekko.persistence.postgres.util.Schema.{ NestedPartitions, Partitioned, Plain, SchemaType }
-import org.apache.pekko.persistence.query.{ EventEnvelope, NoOffset, Sequence }
-import com.typesafe.config.{ ConfigValue, ConfigValueFactory }
+import org.apache.pekko.persistence.postgres.util.Schema.{NestedPartitions, Partitioned, Plain, SchemaType}
+import org.apache.pekko.persistence.query.{EventEnvelope, NoOffset, Sequence}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -22,7 +27,8 @@ object EventsByTagTest {
 
   val configOverrides: Map[String, ConfigValue] = Map(
     "postgres-read-journal.max-buffer-size" -> ConfigValueFactory.fromAnyRef(maxBufferSize.toString),
-    "postgres-read-journal.refresh-interval" -> ConfigValueFactory.fromAnyRef(refreshInterval.toString()))
+    "postgres-read-journal.refresh-interval" -> ConfigValueFactory.fromAnyRef(refreshInterval.toString())
+  )
 }
 
 abstract class EventsByTagTest(val schemaType: SchemaType)
@@ -121,10 +127,8 @@ abstract class EventsByTagTest(val schemaType: SchemaType)
   }
 
   it should "deliver EventEnvelopes non-zero timestamps" in withActorSystem { implicit system =>
-
     val journalOps = new ScalaPostgresReadJournalOperations(system)
     withTestActors(replyToMessages = true) { (actor1, actor2, actor3) =>
-
       val testStartTime = System.currentTimeMillis()
 
       (actor1 ? withTags(1, "number")).futureValue

@@ -6,29 +6,29 @@
 package org.apache.pekko.persistence.postgres.query
 package scaladsl
 
+import com.typesafe.config.Config
 import org.apache.pekko.NotUsed
-import org.apache.pekko.actor.{ ExtendedActorSystem, Scheduler }
+import org.apache.pekko.actor.{ExtendedActorSystem, Scheduler}
+import org.apache.pekko.persistence.{Persistence, PersistentRepr}
 import org.apache.pekko.persistence.postgres.config.ReadJournalConfig
 import org.apache.pekko.persistence.postgres.db.SlickExtension
 import org.apache.pekko.persistence.postgres.journal.dao.FlowControl
-import org.apache.pekko.persistence.postgres.query.JournalSequenceActor.{ GetMaxOrderingId, MaxOrderingId }
+import org.apache.pekko.persistence.postgres.query.JournalSequenceActor.{GetMaxOrderingId, MaxOrderingId}
 import org.apache.pekko.persistence.postgres.query.dao.ReadJournalDao
-import org.apache.pekko.persistence.postgres.tag.{ CachedTagIdResolver, SimpleTagDao, TagIdResolver }
+import org.apache.pekko.persistence.postgres.tag.{CachedTagIdResolver, SimpleTagDao, TagIdResolver}
+import org.apache.pekko.persistence.query.{EventEnvelope, Offset, Sequence}
 import org.apache.pekko.persistence.query.scaladsl._
-import org.apache.pekko.persistence.query.{ EventEnvelope, Offset, Sequence }
-import org.apache.pekko.persistence.{ Persistence, PersistentRepr }
-import org.apache.pekko.serialization.{ Serialization, SerializationExtension }
-import org.apache.pekko.stream.scaladsl.{ Sink, Source }
-import org.apache.pekko.stream.{ Materializer, SystemMaterializer }
+import org.apache.pekko.serialization.{Serialization, SerializationExtension}
+import org.apache.pekko.stream.{Materializer, SystemMaterializer}
+import org.apache.pekko.stream.scaladsl.{Sink, Source}
 import org.apache.pekko.util.Timeout
-import com.typesafe.config.Config
 import org.slf4j.LoggerFactory
 import slick.jdbc.JdbcBackend._
 
 import scala.collection.immutable._
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
-import scala.concurrent.{ ExecutionContext, Future }
-import scala.util.{ Failure, Success }
+import scala.util.{Failure, Success}
 
 object PostgresReadJournal {
   final val Identifier = "postgres-read-journal"
@@ -59,7 +59,8 @@ class PostgresReadJournal(config: Config, configPath: String)(implicit val syste
     val db = slickDb.database
     val tagIdResolver = new CachedTagIdResolver(
       new SimpleTagDao(db, readJournalConfig.tagsTableConfiguration),
-      readJournalConfig.tagsConfig)
+      readJournalConfig.tagsConfig
+    )
     if (readJournalConfig.addShutdownHook && slickDb.allowShutdown) {
       system.registerOnTermination {
         db.close()
@@ -72,7 +73,8 @@ class PostgresReadJournal(config: Config, configPath: String)(implicit val syste
       (classOf[Serialization], SerializationExtension(system)),
       (classOf[TagIdResolver], tagIdResolver),
       (classOf[ExecutionContext], ec),
-      (classOf[Materializer], mat))
+      (classOf[Materializer], mat)
+    )
     system.dynamicAccess.createInstanceFor[ReadJournalDao](fqcn, args) match {
       case Success(dao)   => dao
       case Failure(cause) => throw cause
@@ -82,30 +84,26 @@ class PostgresReadJournal(config: Config, configPath: String)(implicit val syste
   // Started lazily to prevent the actor for querying the db if no eventsByTag queries are used
   private[query] lazy val journalSequenceActor = system.systemActorOf(
     JournalSequenceActor.props(readJournalDao, readJournalConfig.journalSequenceRetrievalConfiguration),
-    s"$configPath.pekko-persistence-postgres-journal-sequence-actor")
+    s"$configPath.pekko-persistence-postgres-journal-sequence-actor"
+  )
   private val delaySource =
     Source.tick(readJournalConfig.refreshInterval, 0.seconds, 0).take(1)
 
-  /**
-   * Same type of query as `persistenceIds` but the event stream
-   * is completed immediately when it reaches the end of the "result set". Events that are
-   * stored after the query is completed are not included in the event stream.
-   */
+  /** Same type of query as `persistenceIds` but the event stream is completed immediately when it reaches the end of
+    * the "result set". Events that are stored after the query is completed are not included in the event stream.
+    */
   override def currentPersistenceIds(): Source[String, NotUsed] =
     readJournalDao.allPersistenceIdsSource(Long.MaxValue)
 
-  /**
-   * `persistenceIds` is used to retrieve a stream of all `persistenceId`s as strings.
-   *
-   * The stream guarantees that a `persistenceId` is only emitted once and there are no duplicates.
-   * Order is not defined. Multiple executions of the same stream (even bounded) may emit different
-   * sequence of `persistenceId`s.
-   *
-   * The stream is not completed when it reaches the end of the currently known `persistenceId`s,
-   * but it continues to push new `persistenceId`s when new events are persisted.
-   * Corresponding query that is completed when it reaches the end of the currently
-   * known `persistenceId`s is provided by `currentPersistenceIds`.
-   */
+  /** `persistenceIds` is used to retrieve a stream of all `persistenceId`s as strings.
+    *
+    * The stream guarantees that a `persistenceId` is only emitted once and there are no duplicates. Order is not
+    * defined. Multiple executions of the same stream (even bounded) may emit different sequence of `persistenceId`s.
+    *
+    * The stream is not completed when it reaches the end of the currently known `persistenceId`s, but it continues to
+    * push new `persistenceId`s when new events are persisted. Corresponding query that is completed when it reaches the
+    * end of the currently known `persistenceId`s is provided by `currentPersistenceIds`.
+    */
   override def persistenceIds(): Source[String, NotUsed] =
     Source
       .repeat(0)
@@ -125,60 +123,58 @@ class PostgresReadJournal(config: Config, configPath: String)(implicit val syste
     adapter.fromJournal(repr.payload, repr.manifest).events.map(repr.withPayload)
   }
 
-  /**
-   * Same type of query as `eventsByPersistenceId` but the event stream
-   * is completed immediately when it reaches the end of the "result set". Events that are
-   * stored after the query is completed are not included in the event stream.
-   */
+  /** Same type of query as `eventsByPersistenceId` but the event stream is completed immediately when it reaches the
+    * end of the "result set". Events that are stored after the query is completed are not included in the event stream.
+    */
   override def currentEventsByPersistenceId(
       persistenceId: String,
       fromSequenceNr: Long,
-      toSequenceNr: Long): Source[EventEnvelope, NotUsed] =
+      toSequenceNr: Long
+  ): Source[EventEnvelope, NotUsed] =
     eventsByPersistenceIdSource(persistenceId, fromSequenceNr, toSequenceNr, None)
 
-  /**
-   * `eventsByPersistenceId` is used to retrieve a stream of events for a particular persistenceId.
-   *
-   * The `EventEnvelope` contains the event and provides `persistenceId` and `sequenceNr`
-   * for each event. The `sequenceNr` is the sequence number for the persistent actor with the
-   * `persistenceId` that persisted the event. The `persistenceId` + `sequenceNr` is an unique
-   * identifier for the event.
-   *
-   * `fromSequenceNr` and `toSequenceNr` can be specified to limit the set of returned events.
-   * The `fromSequenceNr` and `toSequenceNr` are inclusive.
-   *
-   * The `EventEnvelope` also provides the `offset` that corresponds to the `ordering` column in
-   * the Journal table. The `ordering` is a sequential id number that uniquely identifies the
-   * position of each event, also across different `persistenceId`. The `Offset` type is
-   * `org.apache.pekko.persistence.query.Sequence` with the `ordering` as the offset value. This is the
-   * same `ordering` number as is used in the offset of the `eventsByTag` query.
-   *
-   * The returned event stream is ordered by `sequenceNr`.
-   *
-   * Causality is guaranteed (`sequenceNr`s of events for a particular `persistenceId` are always ordered
-   * in a sequence monotonically increasing by one). Multiple executions of the same bounded stream are
-   * guaranteed to emit exactly the same stream of events.
-   *
-   * The stream is not completed when it reaches the end of the currently stored events,
-   * but it continues to push new events when new events are persisted.
-   * Corresponding query that is completed when it reaches the end of the currently
-   * stored events is provided by `currentEventsByPersistenceId`.
-   */
+  /** `eventsByPersistenceId` is used to retrieve a stream of events for a particular persistenceId.
+    *
+    * The `EventEnvelope` contains the event and provides `persistenceId` and `sequenceNr` for each event. The
+    * `sequenceNr` is the sequence number for the persistent actor with the `persistenceId` that persisted the event.
+    * The `persistenceId` + `sequenceNr` is an unique identifier for the event.
+    *
+    * `fromSequenceNr` and `toSequenceNr` can be specified to limit the set of returned events. The `fromSequenceNr` and
+    * `toSequenceNr` are inclusive.
+    *
+    * The `EventEnvelope` also provides the `offset` that corresponds to the `ordering` column in the Journal table. The
+    * `ordering` is a sequential id number that uniquely identifies the position of each event, also across different
+    * `persistenceId`. The `Offset` type is `org.apache.pekko.persistence.query.Sequence` with the `ordering` as the
+    * offset value. This is the same `ordering` number as is used in the offset of the `eventsByTag` query.
+    *
+    * The returned event stream is ordered by `sequenceNr`.
+    *
+    * Causality is guaranteed (`sequenceNr`s of events for a particular `persistenceId` are always ordered in a sequence
+    * monotonically increasing by one). Multiple executions of the same bounded stream are guaranteed to emit exactly
+    * the same stream of events.
+    *
+    * The stream is not completed when it reaches the end of the currently stored events, but it continues to push new
+    * events when new events are persisted. Corresponding query that is completed when it reaches the end of the
+    * currently stored events is provided by `currentEventsByPersistenceId`.
+    */
   override def eventsByPersistenceId(
       persistenceId: String,
       fromSequenceNr: Long,
-      toSequenceNr: Long): Source[EventEnvelope, NotUsed] =
+      toSequenceNr: Long
+  ): Source[EventEnvelope, NotUsed] =
     eventsByPersistenceIdSource(
       persistenceId,
       fromSequenceNr,
       toSequenceNr,
-      Some(readJournalConfig.refreshInterval -> system.scheduler))
+      Some(readJournalConfig.refreshInterval -> system.scheduler)
+    )
 
   private def eventsByPersistenceIdSource(
       persistenceId: String,
       fromSequenceNr: Long,
       toSequenceNr: Long,
-      refreshInterval: Option[(FiniteDuration, Scheduler)]): Source[EventEnvelope, NotUsed] = {
+      refreshInterval: Option[(FiniteDuration, Scheduler)]
+  ): Source[EventEnvelope, NotUsed] = {
     val batchSize = readJournalConfig.maxBufferSize
     readJournalDao
       .messagesWithBatch(persistenceId, fromSequenceNr, toSequenceNr, batchSize, refreshInterval)
@@ -191,11 +187,9 @@ class PostgresReadJournal(config: Config, configPath: String)(implicit val syste
       }
   }
 
-  /**
-   * Same type of query as `eventsByTag` but the event stream
-   * is completed immediately when it reaches the end of the "result set". Events that are
-   * stored after the query is completed are not included in the event stream.
-   */
+  /** Same type of query as `eventsByTag` but the event stream is completed immediately when it reaches the end of the
+    * "result set". Events that are stored after the query is completed are not included in the event stream.
+    */
   override def currentEventsByTag(tag: String, offset: Offset): Source[EventEnvelope, NotUsed] =
     currentEventsByTag(tag, offset.value)
 
@@ -203,7 +197,8 @@ class PostgresReadJournal(config: Config, configPath: String)(implicit val syste
       tag: String,
       offset: Long,
       max: Long,
-      latestOrdering: MaxOrderingId): Source[EventEnvelope, NotUsed] = {
+      latestOrdering: MaxOrderingId
+  ): Source[EventEnvelope, NotUsed] = {
     if (latestOrdering.maxOrdering < offset) Source.empty
     else {
       readJournalDao
@@ -211,21 +206,22 @@ class PostgresReadJournal(config: Config, configPath: String)(implicit val syste
         .mapAsync(1)(Future.fromTry)
         .mapConcat { case (repr, ordering) =>
           adaptEvents(repr).map(r =>
-            EventEnvelope(Sequence(ordering), r.persistenceId, r.sequenceNr, r.payload, r.timestamp))
+            EventEnvelope(Sequence(ordering), r.persistenceId, r.sequenceNr, r.payload, r.timestamp)
+          )
         }
     }
   }
 
-  /**
-   * @param terminateAfterOffset If None, the stream never completes. If a Some, then the stream will complete once a
-   *                             query has been executed which might return an event with this offset (or a higher offset).
-   *                             The stream may include offsets higher than the value in terminateAfterOffset, since the last batch
-   *                             will be returned completely.
-   */
+  /** @param terminateAfterOffset
+    *   If None, the stream never completes. If a Some, then the stream will complete once a query has been executed
+    *   which might return an event with this offset (or a higher offset). The stream may include offsets higher than
+    *   the value in terminateAfterOffset, since the last batch will be returned completely.
+    */
   private def eventsByTag(
       tag: String,
       offset: Long,
-      terminateAfterOffset: Option[Long]): Source[EventEnvelope, NotUsed] = {
+      terminateAfterOffset: Option[Long]
+  ): Source[EventEnvelope, NotUsed] = {
     import FlowControl._
     import org.apache.pekko.pattern.ask
     implicit val askTimeout: Timeout = Timeout(readJournalConfig.journalSequenceRetrievalConfiguration.askTimeout)
@@ -281,7 +277,8 @@ class PostgresReadJournal(config: Config, configPath: String)(implicit val syste
             }
 
             log.trace(
-              s"tag = $tag => ($nextStartingOffset, $nextControl), [highestOffset = $highestOffset, maxOrdering = ${queryUntil.maxOrdering}, hasMoreEvents = $hasMoreEvents, results = ${xs.size}, from = $from]")
+              s"tag = $tag => ($nextStartingOffset, $nextControl), [highestOffset = $highestOffset, maxOrdering = ${queryUntil.maxOrdering}, hasMoreEvents = $hasMoreEvents, results = ${xs.size}, from = $from]"
+            )
             Some((nextStartingOffset, nextControl), xs)
           }
         }
@@ -304,31 +301,26 @@ class PostgresReadJournal(config: Config, configPath: String)(implicit val syste
       .mapMaterializedValue(_ => NotUsed)
   }
 
-  /**
-   * Query events that have a specific tag.
-   *
-   * The consumer can keep track of its current position in the event stream by storing the
-   * `offset` and restart the query from a given `offset` after a crash/restart.
-   * The offset is exclusive, i.e. the event corresponding to the given `offset` parameter is not
-   * included in the stream.
-   *
-   * For pekko-persistence-postgres the `offset` corresponds to the `ordering` column in the Journal table.
-   * The `ordering` is a sequential id number that uniquely identifies the position of each event within
-   * the event stream. The `Offset` type is `org.apache.pekko.persistence.query.Sequence` with the `ordering` as the
-   * offset value.
-   *
-   * The returned event stream is ordered by `offset`.
-   *
-   * In addition to the `offset` the `EventEnvelope` also provides `persistenceId` and `sequenceNr`
-   * for each event. The `sequenceNr` is the sequence number for the persistent actor with the
-   * `persistenceId` that persisted the event. The `persistenceId` + `sequenceNr` is an unique
-   * identifier for the event.
-   *
-   * The stream is not completed when it reaches the end of the currently stored events,
-   * but it continues to push new events when new events are persisted.
-   * Corresponding query that is completed when it reaches the end of the currently
-   * stored events is provided by [[CurrentEventsByTagQuery#currentEventsByTag]].
-   */
+  /** Query events that have a specific tag.
+    *
+    * The consumer can keep track of its current position in the event stream by storing the `offset` and restart the
+    * query from a given `offset` after a crash/restart. The offset is exclusive, i.e. the event corresponding to the
+    * given `offset` parameter is not included in the stream.
+    *
+    * For pekko-persistence-postgres the `offset` corresponds to the `ordering` column in the Journal table. The
+    * `ordering` is a sequential id number that uniquely identifies the position of each event within the event stream.
+    * The `Offset` type is `org.apache.pekko.persistence.query.Sequence` with the `ordering` as the offset value.
+    *
+    * The returned event stream is ordered by `offset`.
+    *
+    * In addition to the `offset` the `EventEnvelope` also provides `persistenceId` and `sequenceNr` for each event. The
+    * `sequenceNr` is the sequence number for the persistent actor with the `persistenceId` that persisted the event.
+    * The `persistenceId` + `sequenceNr` is an unique identifier for the event.
+    *
+    * The stream is not completed when it reaches the end of the currently stored events, but it continues to push new
+    * events when new events are persisted. Corresponding query that is completed when it reaches the end of the
+    * currently stored events is provided by [[CurrentEventsByTagQuery#currentEventsByTag]].
+    */
   override def eventsByTag(tag: String, offset: Offset): Source[EventEnvelope, NotUsed] =
     eventsByTag(tag, offset.value)
 

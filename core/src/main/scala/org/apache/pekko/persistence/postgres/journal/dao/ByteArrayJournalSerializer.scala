@@ -6,20 +6,20 @@
 package org.apache.pekko.persistence.postgres
 package journal.dao
 
+import io.circe.{Decoder, Encoder}
 import org.apache.pekko.persistence.PersistentRepr
 import org.apache.pekko.persistence.postgres.journal.dao.ByteArrayJournalSerializer.Metadata
 import org.apache.pekko.persistence.postgres.serialization.FlowPersistentReprSerializer
 import org.apache.pekko.persistence.postgres.tag.TagIdResolver
-import org.apache.pekko.serialization.{ Serialization, Serializers }
-import io.circe.{ Decoder, Encoder }
+import org.apache.pekko.serialization.{Serialization, Serializers}
 
 import scala.collection.immutable._
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
-class ByteArrayJournalSerializer(serialization: Serialization, tagConverter: TagIdResolver)(
-    implicit val executionContext: ExecutionContext)
-    extends FlowPersistentReprSerializer[JournalRow] {
+class ByteArrayJournalSerializer(serialization: Serialization, tagConverter: TagIdResolver)(implicit
+    val executionContext: ExecutionContext
+) extends FlowPersistentReprSerializer[JournalRow] {
 
   override def serialize(persistentRepr: PersistentRepr, tags: Set[String]): Future[JournalRow] = {
     import io.circe.syntax._
@@ -42,7 +42,8 @@ class ByteArrayJournalSerializer(serialization: Serialization, tagConverter: Tag
           Option(serManifest).filterNot(_.trim.isEmpty),
           Option(persistentRepr.manifest).filterNot(_.trim.isEmpty),
           persistentRepr.writerUuid,
-          persistentRepr.timestamp)
+          persistentRepr.timestamp
+        )
       JournalRow(
         Long.MinValue,
         persistentRepr.deleted,
@@ -50,7 +51,8 @@ class ByteArrayJournalSerializer(serialization: Serialization, tagConverter: Tag
         persistentRepr.sequenceNr,
         serializedEvent,
         convertedTags.toList,
-        meta.asJson)
+        meta.asJson
+      )
     }
   }
 
@@ -69,8 +71,10 @@ class ByteArrayJournalSerializer(serialization: Serialization, tagConverter: Tag
           deleted = false,
           // not used, marked as deprecated (https://github.com/akka/akka/issues/27278
           sender = null,
-          metadata.writerUuid).withTimestamp(metadata.timestamp),
-        journalRow.ordering)
+          metadata.writerUuid
+        ).withTimestamp(metadata.timestamp),
+        journalRow.ordering
+      )
     }
 
 }
@@ -81,7 +85,8 @@ object ByteArrayJournalSerializer {
       serManifest: Option[String],
       eventManifest: Option[String],
       writerUuid: String,
-      timestamp: Long)
+      timestamp: Long
+  )
 
   object Metadata {
     implicit val encoder: Encoder[Metadata] = Encoder

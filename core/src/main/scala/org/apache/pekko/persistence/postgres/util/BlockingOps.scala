@@ -5,8 +5,8 @@
 
 package org.apache.pekko.persistence.postgres.util
 
-import scala.concurrent.duration.{ FiniteDuration, _ }
-import scala.concurrent.{ Await, Future }
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration.{FiniteDuration, _}
 
 object BlockingOps {
   implicit class BlockingFutureImplicits[T](val that: Future[T]) extends AnyVal {

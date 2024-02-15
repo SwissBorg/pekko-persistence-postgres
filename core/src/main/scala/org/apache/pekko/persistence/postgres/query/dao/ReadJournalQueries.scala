@@ -25,7 +25,8 @@ class ReadJournalQueries(journalTable: TableQuery[JournalTable], includeDeleted:
       persistenceId: Rep[String],
       fromSequenceNr: Rep[Long],
       toSequenceNr: Rep[Long],
-      max: ConstColumn[Long]): Query[JournalTable, JournalRow, Seq] =
+      max: ConstColumn[Long]
+  ): Query[JournalTable, JournalRow, Seq] =
     baseTableQuery()
       .filter(_.persistenceId === persistenceId)
       .filter(_.sequenceNumber >= fromSequenceNr)
@@ -38,7 +39,8 @@ class ReadJournalQueries(journalTable: TableQuery[JournalTable], includeDeleted:
       fromSequenceNr: Rep[Long],
       toSequenceNr: Rep[Long],
       max: ConstColumn[Long],
-      minOrdering: Rep[Long]): Query[JournalTable, JournalRow, Seq] =
+      minOrdering: Rep[Long]
+  ): Query[JournalTable, JournalRow, Seq] =
     baseTableQuery()
       .filter(_.persistenceId === persistenceId)
       .filter(_.sequenceNumber >= fromSequenceNr)
@@ -54,7 +56,8 @@ class ReadJournalQueries(journalTable: TableQuery[JournalTable], includeDeleted:
   protected def _eventsByTag(
       tag: Rep[List[Int]],
       offset: ConstColumn[Long],
-      maxOffset: ConstColumn[Long]): Query[JournalTable, JournalRow, Seq] = {
+      maxOffset: ConstColumn[Long]
+  ): Query[JournalTable, JournalRow, Seq] = {
     baseTableQuery()
       .filter(_.tags @> tag)
       .sortBy(_.ordering.asc)

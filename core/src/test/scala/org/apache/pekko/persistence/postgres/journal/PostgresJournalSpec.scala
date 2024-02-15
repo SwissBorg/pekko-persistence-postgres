@@ -5,26 +5,31 @@
 
 package org.apache.pekko.persistence.postgres.journal
 
-import org.apache.pekko.actor.{ Actor, ActorRef }
-import org.apache.pekko.persistence.JournalProtocol.{ ReplayedMessage, WriteMessages, WriteMessagesFailed, WriteMessagesSuccessful }
+import com.typesafe.config.{Config, ConfigFactory}
+import org.apache.pekko.actor.{Actor, ActorRef}
+import org.apache.pekko.persistence.{AtomicWrite, CapabilityFlag, PersistentImpl, PersistentRepr}
+import org.apache.pekko.persistence.JournalProtocol.{
+  ReplayedMessage,
+  WriteMessages,
+  WriteMessagesFailed,
+  WriteMessagesSuccessful
+}
 import org.apache.pekko.persistence.journal.JournalSpec
 import org.apache.pekko.persistence.postgres.config._
 import org.apache.pekko.persistence.postgres.db.SlickExtension
 import org.apache.pekko.persistence.postgres.journal.dao.JournalMetadataTable
 import org.apache.pekko.persistence.postgres.query.ScalaPostgresReadJournalOperations
+import org.apache.pekko.persistence.postgres.util.{ClasspathResources, DropCreate}
 import org.apache.pekko.persistence.postgres.util.Schema._
-import org.apache.pekko.persistence.postgres.util.{ ClasspathResources, DropCreate }
 import org.apache.pekko.persistence.query.Sequence
-import org.apache.pekko.persistence.{ AtomicWrite, CapabilityFlag, PersistentImpl, PersistentRepr }
 import org.apache.pekko.testkit.TestProbe
-import com.typesafe.config.{ Config, ConfigFactory }
+import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatest.concurrent.PatienceConfiguration.Timeout
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.time.{ Minute, Span }
-import org.scalatest.{ BeforeAndAfterAll, BeforeAndAfterEach }
+import org.scalatest.time.{Minute, Span}
 
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
-import scala.concurrent.{ ExecutionContext, Future }
 
 abstract class PostgresJournalSpec(config: String, schemaType: SchemaType)
     extends JournalSpec(ConfigFactory.load(config))
@@ -62,7 +67,9 @@ abstract class PostgresJournalSpec(config: String, schemaType: SchemaType)
         sequenceNr = seqNr,
         persistenceId = pid,
         sender = sender,
-        writerUuid = writerUuid))
+        writerUuid = writerUuid
+      )
+    )
     val probe = TestProbe()
     journal ! WriteMessages(List(msg), probe.ref, actorInstanceId)
     probe.expectMsg(WriteMessagesSuccessful)
@@ -85,7 +92,9 @@ abstract class PostgresJournalSpec(config: String, schemaType: SchemaType)
           sequenceNr = repeatedSnr,
           persistenceId = perId,
           sender = sender.ref,
-          writerUuid = writerUuid))
+          writerUuid = writerUuid
+        )
+      )
 
       val probe = TestProbe()
       journal ! WriteMessages(Seq(msg), probe.ref, actorInstanceId)

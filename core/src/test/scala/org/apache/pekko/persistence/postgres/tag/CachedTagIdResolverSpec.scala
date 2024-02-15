@@ -1,18 +1,17 @@
 package org.apache.pekko.persistence.postgres.tag
 
-import java.util.concurrent.ThreadLocalRandom
-import java.util.concurrent.atomic.{ AtomicBoolean, AtomicLong }
-
-import org.apache.pekko.persistence.postgres.config.TagsConfig
 import com.typesafe.config.ConfigFactory
+import org.apache.pekko.persistence.postgres.config.TagsConfig
+import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll, OptionValues}
+import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.concurrent.Eventually.eventually
-import org.scalatest.concurrent.{ IntegrationPatience, ScalaFutures }
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
-import org.scalatest.{ BeforeAndAfter, BeforeAndAfterAll, OptionValues }
 
+import java.util.concurrent.ThreadLocalRandom
+import java.util.concurrent.atomic.{AtomicBoolean, AtomicLong}
 import scala.collection.mutable
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Random
 import scala.util.control.NoStackTrace
 
@@ -25,7 +24,7 @@ class CachedTagIdResolverSpec
     with BeforeAndAfter
     with IntegrationPatience {
 
-  private implicit val global: ExecutionContext = ExecutionContext.global
+  implicit private val global: ExecutionContext = ExecutionContext.global
 
   "CachedTagIdResolver" when {
     "finding or adding tag name to id mapping" should {
@@ -38,7 +37,8 @@ class CachedTagIdResolverSpec
             tagName should equal(fakeTagName)
             Future.successful(Some(fakeTagId))
           },
-          insertF = _ => fail("Unwanted interaction with DAO (insert)"))
+          insertF = _ => fail("Unwanted interaction with DAO (insert)")
+        )
         val resolver = new CachedTagIdResolver(dao, config)
 
         // when
@@ -57,7 +57,8 @@ class CachedTagIdResolverSpec
           insertF = tagName => {
             tagName should equal(fakeTagName)
             Future.successful(fakeTagId)
-          })
+          }
+        )
         val resolver = new CachedTagIdResolver(dao, config)
 
         // when
@@ -83,8 +84,10 @@ class CachedTagIdResolverSpec
             else if (name == anotherTagName) Future.successful(anotherTagId)
             else
               fail(
-                s"Unwanted interaction with DAO (insert) for tagName = '$name' ($tagName, $anotherTagName, $existingTagName)")
-          })
+                s"Unwanted interaction with DAO (insert) for tagName = '$name' ($tagName, $anotherTagName, $existingTagName)"
+              )
+          }
+        )
         val resolver = new CachedTagIdResolver(dao, config)
 
         // when
@@ -94,7 +97,8 @@ class CachedTagIdResolverSpec
         returnedTagIds should contain theSameElementsAs Map(
           tagName -> tagId,
           anotherTagName -> anotherTagId,
-          existingTagName -> existingTagId)
+          existingTagName -> existingTagId
+        )
       }
 
       "hit the DAO only once and then read from cache" in {
@@ -108,7 +112,8 @@ class CachedTagIdResolverSpec
           insertF = tagName => {
             tagName should equal(fakeTagName)
             Future.successful(fakeTagId)
-          })
+          }
+        )
         val resolver = new CachedTagIdResolver(dao, config)
 
         // when
@@ -129,7 +134,8 @@ class CachedTagIdResolverSpec
           insertF = _ => {
             attemptsCount.incrementAndGet()
             Future.failed(FakeException)
-          })
+          }
+        )
         val resolver = new CachedTagIdResolver(dao, config)
 
         // when
@@ -145,7 +151,8 @@ class CachedTagIdResolverSpec
         val fakeTagId = Random.nextInt()
         val dao = new FakeTagDao(
           findF = _ => fail("Unwanted interaction with DAO (find)"),
-          insertF = _ => fail("Unwanted interaction with DAO (insert)"))
+          insertF = _ => fail("Unwanted interaction with DAO (insert)")
+        )
         val resolver = new CachedTagIdResolver(dao, config)
         resolver.cache.synchronous().put(fakeTagName, fakeTagId)
 
@@ -164,7 +171,8 @@ class CachedTagIdResolverSpec
         val listOfTagQueries = List.fill(300)(mapOfTags.keys.toList(Random.nextInt(mapOfTags.size)))
         val dao = new FakeTagDao(
           findF = tagName => Future.successful(if (Random.nextBoolean()) Some(mapOfTags(tagName)) else None),
-          insertF = tagName => Future.successful(mapOfTags(tagName)))
+          insertF = tagName => Future.successful(mapOfTags(tagName))
+        )
         val resolver = new CachedTagIdResolver(dao, config)
 
         // when
@@ -186,7 +194,8 @@ class CachedTagIdResolverSpec
             tagName should equal(fakeTagName)
             Future.successful(Some(fakeTagId))
           },
-          insertF = _ => fail("Unwanted interaction with DAO (insert)"))
+          insertF = _ => fail("Unwanted interaction with DAO (insert)")
+        )
         val resolver = new CachedTagIdResolver(dao, config)
 
         // when
@@ -202,7 +211,8 @@ class CachedTagIdResolverSpec
         val fakeTagId = Random.nextInt()
         val dao = new FakeTagDao(
           findF = _ => fail("Unwanted interaction with DAO (find)"),
-          insertF = _ => fail("Unwanted interaction with DAO (insert)"))
+          insertF = _ => fail("Unwanted interaction with DAO (insert)")
+        )
         val resolver = new CachedTagIdResolver(dao, config)
         resolver.cache.synchronous().put(fakeTagName, fakeTagId)
 
@@ -218,7 +228,8 @@ class CachedTagIdResolverSpec
         val fakeTagName = generateTagName()
         val dao = new FakeTagDao(
           findF = _ => Future.successful(None),
-          insertF = _ => fail("Unwanted interaction with DAO (insert)"))
+          insertF = _ => fail("Unwanted interaction with DAO (insert)")
+        )
         val resolver = new CachedTagIdResolver(dao, config)
 
         // when
@@ -240,7 +251,8 @@ class CachedTagIdResolverSpec
             if (name == fakeTagName && lookupMissHappened.getAndSet(true))
               Future.successful(Some(fakeTagId))
             else Future.successful(None),
-          insertF = _ => fail("Unwanted interaction with DAO (insert)"))
+          insertF = _ => fail("Unwanted interaction with DAO (insert)")
+        )
 
         val resolver = new CachedTagIdResolver(dao, config)
 
@@ -260,7 +272,8 @@ class CachedTagIdResolverSpec
         val fakeTagId = Random.nextInt()
         val dao = new FakeTagDao(
           findF = _ => Future.successful(Some(fakeTagId)),
-          insertF = _ => fail("Unwanted interaction with DAO (insert)"))
+          insertF = _ => fail("Unwanted interaction with DAO (insert)")
+        )
         val resolver = new CachedTagIdResolver(dao, config)
 
         // then
@@ -277,7 +290,8 @@ class CachedTagIdResolverSpec
         val fakeTagName = generateTagName()
         val dao = new FakeTagDao(
           findF = _ => Future.successful(None),
-          insertF = _ => fail("Unwanted interaction with DAO (insert)"))
+          insertF = _ => fail("Unwanted interaction with DAO (insert)")
+        )
         val resolver = new CachedTagIdResolver(dao, config)
 
         // then

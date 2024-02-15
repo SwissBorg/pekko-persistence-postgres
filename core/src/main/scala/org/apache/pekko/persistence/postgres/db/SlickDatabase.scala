@@ -5,42 +5,38 @@
 
 package org.apache.pekko.persistence.postgres.db
 
-import org.apache.pekko.actor.ActorSystem
-import javax.naming.InitialContext
-import org.apache.pekko.persistence.postgres.config.SlickConfiguration
 import com.typesafe.config.Config
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.persistence.postgres.config.SlickConfiguration
 import slick.basic.DatabaseConfig
-import slick.jdbc.JdbcProfile
 import slick.jdbc.JdbcBackend._
+import slick.jdbc.JdbcProfile
 
-/**
- * INTERNAL API
- */
+import javax.naming.InitialContext
+
+/** INTERNAL API
+  */
 @deprecated(message = "Internal API, will be removed in 4.0.0", since = "3.4.0")
 object SlickDriver {
 
-  /**
-   * INTERNAL API
-   */
+  /** INTERNAL API
+    */
   @deprecated(message = "Internal API, will be removed in 4.0.0", since = "3.4.0")
   def forDriverName(config: Config): JdbcProfile =
     SlickDatabase.profile(config, "slick")
 }
 
-/**
- * INTERNAL API
- */
+/** INTERNAL API
+  */
 object SlickDatabase {
 
-  /**
-   * INTERNAL API
-   */
+  /** INTERNAL API
+    */
   private[postgres] def profile(config: Config, path: String): JdbcProfile =
     DatabaseConfig.forConfig[JdbcProfile](path, config).profile
 
-  /**
-   * INTERNAL API
-   */
+  /** INTERNAL API
+    */
   private[postgres] def database(config: Config, slickConfiguration: SlickConfiguration, path: String): Database = {
     slickConfiguration.jndiName
       .map(Database.forName(_, None))
@@ -50,13 +46,13 @@ object SlickDatabase {
       .getOrElse(Database.forConfig(path, config))
   }
 
-  /**
-   * INTERNAL API
-   */
+  /** INTERNAL API
+    */
   private[postgres] def initializeEagerly(
       config: Config,
       slickConfiguration: SlickConfiguration,
-      path: String): SlickDatabase = {
+      path: String
+  ): SlickDatabase = {
     val dbPath = if (path.isEmpty) "db" else s"$path.db"
     EagerSlickDatabase(database(config, slickConfiguration, dbPath), profile(config, path))
   }
@@ -66,11 +62,9 @@ trait SlickDatabase {
   def database: Database
   def profile: JdbcProfile
 
-  /**
-   * If true, the requesting side usually a (read/write/snapshot journal)
-   * should shutdown the database when it closes. If false, it should leave
-   * the database connection pool open, since it might still be used elsewhere.
-   */
+  /** If true, the requesting side usually a (read/write/snapshot journal) should shutdown the database when it closes.
+    * If false, it should leave the database connection pool open, since it might still be used elsewhere.
+    */
   def allowShutdown: Boolean
 }
 
@@ -78,10 +72,10 @@ case class EagerSlickDatabase(database: Database, profile: JdbcProfile) extends 
   override def allowShutdown: Boolean = true
 }
 
-/**
- * A LazySlickDatabase lazily initializes a database, it also manages the shutdown of the database
- * @param config The configuration used to create the database
- */
+/** A LazySlickDatabase lazily initializes a database, it also manages the shutdown of the database
+  * @param config
+  *   The configuration used to create the database
+  */
 class LazySlickDatabase(config: Config, system: ActorSystem) extends SlickDatabase {
   val profile: JdbcProfile = SlickDatabase.profile(config, path = "")
 

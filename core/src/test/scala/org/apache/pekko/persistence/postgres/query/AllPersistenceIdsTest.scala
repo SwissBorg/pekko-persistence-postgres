@@ -5,7 +5,7 @@
 
 package org.apache.pekko.persistence.postgres.query
 
-import org.apache.pekko.persistence.postgres.util.Schema.{ NestedPartitions, Partitioned, Plain, SchemaType }
+import org.apache.pekko.persistence.postgres.util.Schema.{NestedPartitions, Partitioned, Plain, SchemaType}
 
 import scala.concurrent.duration._
 

@@ -5,12 +5,11 @@
 
 package org.apache.pekko.persistence.postgres.util
 
+import com.typesafe.config.{Config, ConfigFactory}
+
 import java.util.Locale
 import java.util.concurrent.TimeUnit
-
-import com.typesafe.config.{ Config, ConfigFactory }
-
-import scala.concurrent.duration.{ Duration, FiniteDuration }
+import scala.concurrent.duration.{Duration, FiniteDuration}
 import scala.language.implicitConversions
 import scala.util.Try
 
@@ -62,19 +61,18 @@ object ConfigOps {
 
   implicit def TryToOption[A](t: Try[A]): Option[A] = t.toOption
 
-  final implicit class TryOps[A](val t: Try[A]) extends AnyVal {
+  implicit final class TryOps[A](val t: Try[A]) extends AnyVal {
     def ?:(default: A): A = t.getOrElse(default)
   }
 
-  final implicit class StringTryOps(val t: Try[String]) extends AnyVal {
+  implicit final class StringTryOps(val t: Try[String]) extends AnyVal {
 
-    /**
-     * Trim the String content, when empty, return None
-     */
+    /** Trim the String content, when empty, return None
+      */
     def trim: Option[String] = t.map(_.trim).filter(_.nonEmpty)
   }
 
-  final implicit class Requiring[A](val value: A) extends AnyVal {
+  implicit final class Requiring[A](val value: A) extends AnyVal {
     @inline def requiring(cond: Boolean, msg: => Any): A = {
       require(cond, msg)
       value
