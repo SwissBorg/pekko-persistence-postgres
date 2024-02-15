@@ -130,10 +130,10 @@ We are also always looking for contributions and new ideas, so if you’d like t
 
 Development and maintenance of pekko-persistence-postgres is sponsored by:
 
-![SoftwareMill](https://raw.githubusercontent.com/SwissBorg/pekko-persistence-postgres/master/docs/assets/softwaremill-logo.png)
+![SoftwareMill](https://raw.githubusercontent.com/SwissBorg/pekko-persistence-postgres/main/docs/assets/softwaremill-logo.png)
 
 [SoftwareMill](https://softwaremill.com) is a software development and consulting company. We help clients scale their business through software. Our areas of expertise include backends, distributed systems, blockchain, machine learning and data analytics.
 
-![SwissBorg](https://raw.githubusercontent.com/SwissBorg/pekko-persistence-postgres/master/docs/assets/swissborg-logo.png)
+![SwissBorg](https://raw.githubusercontent.com/SwissBorg/pekko-persistence-postgres/main/docs/assets/swissborg-logo.png)
 
 [SwissBorg](https://swissborg.com) makes managing your crypto investment easy and helps control your wealth.
