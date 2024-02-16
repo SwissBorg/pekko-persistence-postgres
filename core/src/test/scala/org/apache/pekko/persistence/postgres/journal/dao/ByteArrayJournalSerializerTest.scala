@@ -6,19 +6,18 @@
 package org.apache.pekko.persistence.postgres
 package journal.dao
 
-import java.nio.charset.Charset
-import java.time.{ LocalDateTime, ZoneOffset }
-import java.util.UUID
-
+import io.circe.Json
+import org.apache.pekko.persistence.{AtomicWrite, PersistentRepr}
 import org.apache.pekko.persistence.journal.Tagged
 import org.apache.pekko.persistence.postgres.journal.dao.FakeTagIdResolver.unwanted1
 import org.apache.pekko.persistence.postgres.tag.TagIdResolver
-import org.apache.pekko.persistence.{ AtomicWrite, PersistentRepr }
-import org.apache.pekko.serialization.{ Serializer, Serializers }
-import io.circe.Json
+import org.apache.pekko.serialization.{Serializer, Serializers}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.must.Matchers
 
+import java.nio.charset.Charset
+import java.time.{LocalDateTime, ZoneOffset}
+import java.util.UUID
 import scala.collection.immutable._
 import scala.concurrent.Future
 
@@ -86,7 +85,8 @@ class ByteArrayJournalSerializerTest extends SharedActorSystemTestSpec with Scal
           "sid" -> Json.fromInt(payloadSer.identifier),
           "wid" -> Json.fromString(repr.writerUuid),
           "t" -> Json.fromLong(repr.timestamp),
-          "em" -> Json.fromString("customManifest"))
+          "em" -> Json.fromString("customManifest")
+        )
       }
     }
 
@@ -97,7 +97,8 @@ class ByteArrayJournalSerializerTest extends SharedActorSystemTestSpec with Scal
         Json.obj(
           "sid" -> Json.fromInt(payloadSer.identifier),
           "wid" -> Json.fromString(repr.writerUuid),
-          "t" -> Json.fromLong(repr.timestamp))
+          "t" -> Json.fromLong(repr.timestamp)
+        )
       }
     }
 
@@ -109,7 +110,8 @@ class ByteArrayJournalSerializerTest extends SharedActorSystemTestSpec with Scal
         Json.obj(
           "sid" -> Json.fromInt(payloadSer.identifier),
           "wid" -> Json.fromString(repr.writerUuid),
-          "t" -> Json.fromLong(repr.timestamp))
+          "t" -> Json.fromLong(repr.timestamp)
+        )
       }
     }
   }
@@ -143,7 +145,9 @@ class ByteArrayJournalSerializerTest extends SharedActorSystemTestSpec with Scal
           "serManifest" -> Json.fromString(serManifest),
           "eventManifest" -> Json.fromString(eventManifest),
           "writerUuid" -> Json.fromString(writerUuid),
-          "timestamp" -> Json.fromLong(timestamp)))
+          "timestamp" -> Json.fromLong(timestamp)
+        )
+      )
       val repr = deserialized(meta)
       repr should equal {
         PersistentRepr(payload, 2137L, "my-7", eventManifest, false, null, writerUuid)
@@ -161,7 +165,9 @@ class ByteArrayJournalSerializerTest extends SharedActorSystemTestSpec with Scal
           "sm" -> Json.fromString(serManifest),
           "em" -> Json.fromString(eventManifest),
           "wid" -> Json.fromString(writerUuid),
-          "t" -> Json.fromLong(timestamp)))
+          "t" -> Json.fromLong(timestamp)
+        )
+      )
       val repr = deserialized(meta)
       repr should equal {
         PersistentRepr(payload, 2137L, "my-7", eventManifest, false, null, writerUuid)
@@ -173,7 +179,8 @@ class ByteArrayJournalSerializerTest extends SharedActorSystemTestSpec with Scal
       val timestamp = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
 
       val meta = Json.fromFields(
-        List("sid" -> Json.fromLong(serId), "wid" -> Json.fromString(writerUuid), "t" -> Json.fromLong(timestamp)))
+        List("sid" -> Json.fromLong(serId), "wid" -> Json.fromString(writerUuid), "t" -> Json.fromLong(timestamp))
+      )
       val repr = deserialized(meta)
       repr should equal {
         PersistentRepr(payload, 2137L, "my-7", "", false, null, writerUuid)
@@ -189,7 +196,9 @@ class ByteArrayJournalSerializerTest extends SharedActorSystemTestSpec with Scal
           "sid" -> Json.fromLong(serId),
           "wid" -> Json.fromString(writerUuid),
           "em" -> Json.fromString(""),
-          "t" -> Json.fromLong(timestamp)))
+          "t" -> Json.fromLong(timestamp)
+        )
+      )
       val repr = deserialized(meta)
       repr should equal {
         PersistentRepr(payload, 2137L, "my-7", "", false, null, writerUuid)
@@ -208,7 +217,9 @@ class ByteArrayJournalSerializerTest extends SharedActorSystemTestSpec with Scal
           "serManifest" -> Json.fromString("broken"),
           "eventManifest" -> Json.fromString("this should be skipped"),
           "wid" -> Json.fromString(writerUuid),
-          "t" -> Json.fromLong(timestamp)))
+          "t" -> Json.fromLong(timestamp)
+        )
+      )
       val repr = deserialized(meta)
       repr should equal {
         PersistentRepr(payload, 2137L, "my-7", "", false, null, writerUuid)
@@ -221,8 +232,8 @@ class ByteArrayJournalSerializerTest extends SharedActorSystemTestSpec with Scal
 
 class FakeTagIdResolver(
     getOrAssignIdsForF: Set[String] => Future[Map[String, Int]] = unwanted1("getOrAssignIdFor"),
-    lookupIdForF: String => Future[Option[Int]] = unwanted1("lookupIdFor"))
-    extends TagIdResolver {
+    lookupIdForF: String => Future[Option[Int]] = unwanted1("lookupIdFor")
+) extends TagIdResolver {
   override def getOrAssignIdsFor(tags: Set[String]): Future[Map[String, Int]] = getOrAssignIdsForF(tags)
 
   override def lookupIdFor(name: String): Future[Option[Int]] = lookupIdForF(name)

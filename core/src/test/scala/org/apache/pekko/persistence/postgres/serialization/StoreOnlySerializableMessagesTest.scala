@@ -5,11 +5,11 @@
 
 package org.apache.pekko.persistence.postgres.serialization
 
-import org.apache.pekko.actor.{ ActorRef, Props }
+import org.apache.pekko.actor.{ActorRef, Props}
 import org.apache.pekko.event.LoggingReceive
+import org.apache.pekko.persistence.{PersistentActor, RecoveryCompleted}
 import org.apache.pekko.persistence.postgres.SharedActorSystemTestSpec
 import org.apache.pekko.persistence.postgres.util.Schema._
-import org.apache.pekko.persistence.{ PersistentActor, RecoveryCompleted }
 import org.apache.pekko.testkit.TestProbe
 
 import scala.concurrent.duration._
@@ -23,8 +23,8 @@ abstract class StoreOnlySerializableMessagesTest(schemaType: SchemaType)
       val persistenceId: String,
       recoverProbe: ActorRef,
       persistFailureProbe: ActorRef,
-      persistRejectedProbe: ActorRef)
-      extends PersistentActor {
+      persistRejectedProbe: ActorRef
+  ) extends PersistentActor {
     override val receiveRecover: Receive = LoggingReceive { case msg =>
       recoverProbe ! msg
     }
@@ -47,7 +47,8 @@ abstract class StoreOnlySerializableMessagesTest(schemaType: SchemaType)
     val persistFailureProbe = TestProbe()
     val persistRejectedProbe = TestProbe()
     val persistentActor = system.actorOf(
-      Props(new TestActor(s"my-$id", recoverProbe.ref, persistFailureProbe.ref, persistRejectedProbe.ref)))
+      Props(new TestActor(s"my-$id", recoverProbe.ref, persistFailureProbe.ref, persistRejectedProbe.ref))
+    )
     try f(persistentActor)(recoverProbe)(persistFailureProbe)(persistRejectedProbe)
     finally killActors(persistentActor)
   }

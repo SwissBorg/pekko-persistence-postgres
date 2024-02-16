@@ -5,13 +5,13 @@
 
 package org.apache.pekko.persistence.postgres.db
 
-import org.apache.pekko.actor.{ ActorSystem, ExtendedActorSystem, Extension, ExtensionId, ExtensionIdProvider }
-import org.apache.pekko.persistence.postgres.config.{ ConfigKeys, SlickConfiguration }
+import com.typesafe.config.{Config, ConfigObject}
+import org.apache.pekko.actor.{ActorSystem, ExtendedActorSystem, Extension, ExtensionId, ExtensionIdProvider}
+import org.apache.pekko.persistence.postgres.config.{ConfigKeys, SlickConfiguration}
 import org.apache.pekko.persistence.postgres.util.ConfigOps._
-import com.typesafe.config.{ Config, ConfigObject }
 
 import scala.jdk.CollectionConverters._
-import scala.util.{ Failure, Success }
+import scala.util.{Failure, Success}
 
 object SlickExtension extends ExtensionId[SlickExtensionImpl] with ExtensionIdProvider {
   override def lookup: SlickExtension.type = SlickExtension
@@ -32,23 +32,20 @@ class SlickExtensionImpl(system: ExtendedActorSystem) extends Extension {
   def database(config: Config): SlickDatabase = dbProvider.database(config)
 }
 
-/**
- * User overridable database provider.
- * Since this provider is called from an pekko extension it must be thread safe!
- *
- * A SlickDatabaseProvider is loaded using reflection,
- * The instance is created using the following:
- * - The fully qualified class name as configured in `postgres-journal.database-provider-fqcn`.
- * - The constructor with one argument of type [[org.apache.pekko.actor.ActorSystem]] is used to create the instance.
- *   Therefore the class must have such a constructor.
- */
+/** User overridable database provider. Since this provider is called from an pekko extension it must be thread safe!
+  *
+  * A SlickDatabaseProvider is loaded using reflection, The instance is created using the following:
+  *   - The fully qualified class name as configured in `postgres-journal.database-provider-fqcn`.
+  *   - The constructor with one argument of type [[org.apache.pekko.actor.ActorSystem]] is used to create the instance.
+  *     Therefore the class must have such a constructor.
+  */
 trait SlickDatabaseProvider {
 
-  /**
-   * Create or retrieve the database
-   * @param config The configuration which may be used to create the database. If the database is shared
-   *               then the SlickDatabaseProvider implementation may choose to ignore this parameter.
-   */
+  /** Create or retrieve the database
+    * @param config
+    *   The configuration which may be used to create the database. If the database is shared then the
+    *   SlickDatabaseProvider implementation may choose to ignore this parameter.
+    */
   def database(config: Config): SlickDatabase
 }
 
@@ -66,7 +63,8 @@ class DefaultSlickDatabaseProvider(system: ActorSystem) extends SlickDatabasePro
       case (key, notAnObject) =>
         throw new RuntimeException(
           s"""Expected "pekko-persistence-postgres.shared-databases.$key" to be a config ConfigObject, but got ${notAnObject
-            .valueType()} (${notAnObject.getClass})""")
+              .valueType()} (${notAnObject.getClass})"""
+        )
     }
     .toMap
 
@@ -74,7 +72,9 @@ class DefaultSlickDatabaseProvider(system: ActorSystem) extends SlickDatabasePro
     sharedDatabases.getOrElse(
       sharedDbName,
       throw new RuntimeException(
-        s"No shared database is configured under pekko-persistence-postgres.shared-databases.$sharedDbName"))
+        s"No shared database is configured under pekko-persistence-postgres.shared-databases.$sharedDbName"
+      )
+    )
 
   def database(config: Config): SlickDatabase = {
     config.asOptionalNonEmptyString(ConfigKeys.useSharedDb) match {

@@ -7,9 +7,9 @@ package org.apache.pekko.persistence.postgres.query
 
 import org.apache.pekko.Done
 import org.apache.pekko.pattern.ask
-import org.apache.pekko.persistence.postgres.query.EventAdapterTest.{ Event, TaggedAsyncEvent }
-import org.apache.pekko.persistence.postgres.util.Schema.{ NestedPartitions, Partitioned, Plain, SchemaType }
-import org.apache.pekko.persistence.query.{ EventEnvelope, Offset, Sequence }
+import org.apache.pekko.persistence.postgres.query.EventAdapterTest.{Event, TaggedAsyncEvent}
+import org.apache.pekko.persistence.postgres.util.Schema.{NestedPartitions, Partitioned, Plain, SchemaType}
+import org.apache.pekko.persistence.query.{EventEnvelope, Offset, Sequence}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._

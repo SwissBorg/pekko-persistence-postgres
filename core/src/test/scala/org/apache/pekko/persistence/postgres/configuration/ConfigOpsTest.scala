@@ -5,12 +5,13 @@
 
 package org.apache.pekko.persistence.postgres.configuration
 
-import org.apache.pekko.persistence.postgres.SimpleSpec
-import org.apache.pekko.persistence.postgres.util.ConfigOps
-import ConfigOps._
 import com.typesafe.config.ConfigFactory
+import org.apache.pekko.persistence.postgres.SimpleSpec
 
 class ConfigOpsTest extends SimpleSpec {
+
+  import org.apache.pekko.persistence.postgres.util.ConfigOps._
+
   it should "parse field values to Try[A]" in {
     val cfg = ConfigFactory.parseString("""
         | person {

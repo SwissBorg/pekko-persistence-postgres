@@ -6,7 +6,8 @@ import org.apache.pekko.persistence.postgres.util.BaseQueryTest
 class ReadJournalMetadataQueriesTest extends BaseQueryTest {
   it should "create SQL query for minAndMaxOrderingForPersistenceId" in withReadJournalMetadataQueries { queries =>
     queries.minAndMaxOrderingForPersistenceId(
-      "aaa") shouldBeSQL """select "min_ordering", "max_ordering" from "journal_metadata" where "persistence_id" = ? limit 1"""
+      "aaa"
+    ) shouldBeSQL """select "min_ordering", "max_ordering" from "journal_metadata" where "persistence_id" = ? limit 1"""
   }
 
   private def withReadJournalMetadataQueries(f: ReadJournalMetadataQueries => Unit): Unit = {

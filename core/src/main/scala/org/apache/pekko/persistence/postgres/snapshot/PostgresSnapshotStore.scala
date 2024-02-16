@@ -5,20 +5,20 @@
 
 package org.apache.pekko.persistence.postgres.snapshot
 
-import org.apache.pekko.actor.{ ActorSystem, ExtendedActorSystem }
+import com.typesafe.config.Config
+import org.apache.pekko.actor.{ActorSystem, ExtendedActorSystem}
+import org.apache.pekko.persistence.{SelectedSnapshot, SnapshotMetadata, SnapshotSelectionCriteria}
 import org.apache.pekko.persistence.postgres.config.SnapshotConfig
-import org.apache.pekko.persistence.postgres.db.{ SlickDatabase, SlickExtension }
+import org.apache.pekko.persistence.postgres.db.{SlickDatabase, SlickExtension}
 import org.apache.pekko.persistence.postgres.snapshot.dao.SnapshotDao
 import org.apache.pekko.persistence.snapshot.SnapshotStore
-import org.apache.pekko.persistence.{ SelectedSnapshot, SnapshotMetadata, SnapshotSelectionCriteria }
-import org.apache.pekko.serialization.{ Serialization, SerializationExtension }
-import org.apache.pekko.stream.{ Materializer, SystemMaterializer }
-import com.typesafe.config.Config
+import org.apache.pekko.serialization.{Serialization, SerializationExtension}
+import org.apache.pekko.stream.{Materializer, SystemMaterializer}
 import slick.jdbc.JdbcBackend._
 
 import scala.collection.immutable._
-import scala.concurrent.{ ExecutionContext, Future }
-import scala.util.{ Failure, Success }
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
 object PostgresSnapshotStore {
   def toSelectedSnapshot(tupled: (SnapshotMetadata, Any)): SelectedSnapshot = tupled match {
@@ -44,7 +44,8 @@ class PostgresSnapshotStore(config: Config) extends SnapshotStore {
       (classOf[SnapshotConfig], snapshotConfig),
       (classOf[Serialization], SerializationExtension(system)),
       (classOf[ExecutionContext], ec),
-      (classOf[Materializer], mat))
+      (classOf[Materializer], mat)
+    )
     system.asInstanceOf[ExtendedActorSystem].dynamicAccess.createInstanceFor[SnapshotDao](fqcn, args) match {
       case Success(dao)   => dao
       case Failure(cause) => throw cause
@@ -53,7 +54,8 @@ class PostgresSnapshotStore(config: Config) extends SnapshotStore {
 
   override def loadAsync(
       persistenceId: String,
-      criteria: SnapshotSelectionCriteria): Future[Option[SelectedSnapshot]] = {
+      criteria: SnapshotSelectionCriteria
+  ): Future[Option[SelectedSnapshot]] = {
     val result = criteria match {
       case SnapshotSelectionCriteria(Long.MaxValue, Long.MaxValue, _, _) =>
         snapshotDao.latestSnapshot(persistenceId)

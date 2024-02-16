@@ -15,7 +15,7 @@ import org.apache.pekko.persistence.postgres.journal.dao.{
   JournalMetadataTable
 }
 import org.apache.pekko.persistence.postgres.serialization.FlowPersistentReprSerializer
-import org.apache.pekko.persistence.postgres.tag.{ CachedTagIdResolver, SimpleTagDao, TagIdResolver }
+import org.apache.pekko.persistence.postgres.tag.{CachedTagIdResolver, SimpleTagDao, TagIdResolver}
 import org.apache.pekko.serialization.Serialization
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.stream.scaladsl.Source
@@ -23,7 +23,7 @@ import slick.basic.DatabasePublisher
 import slick.jdbc.JdbcBackend._
 
 import scala.collection.immutable._
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
 trait BaseByteArrayReadJournalDao extends ReadJournalDao with BaseJournalDaoWithReadMessages {
@@ -42,7 +42,8 @@ trait BaseByteArrayReadJournalDao extends ReadJournalDao with BaseJournalDaoWith
       tag: String,
       offset: Long,
       maxOffset: Long,
-      max: Long): Source[Try[(PersistentRepr, Long)], NotUsed] = {
+      max: Long
+  ): Source[Try[(PersistentRepr, Long)], NotUsed] = {
     val publisher: Int => DatabasePublisher[JournalRow] = tagId =>
       db.stream(queries.eventsByTag(List(tagId), offset, maxOffset).result)
     Source
@@ -55,7 +56,8 @@ trait BaseByteArrayReadJournalDao extends ReadJournalDao with BaseJournalDaoWith
       persistenceId: String,
       fromSequenceNr: Long,
       toSequenceNr: Long,
-      max: Long): Source[Try[(PersistentRepr, Long)], NotUsed] =
+      max: Long
+  ): Source[Try[(PersistentRepr, Long)], NotUsed] =
     Source
       .fromPublisher(db.stream(queries.messagesQuery(persistenceId, fromSequenceNr, toSequenceNr, max).result))
       .via(serializer.deserializeFlow)

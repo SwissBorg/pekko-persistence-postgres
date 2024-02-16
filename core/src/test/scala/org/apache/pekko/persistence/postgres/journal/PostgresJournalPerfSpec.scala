@@ -5,18 +5,18 @@
 
 package org.apache.pekko.persistence.postgres.journal
 
+import com.typesafe.config.ConfigFactory
 import org.apache.pekko.actor.Props
 import org.apache.pekko.persistence.CapabilityFlag
 import org.apache.pekko.persistence.journal.JournalPerfSpec
-import org.apache.pekko.persistence.journal.JournalPerfSpec.{ BenchActor, Cmd, ResetCounter }
+import org.apache.pekko.persistence.journal.JournalPerfSpec.{BenchActor, Cmd, ResetCounter}
 import org.apache.pekko.persistence.postgres.config._
 import org.apache.pekko.persistence.postgres.db.SlickExtension
+import org.apache.pekko.persistence.postgres.util.{ClasspathResources, DropCreate}
 import org.apache.pekko.persistence.postgres.util.Schema._
-import org.apache.pekko.persistence.postgres.util.{ ClasspathResources, DropCreate }
 import org.apache.pekko.testkit.TestProbe
-import com.typesafe.config.ConfigFactory
+import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{ BeforeAndAfterAll, BeforeAndAfterEach }
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.duration._

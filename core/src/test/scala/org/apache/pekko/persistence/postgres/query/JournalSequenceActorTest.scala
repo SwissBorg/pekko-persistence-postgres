@@ -5,26 +5,30 @@
 
 package org.apache.pekko.persistence.postgres.query
 
-import java.util.concurrent.atomic.AtomicLong
-import org.apache.pekko.actor.{ ActorRef, ActorSystem }
+import io.circe.{Json, JsonObject}
+import org.apache.pekko.actor.{ActorRef, ActorSystem}
 import org.apache.pekko.pattern.ask
+import org.apache.pekko.persistence.postgres.{JournalRow, SharedActorSystemTestSpec}
 import org.apache.pekko.persistence.postgres.config.JournalSequenceRetrievalConfig
 import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile
-import org.apache.pekko.persistence.postgres.query.JournalSequenceActor.{ GetMaxOrderingId, MaxOrderingId }
-import org.apache.pekko.persistence.postgres.query.dao.{ FlatReadJournalDao, PartitionedReadJournalDao, TestProbeReadJournalDao }
-import org.apache.pekko.persistence.postgres.tag.{ CachedTagIdResolver, SimpleTagDao }
-import org.apache.pekko.persistence.postgres.util.Schema.{ NestedPartitions, Partitioned, Plain, SchemaType }
-import org.apache.pekko.persistence.postgres.{ JournalRow, SharedActorSystemTestSpec }
+import org.apache.pekko.persistence.postgres.query.JournalSequenceActor.{GetMaxOrderingId, MaxOrderingId}
+import org.apache.pekko.persistence.postgres.query.dao.{
+  FlatReadJournalDao,
+  PartitionedReadJournalDao,
+  TestProbeReadJournalDao
+}
+import org.apache.pekko.persistence.postgres.tag.{CachedTagIdResolver, SimpleTagDao}
+import org.apache.pekko.persistence.postgres.util.Schema.{NestedPartitions, Partitioned, Plain, SchemaType}
 import org.apache.pekko.serialization.SerializationExtension
-import org.apache.pekko.stream.scaladsl.{ Sink, Source }
-import org.apache.pekko.stream.{ Materializer, SystemMaterializer }
+import org.apache.pekko.stream.{Materializer, SystemMaterializer}
+import org.apache.pekko.stream.scaladsl.{Sink, Source}
 import org.apache.pekko.testkit.TestProbe
-import io.circe.{ Json, JsonObject }
 import org.scalatest.time.Span
 import org.slf4j.LoggerFactory
 import slick.jdbc
-import slick.jdbc.{ JdbcBackend, JdbcCapabilities }
+import slick.jdbc.{JdbcBackend, JdbcCapabilities}
 
+import java.util.concurrent.atomic.AtomicLong
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
@@ -166,13 +170,13 @@ abstract class JournalSequenceActorTest(val schemaType: SchemaType) extends Quer
     }
   }
 
-  /**
-   * @param maxTries The number of tries before events are assumed missing
-   *                 (since the actor queries every second by default,
-   *                 this is effectively the number of seconds after which events are assumed missing)
-   */
-  def withJournalSequenceActor(db: JdbcBackend.Database, maxTries: Int)(f: ActorRef => Unit)(
-      implicit system: ActorSystem): Unit = {
+  /** @param maxTries
+    *   The number of tries before events are assumed missing (since the actor queries every second by default, this is
+    *   effectively the number of seconds after which events are assumed missing)
+    */
+  def withJournalSequenceActor(db: JdbcBackend.Database, maxTries: Int)(
+      f: ActorRef => Unit
+  )(implicit system: ActorSystem): Unit = {
     import system.dispatcher
     implicit val mat: Materializer = SystemMaterializer(system).materializer
     val readJournalDao =
@@ -182,7 +186,9 @@ abstract class JournalSequenceActorTest(val schemaType: SchemaType) extends Quer
         SerializationExtension(system),
         new CachedTagIdResolver(
           new SimpleTagDao(db, readJournalConfig.tagsTableConfiguration),
-          readJournalConfig.tagsConfig))
+          readJournalConfig.tagsConfig
+        )
+      )
     val actor =
       system.actorOf(JournalSequenceActor.props(readJournalDao, journalSequenceActorConfig.copy(maxTries = maxTries)))
     try f(actor)
@@ -221,7 +227,8 @@ class MockDaoJournalSequenceActorTest extends SharedActorSystemTestSpec {
       daoProbe.reply(thirdBatch)
       withClue(
         s"when no more events are missing, but less that batchSize elemens have been received, " +
-        s"the actor should wait for $queryDelay before querying again") {
+          s"the actor should wait for $queryDelay before querying again"
+      ) {
         daoProbe.expectNoMessage(almostQueryDelay)
         daoProbe.expectMsg(almostQueryDelay, TestProbeReadJournalDao.JournalSequence(110, batchSize))
       }
@@ -230,7 +237,8 @@ class MockDaoJournalSequenceActorTest extends SharedActorSystemTestSpec {
       daoProbe.reply(fourthBatch)
       withClue(
         "When no more events are missing and the number of events received is equal to batchSize, " +
-        "the actor should query again immediately") {
+          "the actor should query again immediately"
+      ) {
         daoProbe.expectMsg(almostImmediately, TestProbeReadJournalDao.JournalSequence(210, batchSize))
       }
 
@@ -265,7 +273,8 @@ class MockDaoJournalSequenceActorTest extends SharedActorSystemTestSpec {
       retryResponse.last shouldBe 142
       withClue(
         "The elements 41 and 42 should be assumed missing, " +
-        "the actor should query again immediately since a full batch has been received") {
+          "the actor should query again immediately since a full batch has been received"
+      ) {
         daoProbe.expectMsg(almostImmediately, TestProbeReadJournalDao.JournalSequence(142, batchSize))
         fetchMaxOrderingId(actor).futureValue shouldBe 142
       }
@@ -277,14 +286,16 @@ class MockDaoJournalSequenceActorTest extends SharedActorSystemTestSpec {
   }
 
   def withTestProbeJournalSequenceActor(batchSize: Int, maxTries: Int, queryDelay: FiniteDuration)(
-      f: (TestProbe, ActorRef) => Unit)(implicit system: ActorSystem): Unit = {
+      f: (TestProbe, ActorRef) => Unit
+  )(implicit system: ActorSystem): Unit = {
     val testProbe = TestProbe()
     val config = JournalSequenceRetrievalConfig(
       batchSize = batchSize,
       maxTries = maxTries,
       queryDelay = queryDelay,
       maxBackoffQueryDelay = 4.seconds,
-      askTimeout = 100.millis)
+      askTimeout = 100.millis
+    )
     val mockDao = new TestProbeReadJournalDao(testProbe)
     val actor = system.actorOf(JournalSequenceActor.props(mockDao, config))
     try f(testProbe, actor)
@@ -317,8 +328,9 @@ class PartitionedJournalSequenceActorTest extends JournalSequenceActorTest(Parti
     }
   }
 
-  override def withJournalSequenceActor(db: jdbc.JdbcBackend.Database, maxTries: Int)(f: ActorRef => Unit)(
-      implicit system: ActorSystem): Unit = {
+  override def withJournalSequenceActor(db: jdbc.JdbcBackend.Database, maxTries: Int)(
+      f: ActorRef => Unit
+  )(implicit system: ActorSystem): Unit = {
     import system.dispatcher
     implicit val mat: Materializer = SystemMaterializer(system).materializer
     val readJournalDao =
@@ -328,11 +340,14 @@ class PartitionedJournalSequenceActorTest extends JournalSequenceActorTest(Parti
         SerializationExtension(system),
         new CachedTagIdResolver(
           new SimpleTagDao(db, readJournalConfig.tagsTableConfiguration),
-          readJournalConfig.tagsConfig))
+          readJournalConfig.tagsConfig
+        )
+      )
     val actor =
       system.actorOf(
         JournalSequenceActor
-          .props(readJournalDao, readJournalConfig.journalSequenceRetrievalConfiguration.copy(maxTries = maxTries)))
+          .props(readJournalDao, readJournalConfig.journalSequenceRetrievalConfiguration.copy(maxTries = maxTries))
+      )
     try f(actor)
     finally system.stop(actor)
   }

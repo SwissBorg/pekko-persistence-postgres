@@ -3,7 +3,7 @@ package org.apache.pekko.persistence.postgres.tag
 import org.apache.pekko.persistence.postgres.config.TagsTableConfiguration
 import slick.jdbc.JdbcBackend.Database
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait TagDao {
 

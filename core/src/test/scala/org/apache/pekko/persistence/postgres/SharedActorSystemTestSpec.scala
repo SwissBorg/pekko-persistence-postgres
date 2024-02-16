@@ -5,15 +5,15 @@
 
 package org.apache.pekko.persistence.postgres
 
+import com.typesafe.config.{Config, ConfigFactory, ConfigValue}
 import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.persistence.postgres.config.{ JournalConfig, ReadJournalConfig }
+import org.apache.pekko.persistence.postgres.config.{JournalConfig, ReadJournalConfig}
 import org.apache.pekko.persistence.postgres.db.SlickExtension
 import org.apache.pekko.persistence.postgres.query.javadsl.PostgresReadJournal
 import org.apache.pekko.persistence.postgres.util.DropCreate
 import org.apache.pekko.serialization.SerializationExtension
-import org.apache.pekko.stream.{ Materializer, SystemMaterializer }
+import org.apache.pekko.stream.{Materializer, SystemMaterializer}
 import org.apache.pekko.util.Timeout
-import com.typesafe.config.{ Config, ConfigFactory, ConfigValue }
 import org.scalatest.BeforeAndAfterAll
 
 import scala.concurrent.ExecutionContext

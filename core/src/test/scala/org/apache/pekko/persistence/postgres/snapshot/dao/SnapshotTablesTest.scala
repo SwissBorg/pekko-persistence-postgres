@@ -24,12 +24,16 @@ class SnapshotTablesTest extends TablesTestSpec {
   it should "be configured with column names" in {
     val colName = toColumnName(snapshotTableConfiguration.tableName)(_)
     TestByteASnapshotTables.SnapshotTable.baseTableRow.persistenceId.toString shouldBe colName(
-      snapshotTableConfiguration.columnNames.persistenceId)
+      snapshotTableConfiguration.columnNames.persistenceId
+    )
     TestByteASnapshotTables.SnapshotTable.baseTableRow.sequenceNumber.toString shouldBe colName(
-      snapshotTableConfiguration.columnNames.sequenceNumber)
+      snapshotTableConfiguration.columnNames.sequenceNumber
+    )
     TestByteASnapshotTables.SnapshotTable.baseTableRow.created.toString shouldBe colName(
-      snapshotTableConfiguration.columnNames.created)
+      snapshotTableConfiguration.columnNames.created
+    )
     TestByteASnapshotTables.SnapshotTable.baseTableRow.snapshot.toString shouldBe colName(
-      snapshotTableConfiguration.columnNames.snapshot)
+      snapshotTableConfiguration.columnNames.snapshot
+    )
   }
 }

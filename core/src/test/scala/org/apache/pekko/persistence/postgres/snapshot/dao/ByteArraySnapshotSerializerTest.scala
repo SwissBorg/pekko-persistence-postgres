@@ -1,13 +1,13 @@
 package org.apache.pekko.persistence.postgres.snapshot.dao
 
-import java.time.{ LocalDateTime, ZoneOffset }
-
+import io.circe.Json
 import org.apache.pekko.persistence.SnapshotMetadata
 import org.apache.pekko.persistence.postgres.SharedActorSystemTestSpec
 import org.apache.pekko.persistence.postgres.snapshot.dao.SnapshotTables.SnapshotRow
 import org.apache.pekko.serialization.Serializers
-import io.circe.Json
 import org.scalatest.TryValues
+
+import java.time.{LocalDateTime, ZoneOffset}
 
 class ByteArraySnapshotSerializerTest extends SharedActorSystemTestSpec with TryValues {
 
@@ -27,7 +27,8 @@ class ByteArraySnapshotSerializerTest extends SharedActorSystemTestSpec with Try
     row.metadata should equal {
       Json.obj(
         // serialization manifest for String should be blank and omitted
-        "sid" -> Json.fromInt(serId))
+        "sid" -> Json.fromInt(serId)
+      )
     }
   }
 
@@ -61,7 +62,8 @@ class ByteArraySnapshotSerializerTest extends SharedActorSystemTestSpec with Try
       val meta = Json.obj(
         "sid" -> Json.fromInt(serId),
         "serId" -> Json.fromInt(-1),
-        "serManifest" -> Json.fromString("this will be ignored"))
+        "serManifest" -> Json.fromString("this will be ignored")
+      )
       val row = SnapshotRow("per-1", 42, timestamp, serializedPayload, meta)
       val (metadata, _) = serializer.deserialize(row).get
       metadata should equal(SnapshotMetadata("per-1", 42, timestamp))

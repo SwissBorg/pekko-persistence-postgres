@@ -6,9 +6,9 @@
 package org.apache.pekko.persistence.postgres.query
 
 import org.apache.pekko.pattern.ask
-import org.apache.pekko.persistence.journal.{ EventSeq, ReadEventAdapter, Tagged, WriteEventAdapter }
-import org.apache.pekko.persistence.postgres.util.Schema.{ NestedPartitions, Partitioned, Plain, SchemaType }
-import org.apache.pekko.persistence.query.{ EventEnvelope, NoOffset, Sequence }
+import org.apache.pekko.persistence.journal.{EventSeq, ReadEventAdapter, Tagged, WriteEventAdapter}
+import org.apache.pekko.persistence.postgres.util.Schema.{NestedPartitions, Partitioned, Plain, SchemaType}
+import org.apache.pekko.persistence.query.{EventEnvelope, NoOffset, Sequence}
 
 import scala.concurrent.duration._
 
@@ -45,9 +45,8 @@ object EventAdapterTest {
   }
 }
 
-/**
- * Tests that check persistence queries when event adapter is configured for persisted event.
- */
+/** Tests that check persistence queries when event adapter is configured for persisted event.
+  */
 abstract class EventAdapterTest(val schemaType: SchemaType) extends QueryTestSpec(schemaType.configName) {
   import EventAdapterTest._
 

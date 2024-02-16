@@ -6,9 +6,9 @@
 package org.apache.pekko.persistence.postgres
 package journal.dao
 
-import org.apache.pekko.persistence.postgres.config.{ JournalMetadataTableConfiguration, JournalTableConfiguration }
-import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
 import io.circe.Json
+import org.apache.pekko.persistence.postgres.config.{JournalMetadataTableConfiguration, JournalTableConfiguration}
+import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
 
 trait JournalTable extends Table[JournalRow] {
   def ordering: Rep[Long]
@@ -24,7 +24,8 @@ abstract class BaseJournalTable(_tableTag: Tag, journalTableCfg: JournalTableCon
     extends Table[JournalRow](
       _tableTag,
       _schemaName = journalTableCfg.schemaName,
-      _tableName = journalTableCfg.tableName)
+      _tableName = journalTableCfg.tableName
+    )
     with JournalTable
 
 class FlatJournalTable private[dao] (_tableTag: Tag, journalTableCfg: JournalTableConfiguration)
@@ -36,7 +37,8 @@ class FlatJournalTable private[dao] (_tableTag: Tag, journalTableCfg: JournalTab
     sequenceNumber,
     message,
     tags,
-    metadata) <> (JournalRow.tupled, JournalRow.unapply)
+    metadata
+  ) <> (JournalRow.tupled, JournalRow.unapply)
 
   val ordering: Rep[Long] = column[Long](journalTableCfg.columnNames.ordering, O.AutoInc)
   val persistenceId: Rep[String] =
@@ -66,7 +68,8 @@ class PartitionedJournalTable private (_tableTag: Tag, journalTableCfg: JournalT
     sequenceNumber,
     message,
     tags,
-    metadata) <> (JournalRow.tupled, JournalRow.unapply)
+    metadata
+  ) <> (JournalRow.tupled, JournalRow.unapply)
 
   val ordering: Rep[Long] = column[Long](journalTableCfg.columnNames.ordering)
   val persistenceId: Rep[String] =
@@ -95,13 +98,15 @@ class JournalMetadataTable(_tableTag: Tag, journalMetadataTableCfg: JournalMetad
     extends Table[JournalMetadataRow](
       _tableTag,
       _schemaName = journalMetadataTableCfg.schemaName,
-      _tableName = journalMetadataTableCfg.tableName) {
+      _tableName = journalMetadataTableCfg.tableName
+    ) {
   override def * = (
     id,
     persistenceId,
     maxSequenceNumber,
     minOrdering,
-    maxOrdering) <> (JournalMetadataRow.tupled, JournalMetadataRow.unapply)
+    maxOrdering
+  ) <> (JournalMetadataRow.tupled, JournalMetadataRow.unapply)
 
   val id: Rep[Long] = column[Long](journalMetadataTableCfg.columnNames.id)
   val persistenceId: Rep[String] =
@@ -114,7 +119,6 @@ class JournalMetadataTable(_tableTag: Tag, journalMetadataTableCfg: JournalMetad
 }
 
 object JournalMetadataTable {
-  def apply(
-             journalMetadataTableCfg: JournalMetadataTableConfiguration): TableQuery[JournalMetadataTable] =
+  def apply(journalMetadataTableCfg: JournalMetadataTableConfiguration): TableQuery[JournalMetadataTable] =
     TableQuery(tag => new JournalMetadataTable(tag, journalMetadataTableCfg))
 }

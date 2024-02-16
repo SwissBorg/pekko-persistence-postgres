@@ -5,8 +5,8 @@
 
 package org.apache.pekko.persistence.postgres.configuration
 
+import com.typesafe.config.{Config, ConfigFactory}
 import org.apache.pekko.persistence.postgres.config._
-import com.typesafe.config.{ Config, ConfigFactory }
 import org.scalatest.OptionValues
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers

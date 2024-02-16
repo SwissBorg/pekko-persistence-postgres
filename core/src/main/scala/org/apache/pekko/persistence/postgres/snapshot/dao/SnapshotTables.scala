@@ -5,9 +5,9 @@
 
 package org.apache.pekko.persistence.postgres.snapshot.dao
 
+import io.circe.Json
 import org.apache.pekko.persistence.postgres.config.SnapshotTableConfiguration
 import org.apache.pekko.persistence.postgres.snapshot.dao.SnapshotTables._
-import io.circe.Json
 
 object SnapshotTables {
   case class SnapshotRow(
@@ -15,7 +15,8 @@ object SnapshotTables {
       sequenceNumber: Long,
       created: Long,
       snapshot: Array[Byte],
-      metadata: Json)
+      metadata: Json
+  )
 }
 
 trait SnapshotTables {
@@ -27,7 +28,8 @@ trait SnapshotTables {
       extends Table[SnapshotRow](
         _tableTag,
         _schemaName = snapshotTableCfg.schemaName,
-        _tableName = snapshotTableCfg.tableName) {
+        _tableName = snapshotTableCfg.tableName
+      ) {
     def * = (persistenceId, sequenceNumber, created, snapshot, metadata) <> (SnapshotRow.tupled, SnapshotRow.unapply)
 
     val persistenceId: Rep[String] =

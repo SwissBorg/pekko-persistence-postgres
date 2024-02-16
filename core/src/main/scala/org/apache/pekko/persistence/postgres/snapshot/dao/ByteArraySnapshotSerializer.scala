@@ -5,12 +5,12 @@
 
 package org.apache.pekko.persistence.postgres.snapshot.dao
 
+import io.circe.{Decoder, Encoder}
 import org.apache.pekko.persistence.SnapshotMetadata
 import org.apache.pekko.persistence.postgres.serialization.SnapshotSerializer
 import org.apache.pekko.persistence.postgres.snapshot.dao.ByteArraySnapshotSerializer.Metadata
 import org.apache.pekko.persistence.postgres.snapshot.dao.SnapshotTables.SnapshotRow
-import org.apache.pekko.serialization.{ Serialization, Serializers }
-import io.circe.{ Decoder, Encoder }
+import org.apache.pekko.serialization.{Serialization, Serializers}
 
 import scala.util.Try
 
@@ -30,7 +30,8 @@ class ByteArraySnapshotSerializer(serialization: Serialization) extends Snapshot
         metadata.sequenceNr,
         metadata.timestamp,
         serializedSnapshot,
-        metadataJson.asJson)
+        metadataJson.asJson
+      )
     }
   }
 

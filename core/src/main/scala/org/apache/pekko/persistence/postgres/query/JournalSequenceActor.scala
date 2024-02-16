@@ -6,10 +6,10 @@
 package org.apache.pekko.persistence.postgres
 package query
 
-import org.apache.pekko.actor.{ Actor, ActorLogging, Props, Status, Timers }
-import org.apache.pekko.persistence.postgres.query.dao.ReadJournalDao
+import org.apache.pekko.actor.{Actor, ActorLogging, Props, Status, Timers}
 import org.apache.pekko.pattern.pipe
 import org.apache.pekko.persistence.postgres.config.JournalSequenceRetrievalConfig
+import org.apache.pekko.persistence.postgres.query.dao.ReadJournalDao
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.stream.scaladsl.Sink
 
@@ -17,8 +17,9 @@ import scala.collection.immutable.NumericRange
 import scala.concurrent.duration.FiniteDuration
 
 object JournalSequenceActor {
-  def props(readJournalDao: ReadJournalDao, config: JournalSequenceRetrievalConfig)(
-      implicit materializer: Materializer): Props = Props(new JournalSequenceActor(readJournalDao, config))
+  def props(readJournalDao: ReadJournalDao, config: JournalSequenceRetrievalConfig)(implicit
+      materializer: Materializer
+  ): Props = Props(new JournalSequenceActor(readJournalDao, config))
 
   private case object QueryOrderingIds
   private case class NewOrderingIds(originalOffset: Long, elements: Seq[OrderingId])
@@ -34,10 +35,8 @@ object JournalSequenceActor {
 
   private type OrderingId = Long
 
-  /**
-   * Efficient representation of missing elements using NumericRanges.
-   * It can be seen as a collection of OrderingIds
-   */
+  /** Efficient representation of missing elements using NumericRanges. It can be seen as a collection of OrderingIds
+    */
   private case class MissingElements(elements: Seq[NumericRange[OrderingId]]) {
     def addRange(from: OrderingId, until: OrderingId): MissingElements = {
       val newRange = from.until(until)
@@ -51,19 +50,18 @@ object JournalSequenceActor {
   }
 }
 
-/**
- * To support the EventsByTag query, this actor keeps track of which rows are visible in the database.
- * This is required to guarantee the EventByTag does not skip any rows in case rows with a higher (ordering) id are
- * visible in the database before rows with a lower (ordering) id.
- */
-class JournalSequenceActor(readJournalDao: ReadJournalDao, config: JournalSequenceRetrievalConfig)(
-    implicit materializer: Materializer)
-    extends Actor
+/** To support the EventsByTag query, this actor keeps track of which rows are visible in the database. This is required
+  * to guarantee the EventByTag does not skip any rows in case rows with a higher (ordering) id are visible in the
+  * database before rows with a lower (ordering) id.
+  */
+class JournalSequenceActor(readJournalDao: ReadJournalDao, config: JournalSequenceRetrievalConfig)(implicit
+    materializer: Materializer
+) extends Actor
     with ActorLogging
     with Timers {
   import JournalSequenceActor._
+  import config.{batchSize, maxBackoffQueryDelay, maxTries, queryDelay}
   import context.dispatcher
-  import config.{ batchSize, maxBackoffQueryDelay, maxTries, queryDelay }
 
   override def receive: Receive = receive(0L, Map.empty, 0)
 
@@ -77,18 +75,22 @@ class JournalSequenceActor(readJournalDao: ReadJournalDao, config: JournalSequen
     }
   }
 
-  /**
-   * @param currentMaxOrdering The highest ordering value for which it is known that no missing elements exist
-   * @param missingByCounter A map with missing orderingIds. The key of the map is the count at which the missing elements
-   *                         can be assumed to be "skipped ids" (they are no longer assumed missing).
-   * @param moduloCounter A counter which is incremented every time a new query have been executed, modulo `maxTries`
-   * @param previousDelay The last used delay (may change in case failures occur)
-   */
+  /** @param currentMaxOrdering
+    *   The highest ordering value for which it is known that no missing elements exist
+    * @param missingByCounter
+    *   A map with missing orderingIds. The key of the map is the count at which the missing elements can be assumed to
+    *   be "skipped ids" (they are no longer assumed missing).
+    * @param moduloCounter
+    *   A counter which is incremented every time a new query have been executed, modulo `maxTries`
+    * @param previousDelay
+    *   The last used delay (may change in case failures occur)
+    */
   def receive(
       currentMaxOrdering: OrderingId,
       missingByCounter: Map[Int, MissingElements],
       moduloCounter: Int,
-      previousDelay: FiniteDuration = queryDelay): Receive = {
+      previousDelay: FiniteDuration = queryDelay
+  ): Receive = {
     case ScheduleAssumeMaxOrderingId(max) =>
       // All elements smaller than max can be assumed missing after this delay
       val delay = queryDelay * maxTries
@@ -126,14 +128,14 @@ class JournalSequenceActor(readJournalDao: ReadJournalDao, config: JournalSequen
       context.become(receive(currentMaxOrdering, missingByCounter, moduloCounter, newDelay))
   }
 
-  /**
-   * This method that implements the "find gaps" algo. It's the meat and main purpose of this actor.
-   */
+  /** This method that implements the "find gaps" algo. It's the meat and main purpose of this actor.
+    */
   def findGaps(
       elements: Seq[OrderingId],
       currentMaxOrdering: OrderingId,
       missingByCounter: Map[Int, MissingElements],
-      moduloCounter: Int): Unit = {
+      moduloCounter: Int
+  ): Unit = {
     // list of elements that will be considered as genuine gaps.
     // `givenUp` is either empty or is was filled on a previous iteration
     val givenUp = missingByCounter.getOrElse(moduloCounter, MissingElements.empty)
@@ -143,7 +145,8 @@ class JournalSequenceActor(readJournalDao: ReadJournalDao, config: JournalSequen
       elements.foldLeft[(OrderingId, OrderingId, MissingElements)](
         currentMaxOrdering,
         currentMaxOrdering,
-        MissingElements.empty) { case ((currentMax, previousElement, missing), currentElement) =>
+        MissingElements.empty
+      ) { case ((currentMax, previousElement, missing), currentElement) =>
         // we must decide if we move the cursor forward
         val newMax =
           if ((currentMax + 1).until(currentElement).forall(givenUp.contains)) {

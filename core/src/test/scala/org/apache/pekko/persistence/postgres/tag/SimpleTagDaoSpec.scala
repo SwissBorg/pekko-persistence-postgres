@@ -1,16 +1,15 @@
 package org.apache.pekko.persistence.postgres.tag
 
-import java.util.concurrent.ThreadLocalRandom
-
-import org.apache.pekko.persistence.postgres.config.{ SlickConfiguration, TagsTableConfiguration }
+import com.typesafe.config.{Config, ConfigFactory}
+import org.apache.pekko.persistence.postgres.config.{SlickConfiguration, TagsTableConfiguration}
 import org.apache.pekko.persistence.postgres.db.SlickDatabase
-import com.typesafe.config.{ Config, ConfigFactory }
-import org.scalatest.concurrent.{ IntegrationPatience, ScalaFutures }
+import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll, OptionValues}
+import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.{ BeforeAndAfter, BeforeAndAfterAll, OptionValues }
 import slick.jdbc
 
+import java.util.concurrent.ThreadLocalRandom
 import scala.concurrent.ExecutionContext
 
 class SimpleTagDaoSpec
@@ -24,7 +23,7 @@ class SimpleTagDaoSpec
 
   import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
 
-  private implicit val global: ExecutionContext = ExecutionContext.global
+  implicit private val global: ExecutionContext = ExecutionContext.global
 
   before {
     withDB { db =>

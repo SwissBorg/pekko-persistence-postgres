@@ -5,13 +5,13 @@
 
 package org.apache.pekko.persistence.postgres
 
+import com.typesafe.config.{Config, ConfigFactory, ConfigValue}
 import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.persistence.postgres.config.{ JournalConfig, ReadJournalConfig, SlickConfiguration }
+import org.apache.pekko.persistence.postgres.config.{JournalConfig, ReadJournalConfig, SlickConfiguration}
 import org.apache.pekko.persistence.postgres.db.SlickDatabase
 import org.apache.pekko.persistence.postgres.query.javadsl.PostgresReadJournal
 import org.apache.pekko.persistence.postgres.util.DropCreate
 import org.apache.pekko.util.Timeout
-import com.typesafe.config.{ Config, ConfigFactory, ConfigValue }
 import org.scalatest.BeforeAndAfterEach
 import slick.jdbc.JdbcBackend.Database
 
@@ -43,7 +43,8 @@ abstract class SingleActorSystemPerTestSpec(val config: Config)
         SlickDatabase.database(
           config,
           new SlickConfiguration(config.getConfig("pekko-persistence-postgres.shared-databases.slick")),
-          "pekko-persistence-postgres.shared-databases.slick.db")
+          "pekko-persistence-postgres.shared-databases.slick.db"
+        )
 
       dbOpt = Some(newDb)
       newDb

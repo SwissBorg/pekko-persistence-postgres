@@ -19,7 +19,8 @@ trait SnapshotDao {
   def deleteUpToMaxSequenceNrAndMaxTimestamp(
       persistenceId: String,
       maxSequenceNr: Long,
-      maxTimestamp: Long): Future[Unit]
+      maxTimestamp: Long
+  ): Future[Unit]
 
   def latestSnapshot(persistenceId: String): Future[Option[(SnapshotMetadata, Any)]]
 
@@ -30,7 +31,8 @@ trait SnapshotDao {
   def snapshotForMaxSequenceNrAndMaxTimestamp(
       persistenceId: String,
       sequenceNr: Long,
-      timestamp: Long): Future[Option[(SnapshotMetadata, Any)]]
+      timestamp: Long
+  ): Future[Option[(SnapshotMetadata, Any)]]
 
   def delete(persistenceId: String, sequenceNr: Long): Future[Unit]
 

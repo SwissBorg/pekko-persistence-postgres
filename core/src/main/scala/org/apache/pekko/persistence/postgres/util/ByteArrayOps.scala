@@ -5,7 +5,7 @@
 
 package org.apache.pekko.persistence.postgres.util
 
-import java.io.{ ByteArrayInputStream, InputStream }
+import java.io.{ByteArrayInputStream, InputStream}
 import java.util.Base64
 
 object ByteArrayOps {

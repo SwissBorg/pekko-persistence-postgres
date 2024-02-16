@@ -5,13 +5,13 @@
 
 package org.apache.pekko.persistence.postgres.query
 
+import com.typesafe.config.{Config, ConfigFactory, ConfigValue, ConfigValueFactory}
 import org.apache.pekko.Done
 import org.apache.pekko.pattern.ask
 import org.apache.pekko.persistence.postgres.query.CurrentEventsByTagTest._
-import org.apache.pekko.persistence.postgres.query.EventAdapterTest.{ Event, TaggedAsyncEvent }
-import org.apache.pekko.persistence.postgres.util.Schema.{ NestedPartitions, Partitioned, Plain, SchemaType }
-import org.apache.pekko.persistence.query.{ EventEnvelope, NoOffset, Sequence }
-import com.typesafe.config.{ Config, ConfigFactory, ConfigValue, ConfigValueFactory }
+import org.apache.pekko.persistence.postgres.query.EventAdapterTest.{Event, TaggedAsyncEvent}
+import org.apache.pekko.persistence.postgres.util.Schema.{NestedPartitions, Partitioned, Plain, SchemaType}
+import org.apache.pekko.persistence.query.{EventEnvelope, NoOffset, Sequence}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -22,7 +22,8 @@ object CurrentEventsByTagTest {
 
   val configOverrides: Map[String, ConfigValue] = Map(
     "postgres-read-journal.max-buffer-size" -> ConfigValueFactory.fromAnyRef(maxBufferSize.toString),
-    "postgres-read-journal.refresh-interval" -> ConfigValueFactory.fromAnyRef(refreshInterval.toString()))
+    "postgres-read-journal.refresh-interval" -> ConfigValueFactory.fromAnyRef(refreshInterval.toString())
+  )
 
   case class TestEvent(greetings: String)
 
@@ -176,7 +177,8 @@ abstract class CurrentEventsByTagTest(val schemaType: SchemaType)
     import scala.jdk.CollectionConverters._
 
     it should "complete without any gaps in case events are being persisted when the query is executed" in withActorSystem(
-      withMaxBufferSize(1000)) { implicit system =>
+      withMaxBufferSize(1000)
+    ) { implicit system =>
       val journalOps = new JavaDslPostgresReadJournalOperations(system)
       import system.dispatcher
       withTestActors(replyToMessages = true) { (actor1, actor2, actor3) =>
@@ -215,7 +217,8 @@ abstract class CurrentEventsByTagTest(val schemaType: SchemaType)
     }
 
     it should "complete without omitting any events in case events are being persisted when the query is executed" in withActorSystem(
-      withMaxBufferSize((batch1Size + batch2Size) * (numOfActors + 1))) { implicit system =>
+      withMaxBufferSize((batch1Size + batch2Size) * (numOfActors + 1))
+    ) { implicit system =>
       val journalOps = new JavaDslPostgresReadJournalOperations(system)
       import system.dispatcher
       withTestActors(replyToMessages = true) { (actor1, actor2, actor3) =>

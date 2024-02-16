@@ -10,16 +10,17 @@ import org.apache.pekko.persistence.postgres.config.SnapshotConfig
 import org.apache.pekko.persistence.postgres.snapshot.dao.SnapshotTables.SnapshotRow
 import org.apache.pekko.serialization.Serialization
 import org.apache.pekko.stream.Materializer
-import slick.jdbc.JdbcProfile
 import slick.jdbc.JdbcBackend
+import slick.jdbc.JdbcProfile
 
-import scala.concurrent.{ ExecutionContext, Future }
-import scala.util.{ Failure, Success }
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
 class ByteArraySnapshotDao(db: JdbcBackend#Database, snapshotConfig: SnapshotConfig, serialization: Serialization)(
-    implicit ec: ExecutionContext,
-    val mat: Materializer)
-    extends SnapshotDao {
+    implicit
+    ec: ExecutionContext,
+    val mat: Materializer
+) extends SnapshotDao {
   import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
 
   val queries = new SnapshotQueries(snapshotConfig.snapshotTableConfiguration)
@@ -39,14 +40,16 @@ class ByteArraySnapshotDao(db: JdbcBackend#Database, snapshotConfig: SnapshotCon
 
   override def snapshotForMaxTimestamp(
       persistenceId: String,
-      maxTimestamp: Long): Future[Option[(SnapshotMetadata, Any)]] =
+      maxTimestamp: Long
+  ): Future[Option[(SnapshotMetadata, Any)]] =
     for {
       rows <- db.run(queries.selectOneByPersistenceIdAndMaxTimestamp(persistenceId, maxTimestamp).result)
     } yield rows.headOption.map(toSnapshotData)
 
   override def snapshotForMaxSequenceNr(
       persistenceId: String,
-      maxSequenceNr: Long): Future[Option[(SnapshotMetadata, Any)]] =
+      maxSequenceNr: Long
+  ): Future[Option[(SnapshotMetadata, Any)]] =
     for {
       rows <- db.run(queries.selectOneByPersistenceIdAndMaxSequenceNr(persistenceId, maxSequenceNr).result)
     } yield rows.headOption.map(toSnapshotData)
@@ -54,12 +57,14 @@ class ByteArraySnapshotDao(db: JdbcBackend#Database, snapshotConfig: SnapshotCon
   override def snapshotForMaxSequenceNrAndMaxTimestamp(
       persistenceId: String,
       maxSequenceNr: Long,
-      maxTimestamp: Long): Future[Option[(SnapshotMetadata, Any)]] =
+      maxTimestamp: Long
+  ): Future[Option[(SnapshotMetadata, Any)]] =
     for {
       rows <- db.run(
         queries
           .selectOneByPersistenceIdAndMaxSequenceNrAndMaxTimestamp(persistenceId, maxSequenceNr, maxTimestamp)
-          .result)
+          .result
+      )
     } yield rows.headOption.map(toSnapshotData)
 
   override def save(snapshotMetadata: SnapshotMetadata, snapshot: Any): Future[Unit] = {
@@ -90,11 +95,13 @@ class ByteArraySnapshotDao(db: JdbcBackend#Database, snapshotConfig: SnapshotCon
   override def deleteUpToMaxSequenceNrAndMaxTimestamp(
       persistenceId: String,
       maxSequenceNr: Long,
-      maxTimestamp: Long): Future[Unit] =
+      maxTimestamp: Long
+  ): Future[Unit] =
     for {
       _ <- db.run(
         queries
           .selectByPersistenceIdUpToMaxSequenceNrAndMaxTimestamp(persistenceId, maxSequenceNr, maxTimestamp)
-          .delete)
+          .delete
+      )
     } yield ()
 }

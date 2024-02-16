@@ -8,8 +8,8 @@ package org.apache.pekko.persistence.postgres.query
 import org.apache.pekko.Done
 import org.apache.pekko.persistence.Persistence
 import org.apache.pekko.persistence.postgres.journal.PostgresAsyncWriteJournal
-import org.apache.pekko.persistence.postgres.util.Schema.{ NestedPartitions, Partitioned, Plain, SchemaType }
-import org.apache.pekko.persistence.query.{ EventEnvelope, Offset, Sequence }
+import org.apache.pekko.persistence.postgres.util.Schema.{NestedPartitions, Partitioned, Plain, SchemaType}
+import org.apache.pekko.persistence.query.{EventEnvelope, Offset, Sequence}
 import org.apache.pekko.testkit.TestProbe
 
 abstract class CurrentEventsByPersistenceIdTest(val schemaType: SchemaType)
