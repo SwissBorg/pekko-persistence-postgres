@@ -1,14 +1,10 @@
-![Pekko Persistence Postgres](./docs/assets/project-logo.png)
-
 [![License](https://img.shields.io/:license-Apache%202-red.svg)](https://www.apache.org/licenses/LICENSE-2.0.txt)
 [![Actions Status](https://github.com/SwissBorg/pekko-persistence-postgres/workflows/Scala%20CI/badge.svg)](https://github.com/SwissBorg/pekko-persistence-postgres/actions)
 
-> [!WARNING]  
-> This Pekko fork is a work in progress.
-
-The Pekko Persistence Postgres plugin allows for using [PostgreSQL 11](https://www.postgresql.org/) and [Amazon Aurora](https://aws.amazon.com/rds/aurora/) databases as backend for Pekko Persistence and Pekko Persistence Query.
+The Pekko Persistence Postgres plugin allows for using [PostgreSQL](https://www.postgresql.org/) and [Amazon Aurora](https://aws.amazon.com/rds/aurora/) databases as backend for Pekko Persistence and Pekko Persistence Query.
 
 It’s been originally created as a fork of [Akka Persistence JDBC plugin](https://github.com/akka/akka-persistence-jdbc), focused on PostgreSQL features such as partitions, arrays, BRIN indexes and others.
+The first version was also based on Akka, and was named [akka-persistence-postgres](https://github.com/SwissBorg/akka-persistence-postgres).  
 
 The main goal is to keep index size and memory consumption on a moderate level while being able to cope with an increasing data volume.
 

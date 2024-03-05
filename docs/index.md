@@ -3,8 +3,6 @@ title: About the plugin
 nav_order: 0
 ---
 
-![Pekko Persistence Postgres]({{ 'assets/project-logo.png' | absolute_url }})
-
 The Pekko Persistence Postgres plugin allows for using Postgres database as backend for [Pekko Persistence](https://pekko.apache.org/docs/pekko/current/typed/persistence.html) and [Pekko Persistence Query](https://pekko.apache.org/docs/pekko/current/persistence-query.html).
 
 pekko-persistence-postgres writes journal and snapshot entries to a configured PostgreSQL store. It implements the full pekko-persistence-query API and is therefore very useful for implementing DDD-style application models using Pekko and Scala for creating reactive applications.
