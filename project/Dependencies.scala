@@ -10,10 +10,8 @@ object Dependencies {
   val SlickVersion = "3.4.1"
   val SlickPgVersion = "0.21.1"
   val SslConfigVersion = "0.6.1"
-
   val LogbackVersion = "1.4.14"
-
-  val JdbcDrivers = Seq("org.postgresql" % "postgresql" % "42.7.1")
+  val PostgresqlVersion = "42.7.1"
 
   val Libraries: Seq[ModuleID] = Seq(
     "ch.qos.logback" % "logback-classic" % LogbackVersion % Test,
@@ -27,5 +25,7 @@ object Dependencies {
     "org.apache.pekko" %% "pekko-persistence-query" % PekkoVersion % Provided,
     "com.typesafe.slick" %% "slick" % SlickVersion,
     "com.typesafe.slick" %% "slick-hikaricp" % SlickVersion,
-    "org.scalatest" %% "scalatest" % ScalaTestVersion % Test) ++ JdbcDrivers.map(_ % Test)
+    "org.scalatest" %% "scalatest" % ScalaTestVersion % Test,
+    "org.postgresql" % "postgresql" % PostgresqlVersion % Test,
+  )
 }
