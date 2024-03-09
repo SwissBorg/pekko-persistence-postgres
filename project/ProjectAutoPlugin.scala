@@ -1,5 +1,5 @@
-import sbt.Keys._
 import sbt._
+import sbt.Keys._
 import sbt.plugins.JvmPlugin
 
 object ProjectAutoPlugin extends AutoPlugin {
@@ -18,7 +18,9 @@ object ProjectAutoPlugin extends AutoPlugin {
       description := "A plugin for storing events in a PostgreSQL journal",
       startYear := Some(2020),
       developers := List(
-        Developer("mkubala", "Marcin Kubala", "marcin.kubala+oss@softwaremill.com", url("https://softwaremill.com"))))
+        Developer("mkubala", "Marcin Kubala", "marcin.kubala+oss@softwaremill.com", url("https://softwaremill.com"))
+      )
+    )
 
   override val projectSettings: Seq[Setting[_]] = Seq(
     crossVersion := CrossVersion.binary,
@@ -37,7 +39,8 @@ object ProjectAutoPlugin extends AutoPlugin {
       "-language:higherKinds",
       "-language:implicitConversions",
       "-Ydelambdafy:method",
-      "-release:11"),
+      "-release:11"
+    ),
     Compile / doc / scalacOptions := scalacOptions.value ++ Seq(
       "-doc-title",
       "Pekko Persistence Postgres",
@@ -50,12 +53,16 @@ object ProjectAutoPlugin extends AutoPlugin {
       "-doc-source-url", {
         val branch = if (isSnapshot.value) "main" else s"v${version.value}"
         s"https://github.com/SwissBorg/pekko-persistence-postgres/tree/${branch}€{FILE_PATH_EXT}#L€{FILE_LINE}"
-      }),
+      }
+    ),
     // show full stack traces and test case durations
     Test / testOptions += Tests.Argument("-oDF"),
     scmInfo := Some(
       ScmInfo(
         url("https://github.com/SwissBorg/pekko-persistence-postgres"),
-        "git@github.com:SwissBorg/pekko-persistence-postgres.git")))
+        "git@github.com:SwissBorg/pekko-persistence-postgres.git"
+      )
+    )
+  )
 
 }

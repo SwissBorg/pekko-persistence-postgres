@@ -26,6 +26,6 @@ object Dependencies {
     "com.typesafe.slick" %% "slick" % SlickVersion,
     "com.typesafe.slick" %% "slick-hikaricp" % SlickVersion,
     "org.scalatest" %% "scalatest" % ScalaTestVersion % Test,
-    "org.postgresql" % "postgresql" % PostgresqlVersion % Test,
+    "org.postgresql" % "postgresql" % PostgresqlVersion % Test
   )
 }

@@ -13,15 +13,18 @@ lazy val core = project
   .settings(
     name := "pekko-persistence-postgres",
     libraryDependencies ++= Dependencies.Libraries,
-    mimaBinaryIssueFilters ++= Seq())
+    mimaBinaryIssueFilters ++= Seq()
+  )
 
 TaskKey[Unit]("verifyCodeFmt") := {
   scalafmtCheckAll.all(ScopeFilter(inAnyProject)).result.value.toEither.left.foreach { _ =>
     throw new MessageOnlyException(
-      "Unformatted Scala code found. Please run 'scalafmtAll' and commit the reformatted code")
+      "Unformatted Scala code found. Please run 'scalafmtAll' and commit the reformatted code"
+    )
   }
   (Compile / scalafmtSbtCheck).result.value.toEither.left.foreach { _ =>
     throw new MessageOnlyException(
-      "Unformatted sbt code found. Please run 'scalafmtSbt' and commit the reformatted code")
+      "Unformatted sbt code found. Please run 'scalafmtSbt' and commit the reformatted code"
+    )
   }
 }
