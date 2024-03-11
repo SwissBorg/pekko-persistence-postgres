@@ -6,7 +6,7 @@ object Dependencies {
 
   val PekkoVersion = "1.0.2"
   val ScaffeineVersion = "5.2.1"
-  val ScalaTestVersion = "3.2.17"
+  val ScalaTestVersion = "3.2.18"
   val SlickVersion = "3.4.1"
   val SlickPgVersion = "0.21.1"
   val SslConfigVersion = "0.6.1"
@@ -26,6 +26,6 @@ object Dependencies {
     "com.typesafe.slick" %% "slick" % SlickVersion,
     "com.typesafe.slick" %% "slick-hikaricp" % SlickVersion,
     "org.scalatest" %% "scalatest" % ScalaTestVersion % Test,
-    "org.postgresql" % "postgresql" % PostgresqlVersion % Test,
+    "org.postgresql" % "postgresql" % PostgresqlVersion % Test
   )
 }
