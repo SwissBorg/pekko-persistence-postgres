@@ -7,9 +7,8 @@ object Dependencies {
   val PekkoVersion = "1.0.2"
   val ScaffeineVersion = "5.2.1"
   val ScalaTestVersion = "3.2.18"
-  val SlickVersion = "3.4.1"
-  val SlickPgVersion = "0.21.1"
-  val SslConfigVersion = "0.6.1"
+  val SlickVersion = "3.5.0"
+  val SlickPgVersion = "0.22.0"
   val LogbackVersion = "1.5.3"
   val PostgresqlVersion = "42.7.3"
 
