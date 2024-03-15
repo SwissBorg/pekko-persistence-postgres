@@ -11,7 +11,7 @@ object Dependencies {
   val SlickPgVersion = "0.21.1"
   val SslConfigVersion = "0.6.1"
   val LogbackVersion = "1.5.3"
-  val PostgresqlVersion = "42.7.2"
+  val PostgresqlVersion = "42.7.3"
 
   val Libraries: Seq[ModuleID] = Seq(
     "ch.qos.logback" % "logback-classic" % LogbackVersion % Test,
