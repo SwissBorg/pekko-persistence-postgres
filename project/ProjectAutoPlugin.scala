@@ -38,9 +38,17 @@ object ProjectAutoPlugin extends AutoPlugin {
       "-language:implicitConversions",
       "-language:reflectiveCalls",
       "-language:higherKinds",
-      "-release:11",
-      "-Xsource:3"
-    ),
+      "-release:11"
+    ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, 13)) =>
+        List(
+          "-Xsource:3"
+        )
+      case Some((3, _)) =>
+        List("-source:3.0-migration")
+      case _ =>
+        Nil
+    }),
     Compile / doc / scalacOptions := scalacOptions.value ++ Seq(
       "-doc-title",
       "Pekko Persistence Postgres",

@@ -10,7 +10,7 @@ trait TagTables {
 
   class EventTagTableDefinition(_tableTag: Tag)
       extends Table[EventTag](_tableTag, _schemaName = tagsTableCfg.schemaName, _tableName = tagsTableCfg.tableName) {
-    def * = (id, name) <> (EventTag.tupled, EventTag.unapply)
+    def * = (id, name) <> ((EventTag.apply _).tupled, EventTag.unapply)
 
     val id: Rep[Int] = column[Int](tagsTableCfg.columnNames.id, O.AutoInc)
     val name: Rep[String] = column[String](tagsTableCfg.columnNames.name, O.Length(255, varying = true))

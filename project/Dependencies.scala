@@ -2,7 +2,8 @@ import sbt.*
 
 object Dependencies {
   val Scala213 = "2.13.13"
-  val ScalaVersions = Seq(Scala213)
+  val Scala3 = "3.3.1"
+  val ScalaVersions = Seq(Scala213, Scala3)
 
   val PekkoVersion = "1.0.2"
   val ScaffeineVersion = "5.2.1"

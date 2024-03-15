@@ -66,13 +66,13 @@ abstract class SingleActorSystemPerTestSpec(val config: Config)
     closeDb()
   }
 
-  def withActorSystem(f: ActorSystem => Unit): Unit = {
+  def withActorSystem[A](f: ActorSystem => A): Unit = {
     implicit val system: ActorSystem = ActorSystem("test", config)
     f(system)
     system.terminate().futureValue
   }
 
-  def withActorSystem(config: Config = config)(f: ActorSystem => Unit): Unit = {
+  def withActorSystem[A](config: Config = config)(f: ActorSystem => A): Unit = {
     implicit val system: ActorSystem = ActorSystem("test", config)
     f(system)
     system.terminate().futureValue
