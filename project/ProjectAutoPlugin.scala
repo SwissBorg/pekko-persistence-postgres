@@ -1,5 +1,5 @@
-import sbt._
-import sbt.Keys._
+import sbt.*
+import sbt.Keys.*
 import sbt.plugins.JvmPlugin
 
 object ProjectAutoPlugin extends AutoPlugin {
@@ -35,11 +35,11 @@ object ProjectAutoPlugin extends AutoPlugin {
       "-deprecation",
       "-feature",
       "-unchecked",
-      "-Xlog-reflective-calls",
-      "-language:higherKinds",
       "-language:implicitConversions",
-      "-Ydelambdafy:method",
-      "-release:11"
+      "-language:reflectiveCalls",
+      "-language:higherKinds",
+      "-release:11",
+      "-Xsource:3"
     ),
     Compile / doc / scalacOptions := scalacOptions.value ++ Seq(
       "-doc-title",

@@ -12,19 +12,19 @@ import org.apache.pekko.persistence.{DeleteMessagesFailure, DeleteMessagesSucces
 import org.apache.pekko.persistence.journal.Tagged
 import org.apache.pekko.persistence.postgres.SingleActorSystemPerTestSpec
 import org.apache.pekko.persistence.postgres.query.EventAdapterTest.{Event, TaggedAsyncEvent, TaggedEvent}
-import org.apache.pekko.persistence.postgres.query.javadsl.{PostgresReadJournal => JavaPostgresReadJournal}
+import org.apache.pekko.persistence.postgres.query.javadsl.{PostgresReadJournal as JavaPostgresReadJournal}
 import org.apache.pekko.persistence.postgres.query.scaladsl.PostgresReadJournal
 import org.apache.pekko.persistence.postgres.util.Schema.SchemaType
 import org.apache.pekko.persistence.query.{EventEnvelope, Offset, PersistenceQuery}
 import org.apache.pekko.stream.{Materializer, SystemMaterializer}
 import org.apache.pekko.stream.scaladsl.Sink
 import org.apache.pekko.stream.testkit.TestSubscriber
-import org.apache.pekko.stream.testkit.javadsl.{TestSink => JavaSink}
+import org.apache.pekko.stream.testkit.javadsl.{TestSink as JavaSink}
 import org.apache.pekko.stream.testkit.scaladsl.TestSink
-import slick.jdbc.PostgresProfile.api._
+import slick.jdbc.PostgresProfile.api.*
 
 import scala.concurrent.Future
-import scala.concurrent.duration.{FiniteDuration, _}
+import scala.concurrent.duration.{FiniteDuration, *}
 
 trait ReadJournalOperations {
   def withCurrentPersistenceIds(within: FiniteDuration = 60.second)(f: TestSubscriber.Probe[String] => Unit): Unit
@@ -328,7 +328,7 @@ abstract class QueryTestSpec(config: String, configOverrides: Map[String, Config
   )(implicit system: ActorSystem): Unit = {
     val refs = (seq until seq + 3).map(setupEmpty(_, replyToMessages)).toList
     try f(refs.head, refs.drop(1).head, refs.drop(2).head)
-    finally killActors(refs: _*)
+    finally killActors(refs*)
   }
 
   def withManyTestActors(amount: Int, seq: Int = 1, replyToMessages: Boolean = false)(
@@ -336,9 +336,9 @@ abstract class QueryTestSpec(config: String, configOverrides: Map[String, Config
   )(implicit system: ActorSystem): Unit = {
     val refs = (seq until seq + amount).map(setupEmpty(_, replyToMessages)).toList
     try f(refs)
-    finally killActors(refs: _*)
+    finally killActors(refs*)
   }
 
-  def withTags(payload: Any, tags: String*) = Tagged(payload, Set(tags: _*))
+  def withTags(payload: Any, tags: String*) = Tagged(payload, Set(tags*))
 
 }

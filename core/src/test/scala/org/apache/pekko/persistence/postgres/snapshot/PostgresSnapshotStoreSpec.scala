@@ -6,16 +6,16 @@
 package org.apache.pekko.persistence.postgres.snapshot
 
 import com.typesafe.config.ConfigFactory
-import org.apache.pekko.persistence.postgres.config._
+import org.apache.pekko.persistence.postgres.config.*
 import org.apache.pekko.persistence.postgres.db.SlickDatabase
 import org.apache.pekko.persistence.postgres.util.{ClasspathResources, DropCreate}
-import org.apache.pekko.persistence.postgres.util.Schema._
+import org.apache.pekko.persistence.postgres.util.Schema.*
 import org.apache.pekko.persistence.snapshot.SnapshotStoreSpec
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.concurrent.ScalaFutures
 
 import scala.concurrent.ExecutionContextExecutor
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 abstract class PostgresSnapshotStoreSpec(schemaType: SchemaType)
     extends SnapshotStoreSpec(ConfigFactory.load(schemaType.configName))

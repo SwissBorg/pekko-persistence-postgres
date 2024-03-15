@@ -21,7 +21,7 @@ class SimpleTagDaoSpec
     with BeforeAndAfter
     with IntegrationPatience {
 
-  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
   implicit private val global: ExecutionContext = ExecutionContext.global
 

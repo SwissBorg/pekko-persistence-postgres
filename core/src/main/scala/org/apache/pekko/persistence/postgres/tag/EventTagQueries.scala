@@ -4,7 +4,7 @@ import org.apache.pekko.persistence.postgres.config.TagsTableConfiguration
 
 class EventTagQueries(val tagsTableCfg: TagsTableConfiguration) extends TagTables {
 
-  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
   def add(xs: EventTag) =
     EventTagTable.returning(EventTagTable.map(_.id)) += xs

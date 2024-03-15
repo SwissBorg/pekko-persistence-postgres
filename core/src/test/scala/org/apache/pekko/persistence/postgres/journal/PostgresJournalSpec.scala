@@ -15,12 +15,12 @@ import org.apache.pekko.persistence.JournalProtocol.{
   WriteMessagesSuccessful
 }
 import org.apache.pekko.persistence.journal.JournalSpec
-import org.apache.pekko.persistence.postgres.config._
+import org.apache.pekko.persistence.postgres.config.*
 import org.apache.pekko.persistence.postgres.db.SlickExtension
 import org.apache.pekko.persistence.postgres.journal.dao.JournalMetadataTable
 import org.apache.pekko.persistence.postgres.query.ScalaPostgresReadJournalOperations
 import org.apache.pekko.persistence.postgres.util.{ClasspathResources, DropCreate}
-import org.apache.pekko.persistence.postgres.util.Schema._
+import org.apache.pekko.persistence.postgres.util.Schema.*
 import org.apache.pekko.persistence.query.Sequence
 import org.apache.pekko.testkit.TestProbe
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
@@ -29,7 +29,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Minute, Span}
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 abstract class PostgresJournalSpec(config: String, schemaType: SchemaType)
     extends JournalSpec(ConfigFactory.load(config))
@@ -103,7 +103,7 @@ abstract class PostgresJournalSpec(config: String, schemaType: SchemaType)
   }
 
   "An insert on the journal" must {
-    import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+    import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
     val metadataTable = JournalMetadataTable(journalConfig.journalMetadataTableConfiguration)
     val UNSET_MIN_ORDERING = -1

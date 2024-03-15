@@ -17,7 +17,7 @@ import org.apache.pekko.util.Timeout
 import org.scalatest.BeforeAndAfterAll
 
 import scala.concurrent.ExecutionContext
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 abstract class SharedActorSystemTestSpec(val config: Config) extends SimpleSpec with DropCreate with BeforeAndAfterAll {
   def this(config: String = "plain-application.conf", configOverrides: Map[String, ConfigValue] = Map.empty) =

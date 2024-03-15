@@ -3,12 +3,12 @@ package org.apache.pekko.persistence.postgres.journal
 import com.typesafe.config.{Config, ConfigFactory}
 import org.apache.pekko.actor.{Actor, ActorRef, ActorSystem}
 import org.apache.pekko.persistence.{AtomicWrite, Persistence, PersistentImpl, PersistentRepr}
-import org.apache.pekko.persistence.JournalProtocol._
-import org.apache.pekko.persistence.postgres.config._
+import org.apache.pekko.persistence.JournalProtocol.*
+import org.apache.pekko.persistence.postgres.config.*
 import org.apache.pekko.persistence.postgres.db.SlickExtension
 import org.apache.pekko.persistence.postgres.journal.JournalPartitioningSpec.HugeBatchSmallPartitionConfig
 import org.apache.pekko.persistence.postgres.util.{ClasspathResources, DropCreate}
-import org.apache.pekko.persistence.postgres.util.Schema._
+import org.apache.pekko.persistence.postgres.util.Schema.*
 import org.apache.pekko.testkit.TestProbe
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatest.concurrent.ScalaFutures
@@ -17,7 +17,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 object JournalPartitioningSpec {
   val HugeBatchSmallPartitionConfig: Config = ConfigFactory.parseString {
@@ -54,7 +54,7 @@ abstract class JournalPartitioningSpec(schemaType: SchemaType)
   lazy val db = SlickExtension(system).database(cfg).database
 
   def withFreshSchemaAndPlugin(f: (ActorRef, String) => Unit): Unit = {
-    import org.apache.pekko.testkit._
+    import org.apache.pekko.testkit.*
     dropCreate(schemaType)
     implicit val system: ActorSystem = ActorSystem("JournalPartitioningSpec", config)
     val journal = Persistence(system).journalFor(null)

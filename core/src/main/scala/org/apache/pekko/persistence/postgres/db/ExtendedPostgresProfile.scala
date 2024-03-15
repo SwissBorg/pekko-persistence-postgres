@@ -1,6 +1,6 @@
 package org.apache.pekko.persistence.postgres.db
 
-import com.github.tminglei.slickpg._
+import com.github.tminglei.slickpg.*
 import slick.basic.Capability
 import slick.jdbc.JdbcCapabilities
 

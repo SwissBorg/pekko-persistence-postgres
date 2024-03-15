@@ -4,7 +4,7 @@ import org.apache.pekko.persistence.postgres.config.TagsTableConfiguration
 
 trait TagTables {
 
-  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
   def tagsTableCfg: TagsTableConfiguration
 

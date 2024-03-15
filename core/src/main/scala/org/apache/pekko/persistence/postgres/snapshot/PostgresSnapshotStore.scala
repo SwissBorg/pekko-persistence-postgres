@@ -14,9 +14,9 @@ import org.apache.pekko.persistence.postgres.snapshot.dao.SnapshotDao
 import org.apache.pekko.persistence.snapshot.SnapshotStore
 import org.apache.pekko.serialization.{Serialization, SerializationExtension}
 import org.apache.pekko.stream.{Materializer, SystemMaterializer}
-import slick.jdbc.JdbcBackend._
+import slick.jdbc.JdbcBackend.*
 
-import scala.collection.immutable._
+import scala.collection.immutable.*
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
@@ -27,7 +27,7 @@ object PostgresSnapshotStore {
 }
 
 class PostgresSnapshotStore(config: Config) extends SnapshotStore {
-  import PostgresSnapshotStore._
+  import PostgresSnapshotStore.*
 
   implicit val ec: ExecutionContext = context.dispatcher
   implicit val system: ActorSystem = context.system

@@ -6,9 +6,9 @@
 package org.apache.pekko.persistence.postgres.query.javadsl
 
 import org.apache.pekko.NotUsed
-import org.apache.pekko.persistence.postgres.query.scaladsl.{PostgresReadJournal => ScalaPostgresReadJournal}
+import org.apache.pekko.persistence.postgres.query.scaladsl.{PostgresReadJournal as ScalaPostgresReadJournal}
 import org.apache.pekko.persistence.query.{EventEnvelope, Offset}
-import org.apache.pekko.persistence.query.javadsl._
+import org.apache.pekko.persistence.query.javadsl.*
 import org.apache.pekko.stream.javadsl.Source
 
 object PostgresReadJournal {

@@ -3,7 +3,7 @@ package org.apache.pekko.persistence.postgres.journal.dao
 import org.apache.pekko.persistence.postgres.JournalRow
 import org.apache.pekko.persistence.postgres.config.JournalConfig
 import org.apache.pekko.persistence.postgres.db.DbErrors.withHandledPartitionErrors
-import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 import org.apache.pekko.serialization.Serialization
 import org.apache.pekko.stream.Materializer
 import slick.jdbc.JdbcBackend.Database

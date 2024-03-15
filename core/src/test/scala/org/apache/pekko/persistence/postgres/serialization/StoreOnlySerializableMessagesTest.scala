@@ -9,10 +9,10 @@ import org.apache.pekko.actor.{ActorRef, Props}
 import org.apache.pekko.event.LoggingReceive
 import org.apache.pekko.persistence.{PersistentActor, RecoveryCompleted}
 import org.apache.pekko.persistence.postgres.SharedActorSystemTestSpec
-import org.apache.pekko.persistence.postgres.util.Schema._
+import org.apache.pekko.persistence.postgres.util.Schema.*
 import org.apache.pekko.testkit.TestProbe
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 abstract class StoreOnlySerializableMessagesTest(schemaType: SchemaType)
     extends SharedActorSystemTestSpec(schemaType.configName) {

@@ -15,7 +15,7 @@ import org.apache.pekko.testkit.TestProbe
 import org.apache.pekko.util.Timeout
 
 import scala.concurrent.Future
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.util.Try
 
 object TestProbeReadJournalDao {

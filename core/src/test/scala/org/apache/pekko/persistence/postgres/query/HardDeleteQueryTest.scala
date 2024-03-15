@@ -5,12 +5,12 @@
 
 package org.apache.pekko.persistence.postgres.query
 
-import org.apache.pekko.pattern._
+import org.apache.pekko.pattern.*
 import org.apache.pekko.persistence.postgres.util.Schema.{NestedPartitions, Partitioned, Plain, SchemaType}
 import org.apache.pekko.persistence.query.NoOffset
 import org.scalatest.matchers.should.Matchers
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 abstract class HardDeleteQueryTest(val schemaType: SchemaType)
     extends QueryTestSpec(s"${schemaType.resourceNamePrefix}-application-with-hard-delete.conf")

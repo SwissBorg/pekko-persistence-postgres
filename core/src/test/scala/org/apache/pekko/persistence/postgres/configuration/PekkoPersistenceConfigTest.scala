@@ -6,12 +6,12 @@
 package org.apache.pekko.persistence.postgres.configuration
 
 import com.typesafe.config.{Config, ConfigFactory}
-import org.apache.pekko.persistence.postgres.config._
+import org.apache.pekko.persistence.postgres.config.*
 import org.scalatest.OptionValues
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 class PekkoPersistenceConfigTest extends AnyFlatSpec with Matchers with OptionValues {
   val config: Config = ConfigFactory.parseString("""

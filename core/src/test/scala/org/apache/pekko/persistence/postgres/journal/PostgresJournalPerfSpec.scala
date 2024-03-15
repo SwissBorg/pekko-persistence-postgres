@@ -10,16 +10,16 @@ import org.apache.pekko.actor.Props
 import org.apache.pekko.persistence.CapabilityFlag
 import org.apache.pekko.persistence.journal.JournalPerfSpec
 import org.apache.pekko.persistence.journal.JournalPerfSpec.{BenchActor, Cmd, ResetCounter}
-import org.apache.pekko.persistence.postgres.config._
+import org.apache.pekko.persistence.postgres.config.*
 import org.apache.pekko.persistence.postgres.db.SlickExtension
 import org.apache.pekko.persistence.postgres.util.{ClasspathResources, DropCreate}
-import org.apache.pekko.persistence.postgres.util.Schema._
+import org.apache.pekko.persistence.postgres.util.Schema.*
 import org.apache.pekko.testkit.TestProbe
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatest.concurrent.ScalaFutures
 
 import scala.concurrent.ExecutionContextExecutor
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 abstract class PostgresJournalPerfSpec(config: String, schemaType: SchemaType)
     extends JournalPerfSpec(ConfigFactory.load(config))

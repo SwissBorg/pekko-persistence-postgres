@@ -13,7 +13,7 @@ trait TagDao {
 }
 
 class SimpleTagDao(db: Database, tagsTableCfg: TagsTableConfiguration)(implicit ec: ExecutionContext) extends TagDao {
-  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
   private val queries = new EventTagQueries(tagsTableCfg)
 

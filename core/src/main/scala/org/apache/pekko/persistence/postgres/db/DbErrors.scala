@@ -8,7 +8,7 @@ import scala.util.{Failure, Success}
 
 object DbErrors {
 
-  import ExtendedPostgresProfile.api._
+  import ExtendedPostgresProfile.api.*
 
   val PgDuplicateTable: String = "42P07"
   val PgUniqueViolation: String = "23505"

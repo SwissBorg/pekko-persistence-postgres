@@ -5,7 +5,7 @@ import slick.lifted.TableQuery
 
 class ReadJournalMetadataQueries(journalMetadataTable: TableQuery[JournalMetadataTable]) {
 
-  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
   private def _minAndMaxOrderingForPersistenceId(
       persistenceId: Rep[String]

@@ -12,7 +12,7 @@ import slick.sql.FixedSqlAction
 
 class JournalQueries(journalTable: TableQuery[JournalTable]) {
 
-  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
   private val compiledJournalTable = Compiled(journalTable)
 

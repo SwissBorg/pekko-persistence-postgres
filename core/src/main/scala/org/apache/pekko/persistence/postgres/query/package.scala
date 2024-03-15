@@ -6,7 +6,7 @@
 package org.apache.pekko.persistence.postgres
 
 import org.apache.pekko.NotUsed
-import org.apache.pekko.persistence.query._
+import org.apache.pekko.persistence.query.*
 import org.apache.pekko.stream.scaladsl.Source
 
 import scala.language.implicitConversions

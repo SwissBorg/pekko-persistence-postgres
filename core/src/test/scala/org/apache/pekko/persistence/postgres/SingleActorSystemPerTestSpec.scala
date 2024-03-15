@@ -15,7 +15,7 @@ import org.apache.pekko.util.Timeout
 import org.scalatest.BeforeAndAfterEach
 import slick.jdbc.JdbcBackend.Database
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 abstract class SingleActorSystemPerTestSpec(val config: Config)
     extends SimpleSpec

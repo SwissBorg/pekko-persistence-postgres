@@ -10,7 +10,7 @@ import org.apache.pekko.persistence.postgres.journal.dao.JournalTable
 import slick.lifted.TableQuery
 
 class ReadJournalQueries(journalTable: TableQuery[JournalTable], includeDeleted: Boolean) {
-  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
   private def _allPersistenceIdsDistinct(max: ConstColumn[Long]): Query[Rep[String], String, Seq] =
     baseTableQuery().map(_.persistenceId).distinct.take(max)

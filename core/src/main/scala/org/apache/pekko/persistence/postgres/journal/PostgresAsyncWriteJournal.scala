@@ -17,10 +17,10 @@ import org.apache.pekko.persistence.postgres.journal.PostgresAsyncWriteJournal.{
 import org.apache.pekko.persistence.postgres.journal.dao.{JournalDao, JournalDaoWithUpdates}
 import org.apache.pekko.serialization.{Serialization, SerializationExtension}
 import org.apache.pekko.stream.{Materializer, SystemMaterializer}
-import slick.jdbc.JdbcBackend._
+import slick.jdbc.JdbcBackend.*
 
-import java.util.{HashMap => JHMap, Map => JMap}
-import scala.collection.immutable._
+import java.util.{HashMap as JHMap, Map as JMap}
+import scala.collection.immutable.*
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 
