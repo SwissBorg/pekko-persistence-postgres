@@ -23,13 +23,13 @@ trait ExtendedPostgresProfile
   override protected def computeCapabilities: Set[Capability] =
     super.computeCapabilities + JdbcCapabilities.insertOrUpdate
 
-  override val api = MyAPI
+  override val api: MyAPI.type = MyAPI
 
   trait MyAPI
-      extends API
+      extends ExtPostgresAPI
       with ArrayImplicits
       with SimpleArrayPlainImplicits
-      with DateTimeImplicits
+      with Date2DateTimeImplicitsDuration
       with NetImplicits
       with LTreeImplicits
       with RangeImplicits
