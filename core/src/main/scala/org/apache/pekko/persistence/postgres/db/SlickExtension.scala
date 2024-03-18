@@ -8,9 +8,9 @@ package org.apache.pekko.persistence.postgres.db
 import com.typesafe.config.{Config, ConfigObject}
 import org.apache.pekko.actor.{ActorSystem, ExtendedActorSystem, Extension, ExtensionId, ExtensionIdProvider}
 import org.apache.pekko.persistence.postgres.config.{ConfigKeys, SlickConfiguration}
-import org.apache.pekko.persistence.postgres.util.ConfigOps._
+import org.apache.pekko.persistence.postgres.util.ConfigOps.*
 
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 import scala.util.{Failure, Success}
 
 object SlickExtension extends ExtensionId[SlickExtensionImpl] with ExtensionIdProvider {

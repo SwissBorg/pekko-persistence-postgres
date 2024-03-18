@@ -11,7 +11,7 @@ import org.apache.pekko.persistence.query.NoOffset
 import org.apache.pekko.serialization.SerializationExtension
 import org.apache.pekko.stream.scaladsl.{Sink, Source}
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 object CurrentEventsByTagWithGapsTest {
   private val maxBufferSize = 10000
@@ -37,7 +37,7 @@ class CurrentEventsByTagWithGapsTest
     withActorSystem { implicit system: ActorSystem =>
       import system.dispatcher
       withDatabase { db =>
-        import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+        import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
         db.run {
           val tableConf = journalConfig.journalTableConfiguration
           val schema = tableConf.schemaName.getOrElse("public")

@@ -3,7 +3,7 @@ package org.apache.pekko.persistence.postgres.journal.dao
 import slick.lifted.TableQuery
 
 class JournalMetadataQueries(journalMetadataTable: TableQuery[JournalMetadataTable]) {
-  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
   private def _highestSequenceNrForPersistenceId(persistenceId: Rep[String]): Query[Rep[Long], Long, Seq] = {
     journalMetadataTable.filter(_.persistenceId === persistenceId).map(_.maxSequenceNumber).take(1)

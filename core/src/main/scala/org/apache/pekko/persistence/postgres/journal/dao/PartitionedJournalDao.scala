@@ -26,7 +26,7 @@ class PartitionedJournalDao(db: Database, journalConfig: JournalConfig, serializ
   private val schema = journalTableCfg.schemaName.map(_ + ".").getOrElse("")
   private val seqName = s"$schema${journalTableCfg.tableName}_${journalTableCfg.columnNames.ordering}_seq"
 
-  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
   override protected def writeJournalRows(xs: Seq[JournalRow]): Future[Unit] =
     xs match {

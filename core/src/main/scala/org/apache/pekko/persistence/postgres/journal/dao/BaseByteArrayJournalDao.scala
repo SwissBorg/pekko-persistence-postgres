@@ -16,9 +16,9 @@ import org.apache.pekko.stream.{Materializer, OverflowStrategy, QueueOfferResult
 import org.apache.pekko.stream.scaladsl.{Keep, Sink, Source}
 import org.slf4j.{Logger, LoggerFactory}
 import slick.dbio.DBIOAction
-import slick.jdbc.JdbcBackend._
+import slick.jdbc.JdbcBackend.*
 
-import scala.collection.immutable._
+import scala.collection.immutable.*
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.concurrent.duration.FiniteDuration
 import scala.util.{Failure, Success, Try}
@@ -35,7 +35,7 @@ trait BaseByteArrayJournalDao extends JournalDaoWithUpdates with BaseJournalDaoW
   implicit val mat: Materializer
 
   import journalConfig.daoConfig.{batchSize, bufferSize, logicalDelete, parallelism}
-  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
   val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
@@ -175,7 +175,7 @@ trait BaseByteArrayJournalDao extends JournalDaoWithUpdates with BaseJournalDaoW
 }
 
 trait BaseJournalDaoWithReadMessages extends JournalDaoWithReadMessages {
-  import FlowControl._
+  import FlowControl.*
 
   implicit val ec: ExecutionContext
   implicit val mat: Materializer

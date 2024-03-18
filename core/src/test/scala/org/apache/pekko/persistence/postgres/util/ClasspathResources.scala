@@ -6,7 +6,7 @@
 package org.apache.pekko.persistence.postgres.util
 
 import java.io.InputStream
-import scala.io.{Source => ScalaIOSource}
+import scala.io.{Source as ScalaIOSource}
 
 object ClasspathResources extends ClasspathResources
 

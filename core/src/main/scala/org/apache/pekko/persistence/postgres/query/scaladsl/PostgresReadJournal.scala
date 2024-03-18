@@ -17,17 +17,17 @@ import org.apache.pekko.persistence.postgres.query.JournalSequenceActor.{GetMaxO
 import org.apache.pekko.persistence.postgres.query.dao.ReadJournalDao
 import org.apache.pekko.persistence.postgres.tag.{CachedTagIdResolver, SimpleTagDao, TagIdResolver}
 import org.apache.pekko.persistence.query.{EventEnvelope, Offset, Sequence}
-import org.apache.pekko.persistence.query.scaladsl._
+import org.apache.pekko.persistence.query.scaladsl.*
 import org.apache.pekko.serialization.{Serialization, SerializationExtension}
 import org.apache.pekko.stream.{Materializer, SystemMaterializer}
 import org.apache.pekko.stream.scaladsl.{Sink, Source}
 import org.apache.pekko.util.Timeout
 import org.slf4j.LoggerFactory
-import slick.jdbc.JdbcBackend._
+import slick.jdbc.JdbcBackend.*
 
-import scala.collection.immutable._
+import scala.collection.immutable.*
 import scala.concurrent.{ExecutionContext, Future}
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.util.{Failure, Success}
 
 object PostgresReadJournal {
@@ -222,7 +222,7 @@ class PostgresReadJournal(config: Config, configPath: String)(implicit val syste
       offset: Long,
       terminateAfterOffset: Option[Long]
   ): Source[EventEnvelope, NotUsed] = {
-    import FlowControl._
+    import FlowControl.*
     import org.apache.pekko.pattern.ask
     implicit val askTimeout: Timeout = Timeout(readJournalConfig.journalSequenceRetrievalConfiguration.askTimeout)
     val batchSize = readJournalConfig.maxBufferSize

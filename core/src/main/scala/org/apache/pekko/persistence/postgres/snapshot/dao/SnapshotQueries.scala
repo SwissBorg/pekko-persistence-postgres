@@ -9,7 +9,7 @@ import org.apache.pekko.persistence.postgres.config.SnapshotTableConfiguration
 import org.apache.pekko.persistence.postgres.snapshot.dao.SnapshotTables.SnapshotRow
 
 class SnapshotQueries(override val snapshotTableCfg: SnapshotTableConfiguration) extends SnapshotTables {
-  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
   private val SnapshotTableC = Compiled(SnapshotTable)
 

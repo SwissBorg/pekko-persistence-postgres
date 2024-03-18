@@ -59,7 +59,7 @@ class JournalSequenceActor(readJournalDao: ReadJournalDao, config: JournalSequen
 ) extends Actor
     with ActorLogging
     with Timers {
-  import JournalSequenceActor._
+  import JournalSequenceActor.*
   import config.{batchSize, maxBackoffQueryDelay, maxTries, queryDelay}
   import context.dispatcher
 

@@ -5,7 +5,7 @@ import org.apache.pekko.persistence.postgres.config.JournalConfig
 import org.apache.pekko.persistence.postgres.tag.{CachedTagIdResolver, SimpleTagDao}
 import org.apache.pekko.serialization.Serialization
 import org.apache.pekko.stream.Materializer
-import slick.jdbc.JdbcBackend._
+import slick.jdbc.JdbcBackend.*
 
 import scala.concurrent.ExecutionContext
 
@@ -15,6 +15,6 @@ class FlatJournalDao(val db: Database, val journalConfig: JournalConfig, seriali
 ) extends BaseByteArrayJournalDao {
   val queries = new JournalQueries(FlatJournalTable(journalConfig.journalTableConfiguration))
   val tagDao = new SimpleTagDao(db, journalConfig.tagsTableConfiguration)
-  val eventTagConverter = new CachedTagIdResolver(tagDao, journalConfig.tagsConfig)
-  val serializer = new ByteArrayJournalSerializer(serialization, eventTagConverter)
+  val eventTagConverter: CachedTagIdResolver = new CachedTagIdResolver(tagDao, journalConfig.tagsConfig)
+  val serializer: ByteArrayJournalSerializer = new ByteArrayJournalSerializer(serialization, eventTagConverter)
 }

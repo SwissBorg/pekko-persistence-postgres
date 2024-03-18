@@ -30,7 +30,7 @@ import slick.jdbc.{JdbcBackend, JdbcCapabilities}
 
 import java.util.concurrent.atomic.AtomicLong
 import scala.concurrent.Future
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 abstract class JournalSequenceActorTest(val schemaType: SchemaType) extends QueryTestSpec(schemaType.configName) {
   private val log = LoggerFactory.getLogger(classOf[JournalSequenceActorTest])
@@ -38,7 +38,7 @@ abstract class JournalSequenceActorTest(val schemaType: SchemaType) extends Quer
   private val journalSequenceActorConfig = readJournalConfig.journalSequenceRetrievalConfiguration
   private val journalTable = schemaType.table(journalConfig.journalTableConfiguration)
 
-  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
   implicit val askTimeout: FiniteDuration = 50.millis
 
@@ -306,7 +306,7 @@ class MockDaoJournalSequenceActorTest extends SharedActorSystemTestSpec {
 class NestedPartitionsJournalSequenceActorTest extends JournalSequenceActorTest(NestedPartitions) {
   override def beforeEach(): Unit = {
     super.beforeEach()
-    import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+    import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
     withActorSystem { implicit system: ActorSystem =>
       withDatabase { db =>
         db.run(sqlu"""
@@ -320,7 +320,7 @@ class NestedPartitionsJournalSequenceActorTest extends JournalSequenceActorTest(
 class PartitionedJournalSequenceActorTest extends JournalSequenceActorTest(Partitioned) {
   override def beforeEach(): Unit = {
     super.beforeEach()
-    import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+    import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
     withActorSystem { implicit system: ActorSystem =>
       withDatabase { db =>
         db.run(sqlu"""CREATE TABLE IF NOT EXISTS j_1 PARTITION OF journal FOR VALUES FROM (0) TO (1000000000);""")

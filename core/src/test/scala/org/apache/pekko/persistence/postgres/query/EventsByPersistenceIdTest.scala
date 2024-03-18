@@ -12,7 +12,7 @@ import org.apache.pekko.persistence.postgres.util.Schema.{NestedPartitions, Part
 import org.apache.pekko.persistence.query.{EventEnvelope, Offset, Sequence}
 
 import scala.concurrent.Future
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 abstract class EventsByPersistenceIdTest(val schemaType: SchemaType) extends QueryTestSpec(schemaType.configName) {
   import QueryTestSpec.EventEnvelopeProbeOps

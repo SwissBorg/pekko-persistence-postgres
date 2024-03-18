@@ -8,7 +8,7 @@ package journal.dao
 
 import io.circe.Json
 import org.apache.pekko.persistence.postgres.config.{JournalMetadataTableConfiguration, JournalTableConfiguration}
-import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
 trait JournalTable extends Table[JournalRow] {
   def ordering: Rep[Long]

@@ -5,7 +5,7 @@ import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile
 import slick.lifted.RunnableCompiled
 
 class BaseQueryTest extends SingleActorSystemPerTestSpec {
-  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
   implicit class SQLStringMatcherRunnableCompiled(under: RunnableCompiled[_, _]) {
     def toSQL: String = {
       under.result.toSQL

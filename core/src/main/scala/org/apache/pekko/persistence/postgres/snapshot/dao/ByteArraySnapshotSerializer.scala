@@ -17,7 +17,7 @@ import scala.util.Try
 class ByteArraySnapshotSerializer(serialization: Serialization) extends SnapshotSerializer[SnapshotRow] {
 
   def serialize(metadata: SnapshotMetadata, snapshot: Any): Try[SnapshotRow] = {
-    import io.circe.syntax._
+    import io.circe.syntax.*
     val payload = snapshot.asInstanceOf[AnyRef]
     for {
       ser <- Try(serialization.findSerializerFor(payload))

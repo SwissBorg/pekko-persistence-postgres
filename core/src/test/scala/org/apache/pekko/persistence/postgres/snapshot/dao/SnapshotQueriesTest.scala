@@ -6,7 +6,7 @@ import org.apache.pekko.persistence.postgres.snapshot.dao.SnapshotTables.Snapsho
 import org.apache.pekko.persistence.postgres.util.BaseQueryTest
 
 class SnapshotQueriesTest extends BaseQueryTest {
-  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
   it should "create SQL query for selectAllByPersistenceId.delete" in withSnapshotQueries { queries =>
     queries

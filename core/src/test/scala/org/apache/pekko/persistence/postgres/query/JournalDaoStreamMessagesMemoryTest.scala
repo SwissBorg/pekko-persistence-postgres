@@ -25,7 +25,7 @@ import java.util.UUID
 import scala.collection.immutable
 import scala.collection.immutable.Seq
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.util.{Failure, Success}
 
 object JournalDaoStreamMessagesMemoryTest {

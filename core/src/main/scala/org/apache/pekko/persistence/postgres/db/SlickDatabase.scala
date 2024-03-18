@@ -9,7 +9,7 @@ import com.typesafe.config.Config
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.persistence.postgres.config.SlickConfiguration
 import slick.basic.DatabaseConfig
-import slick.jdbc.JdbcBackend._
+import slick.jdbc.JdbcBackend.*
 import slick.jdbc.JdbcProfile
 
 import javax.naming.InitialContext

@@ -13,7 +13,7 @@ import org.apache.pekko.persistence.postgres.serialization.FlowPersistentReprSer
 import org.apache.pekko.persistence.postgres.tag.TagIdResolver
 import org.apache.pekko.serialization.{Serialization, Serializers}
 
-import scala.collection.immutable._
+import scala.collection.immutable.*
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
@@ -22,7 +22,7 @@ class ByteArrayJournalSerializer(serialization: Serialization, tagConverter: Tag
 ) extends FlowPersistentReprSerializer[JournalRow] {
 
   override def serialize(persistentRepr: PersistentRepr, tags: Set[String]): Future[JournalRow] = {
-    import io.circe.syntax._
+    import io.circe.syntax.*
     val convertedTagsFut = {
       if (tags.nonEmpty) tagConverter.getOrAssignIdsFor(tags).map(_.values)
       else Future.successful(Nil)

@@ -5,11 +5,11 @@
 
 package org.apache.pekko.persistence.postgres.query
 
-import org.apache.pekko.pattern._
+import org.apache.pekko.pattern.*
 import org.apache.pekko.persistence.postgres.util.Schema.{NestedPartitions, Partitioned, Plain, SchemaType}
 import org.apache.pekko.persistence.query.{EventEnvelope, NoOffset, Sequence}
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 abstract class LogicalDeleteQueryTest(val schemaType: SchemaType) extends QueryTestSpec(schemaType.configName) {
   implicit val askTimeout: FiniteDuration = 500.millis

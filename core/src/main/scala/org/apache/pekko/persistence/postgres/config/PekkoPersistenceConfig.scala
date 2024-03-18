@@ -6,9 +6,9 @@
 package org.apache.pekko.persistence.postgres.config
 
 import com.typesafe.config.Config
-import org.apache.pekko.persistence.postgres.util.ConfigOps._
+import org.apache.pekko.persistence.postgres.util.ConfigOps.*
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 object ConfigKeys {
   val useSharedDb = "use-shared-db"

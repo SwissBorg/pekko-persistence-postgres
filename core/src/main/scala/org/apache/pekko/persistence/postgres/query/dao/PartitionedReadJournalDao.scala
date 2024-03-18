@@ -25,7 +25,7 @@ class PartitionedReadJournalDao(
 )(implicit val ec: ExecutionContext, val mat: Materializer)
     extends BaseByteArrayReadJournalDao {
 
-  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
   val queries = new ReadJournalQueries(
     PartitionedJournalTable(readJournalConfig.journalTableConfiguration),
@@ -35,7 +35,7 @@ class PartitionedReadJournalDao(
     JournalMetadataTable(readJournalConfig.journalMetadataTableConfiguration)
   )
 
-  val serializer = new ByteArrayJournalSerializer(
+  val serializer: ByteArrayJournalSerializer = new ByteArrayJournalSerializer(
     serialization,
     new CachedTagIdResolver(
       new SimpleTagDao(db, readJournalConfig.tagsTableConfiguration),

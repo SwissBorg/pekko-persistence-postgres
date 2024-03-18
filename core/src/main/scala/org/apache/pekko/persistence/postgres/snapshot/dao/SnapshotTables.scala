@@ -7,7 +7,7 @@ package org.apache.pekko.persistence.postgres.snapshot.dao
 
 import io.circe.Json
 import org.apache.pekko.persistence.postgres.config.SnapshotTableConfiguration
-import org.apache.pekko.persistence.postgres.snapshot.dao.SnapshotTables._
+import org.apache.pekko.persistence.postgres.snapshot.dao.SnapshotTables.*
 
 object SnapshotTables {
   case class SnapshotRow(
@@ -20,7 +20,7 @@ object SnapshotTables {
 }
 
 trait SnapshotTables {
-  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
   def snapshotTableCfg: SnapshotTableConfiguration
 

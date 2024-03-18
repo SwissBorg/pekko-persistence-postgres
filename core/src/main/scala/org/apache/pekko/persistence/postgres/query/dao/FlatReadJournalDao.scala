@@ -20,7 +20,7 @@ class FlatReadJournalDao(
     FlatJournalTable(readJournalConfig.journalTableConfiguration),
     readJournalConfig.includeDeleted
   )
-  val serializer = new ByteArrayJournalSerializer(
+  val serializer: ByteArrayJournalSerializer = new ByteArrayJournalSerializer(
     serialization,
     new CachedTagIdResolver(
       new SimpleTagDao(db, readJournalConfig.tagsTableConfiguration),

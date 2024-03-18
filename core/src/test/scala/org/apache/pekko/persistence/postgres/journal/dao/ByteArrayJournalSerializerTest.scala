@@ -18,7 +18,7 @@ import org.scalatest.matchers.must.Matchers
 import java.nio.charset.Charset
 import java.time.{LocalDateTime, ZoneOffset}
 import java.util.UUID
-import scala.collection.immutable._
+import scala.collection.immutable.*
 import scala.concurrent.Future
 
 class ByteArrayJournalSerializerTest extends SharedActorSystemTestSpec with ScalaFutures {

@@ -7,7 +7,7 @@ package org.apache.pekko.persistence.postgres.query
 
 import org.apache.pekko.persistence.postgres.util.Schema.{NestedPartitions, Partitioned, Plain, SchemaType}
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 abstract class AllPersistenceIdsTest(val schemaType: SchemaType) extends QueryTestSpec(schemaType.configName) {
   it should "not terminate the stream when there are not pids" in withActorSystem { implicit system =>

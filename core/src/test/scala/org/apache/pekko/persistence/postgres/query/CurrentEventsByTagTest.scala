@@ -8,13 +8,13 @@ package org.apache.pekko.persistence.postgres.query
 import com.typesafe.config.{Config, ConfigFactory, ConfigValue, ConfigValueFactory}
 import org.apache.pekko.Done
 import org.apache.pekko.pattern.ask
-import org.apache.pekko.persistence.postgres.query.CurrentEventsByTagTest._
+import org.apache.pekko.persistence.postgres.query.CurrentEventsByTagTest.*
 import org.apache.pekko.persistence.postgres.query.EventAdapterTest.{Event, TaggedAsyncEvent}
 import org.apache.pekko.persistence.postgres.util.Schema.{NestedPartitions, Partitioned, Plain, SchemaType}
 import org.apache.pekko.persistence.query.{EventEnvelope, NoOffset, Sequence}
 
 import scala.concurrent.Future
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 object CurrentEventsByTagTest {
   val maxBufferSize = 20
@@ -174,7 +174,7 @@ abstract class CurrentEventsByTagTest(val schemaType: SchemaType)
     val batch1Size = 200
     val batch2Size = 10000
 
-    import scala.jdk.CollectionConverters._
+    import scala.jdk.CollectionConverters.*
 
     it should "complete without any gaps in case events are being persisted when the query is executed" in withActorSystem(
       withMaxBufferSize(1000)

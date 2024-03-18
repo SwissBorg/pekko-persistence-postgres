@@ -8,7 +8,7 @@ package org.apache.pekko.persistence.postgres
 import org.apache.pekko.actor.{ActorRef, ActorSystem}
 import org.apache.pekko.persistence.postgres.util.ClasspathResources
 import org.apache.pekko.testkit.TestProbe
-import org.scalatest._
+import org.scalatest.*
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers

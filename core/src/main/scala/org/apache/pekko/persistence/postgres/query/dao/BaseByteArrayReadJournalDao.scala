@@ -20,9 +20,9 @@ import org.apache.pekko.serialization.Serialization
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.stream.scaladsl.Source
 import slick.basic.DatabasePublisher
-import slick.jdbc.JdbcBackend._
+import slick.jdbc.JdbcBackend.*
 
-import scala.collection.immutable._
+import scala.collection.immutable.*
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
@@ -33,7 +33,7 @@ trait BaseByteArrayReadJournalDao extends ReadJournalDao with BaseJournalDaoWith
   def tagIdResolver: TagIdResolver
   def readJournalConfig: ReadJournalConfig
 
-  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
   override def allPersistenceIdsSource(max: Long): Source[String, NotUsed] =
     Source.fromPublisher(db.stream(queries.allPersistenceIdsDistinct(max).result))

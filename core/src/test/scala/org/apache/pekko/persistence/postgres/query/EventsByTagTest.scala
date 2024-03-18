@@ -14,12 +14,12 @@ import org.apache.pekko.persistence.postgres.query.EventAdapterTest.{
   TaggedAsyncEvent,
   TaggedEvent
 }
-import org.apache.pekko.persistence.postgres.query.EventsByTagTest._
+import org.apache.pekko.persistence.postgres.query.EventsByTagTest.*
 import org.apache.pekko.persistence.postgres.util.Schema.{NestedPartitions, Partitioned, Plain, SchemaType}
 import org.apache.pekko.persistence.query.{EventEnvelope, NoOffset, Sequence}
 
 import scala.concurrent.Future
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 object EventsByTagTest {
   val maxBufferSize = 20

@@ -10,7 +10,7 @@ import org.apache.pekko.persistence.{AtomicWrite, PersistentRepr}
 import org.apache.pekko.persistence.journal.Tagged
 import org.apache.pekko.stream.scaladsl.Flow
 
-import scala.collection.immutable._
+import scala.collection.immutable.*
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
