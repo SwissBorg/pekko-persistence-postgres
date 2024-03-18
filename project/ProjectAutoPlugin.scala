@@ -38,9 +38,17 @@ object ProjectAutoPlugin extends AutoPlugin {
       "-language:implicitConversions",
       "-language:reflectiveCalls",
       "-language:higherKinds",
-      "-release:11",
-      "-Xsource:3"
-    ),
+      "-release:11"
+    ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, 13)) =>
+        List(
+          "-Xsource:3"
+        )
+      case Some((3, _)) =>
+        List("-source:3.0-migration")
+      case _ =>
+        Nil
+    }),
     Compile / doc / scalacOptions := scalacOptions.value ++ Seq(
       "-doc-title",
       "Pekko Persistence Postgres",
@@ -48,8 +56,6 @@ object ProjectAutoPlugin extends AutoPlugin {
       version.value,
       "-sourcepath",
       (ThisBuild / baseDirectory).value.toString,
-      "-skip-packages",
-      "pekko.pattern", // for some reason Scaladoc creates this
       "-doc-source-url", {
         val branch = if (isSnapshot.value) "main" else s"v${version.value}"
         s"https://github.com/SwissBorg/pekko-persistence-postgres/tree/${branch}€{FILE_PATH_EXT}#L€{FILE_LINE}"

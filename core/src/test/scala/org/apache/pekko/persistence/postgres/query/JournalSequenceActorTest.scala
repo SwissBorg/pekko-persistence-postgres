@@ -12,17 +12,14 @@ import org.apache.pekko.persistence.postgres.{JournalRow, SharedActorSystemTestS
 import org.apache.pekko.persistence.postgres.config.JournalSequenceRetrievalConfig
 import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile
 import org.apache.pekko.persistence.postgres.query.JournalSequenceActor.{GetMaxOrderingId, MaxOrderingId}
-import org.apache.pekko.persistence.postgres.query.dao.{
-  FlatReadJournalDao,
-  PartitionedReadJournalDao,
-  TestProbeReadJournalDao
-}
+import org.apache.pekko.persistence.postgres.query.dao.{FlatReadJournalDao, PartitionedReadJournalDao, TestProbeReadJournalDao}
 import org.apache.pekko.persistence.postgres.tag.{CachedTagIdResolver, SimpleTagDao}
 import org.apache.pekko.persistence.postgres.util.Schema.{NestedPartitions, Partitioned, Plain, SchemaType}
 import org.apache.pekko.serialization.SerializationExtension
 import org.apache.pekko.stream.{Materializer, SystemMaterializer}
 import org.apache.pekko.stream.scaladsl.{Sink, Source}
 import org.apache.pekko.testkit.TestProbe
+import org.scalatest.concurrent.PatienceConfiguration.{Interval, Timeout}
 import org.scalatest.time.Span
 import org.slf4j.LoggerFactory
 import slick.jdbc
@@ -88,11 +85,10 @@ abstract class JournalSequenceActorTest(val schemaType: SchemaType) extends Quer
 
           val startTime = System.currentTimeMillis()
           withJournalSequenceActor(db, maxTries = 100) { actor =>
-            val patienceConfig = PatienceConfig(10.seconds, Span(200, org.scalatest.time.Millis))
-            eventually {
+            eventually(Timeout(10.seconds), Interval(Span(200, org.scalatest.time.Millis))) {
               val currentMax = actor.ask(GetMaxOrderingId).mapTo[MaxOrderingId].futureValue.maxOrdering
               currentMax shouldBe elements
-            }(patienceConfig, implicitly, implicitly)
+            }
           }
           val timeTaken = System.currentTimeMillis() - startTime
           log.info(s"Recovered all events in $timeTaken ms")
@@ -124,11 +120,10 @@ abstract class JournalSequenceActorTest(val schemaType: SchemaType) extends Quer
 
           withJournalSequenceActor(db, maxTries = 2) { actor =>
             // Should normally recover after `maxTries` seconds
-            val patienceConfig = PatienceConfig(10.seconds, Span(200, org.scalatest.time.Millis))
-            eventually {
+            eventually(Timeout(10.seconds), Interval(Span(200, org.scalatest.time.Millis))) {
               val currentMax = actor.ask(GetMaxOrderingId).mapTo[MaxOrderingId].futureValue.maxOrdering
               currentMax shouldBe lastElement
-            }(patienceConfig, implicitly, implicitly)
+            }
           }
         }
       }
@@ -159,11 +154,10 @@ abstract class JournalSequenceActorTest(val schemaType: SchemaType) extends Quer
 
           withJournalSequenceActor(db, maxTries = 2) { actor =>
             // The actor should assume the max after 2 seconds
-            val patienceConfig = PatienceConfig(3.seconds)
-            eventually {
+            eventually(Timeout(3.seconds)) {
               val currentMax = actor.ask(GetMaxOrderingId).mapTo[MaxOrderingId].futureValue.maxOrdering
               currentMax shouldBe highestValue
-            }(patienceConfig, implicitly, implicitly)
+            }
           }
         }
       }

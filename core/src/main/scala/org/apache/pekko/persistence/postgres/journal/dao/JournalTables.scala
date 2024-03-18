@@ -38,7 +38,7 @@ class FlatJournalTable private[dao] (_tableTag: Tag, journalTableCfg: JournalTab
     message,
     tags,
     metadata
-  ) <> (JournalRow.tupled, JournalRow.unapply)
+  ) <> ((JournalRow.apply _).tupled, JournalRow.unapply)
 
   val ordering: Rep[Long] = column[Long](journalTableCfg.columnNames.ordering, O.AutoInc)
   val persistenceId: Rep[String] =
@@ -69,7 +69,7 @@ class PartitionedJournalTable private (_tableTag: Tag, journalTableCfg: JournalT
     message,
     tags,
     metadata
-  ) <> (JournalRow.tupled, JournalRow.unapply)
+  ) <> ((JournalRow.apply _).tupled, JournalRow.unapply)
 
   val ordering: Rep[Long] = column[Long](journalTableCfg.columnNames.ordering)
   val persistenceId: Rep[String] =
@@ -106,7 +106,7 @@ class JournalMetadataTable(_tableTag: Tag, journalMetadataTableCfg: JournalMetad
     maxSequenceNumber,
     minOrdering,
     maxOrdering
-  ) <> (JournalMetadataRow.tupled, JournalMetadataRow.unapply)
+  ) <> ((JournalMetadataRow.apply _).tupled, JournalMetadataRow.unapply)
 
   val id: Rep[Long] = column[Long](journalMetadataTableCfg.columnNames.id)
   val persistenceId: Rep[String] =

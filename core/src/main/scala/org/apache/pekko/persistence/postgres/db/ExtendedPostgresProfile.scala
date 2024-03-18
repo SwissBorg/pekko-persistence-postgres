@@ -13,7 +13,6 @@ trait ExtendedPostgresProfile
     with PgSearchSupport
     with PgNetSupport
     with PgLTreeSupport
-    with PgJsonSupport
     with array.PgArrayJdbcTypes
     with PgCirceJsonSupport {
 

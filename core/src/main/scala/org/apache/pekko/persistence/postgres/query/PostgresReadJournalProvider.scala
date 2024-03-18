@@ -11,7 +11,9 @@ import org.apache.pekko.persistence.query.ReadJournalProvider
 
 class PostgresReadJournalProvider(system: ExtendedActorSystem, config: Config, configPath: String)
     extends ReadJournalProvider {
-  override val scaladslReadJournal = new scaladsl.PostgresReadJournal(config, configPath)(system)
+  override def scaladslReadJournal(): scaladsl.PostgresReadJournal =
+    new scaladsl.PostgresReadJournal(config, configPath)(system)
 
-  override val javadslReadJournal = new javadsl.PostgresReadJournal(scaladslReadJournal)
+  override def javadslReadJournal(): javadsl.PostgresReadJournal =
+    new javadsl.PostgresReadJournal(scaladslReadJournal())
 }

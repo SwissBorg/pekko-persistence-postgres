@@ -65,7 +65,6 @@ class PostgresSnapshotStore(config: Config) extends SnapshotStore {
         snapshotDao.snapshotForMaxSequenceNr(persistenceId, maxSequenceNr)
       case SnapshotSelectionCriteria(maxSequenceNr, maxTimestamp, _, _) =>
         snapshotDao.snapshotForMaxSequenceNrAndMaxTimestamp(persistenceId, maxSequenceNr, maxTimestamp)
-      case _ => Future.successful(None)
     }
 
     result.map(_.map(toSelectedSnapshot))
@@ -88,7 +87,6 @@ class PostgresSnapshotStore(config: Config) extends SnapshotStore {
       snapshotDao.deleteUpToMaxSequenceNr(persistenceId, maxSequenceNr)
     case SnapshotSelectionCriteria(maxSequenceNr, maxTimestamp, _, _) =>
       snapshotDao.deleteUpToMaxSequenceNrAndMaxTimestamp(persistenceId, maxSequenceNr, maxTimestamp)
-    case _ => Future.successful(())
   }
 
   override def postStop(): Unit = {
