@@ -56,8 +56,6 @@ object ProjectAutoPlugin extends AutoPlugin {
       version.value,
       "-sourcepath",
       (ThisBuild / baseDirectory).value.toString,
-      "-skip-packages",
-      "pekko.pattern", // for some reason Scaladoc creates this
       "-doc-source-url", {
         val branch = if (isSnapshot.value) "main" else s"v${version.value}"
         s"https://github.com/SwissBorg/pekko-persistence-postgres/tree/${branch}€{FILE_PATH_EXT}#L€{FILE_LINE}"
