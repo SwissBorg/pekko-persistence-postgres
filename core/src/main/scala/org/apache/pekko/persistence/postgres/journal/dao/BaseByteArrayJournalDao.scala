@@ -55,7 +55,7 @@ trait BaseByteArrayJournalDao extends JournalDaoWithUpdates with BaseJournalDaoW
   }
 
   private val writeQueue = Source
-    .queue[(Promise[Unit], Seq[JournalRow])](bufferSize, OverflowStrategy.dropNew)
+    .queue[(Promise[Unit], Seq[JournalRow])](bufferSize)
     .batchWeighted[(Seq[Promise[Unit]], Seq[JournalRow])](batchSize, _._2.size, tup => Vector(tup._1) -> tup._2) {
       case ((promises, rows), (newPromise, newRows)) => (promises :+ newPromise) -> (rows ++ newRows)
     }
@@ -69,17 +69,17 @@ trait BaseByteArrayJournalDao extends JournalDaoWithUpdates with BaseJournalDaoW
 
   private def queueWriteJournalRows(xs: Seq[JournalRow]): Future[Unit] = {
     val promise = Promise[Unit]()
-    writeQueue.offer(promise -> xs).flatMap {
+    writeQueue.offer(promise -> xs) match {
       case QueueOfferResult.Enqueued =>
         promise.future
-      case QueueOfferResult.Failure(t) =>
-        Future.failed(new Exception("Failed to write journal row batch", t))
       case QueueOfferResult.Dropped =>
         Future.failed(
           new Exception(
             s"Failed to enqueue journal row batch write, the queue buffer was full ($bufferSize elements) please check the postgres-journal.bufferSize setting"
           )
         )
+      case QueueOfferResult.Failure(t) =>
+        Future.failed(new Exception("Failed to write journal row batch", t))
       case QueueOfferResult.QueueClosed =>
         Future.failed(new Exception("Failed to enqueue journal row batch write, the queue was closed"))
     }
