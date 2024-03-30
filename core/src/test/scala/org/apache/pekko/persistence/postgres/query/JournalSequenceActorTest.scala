@@ -12,7 +12,11 @@ import org.apache.pekko.persistence.postgres.{JournalRow, SharedActorSystemTestS
 import org.apache.pekko.persistence.postgres.config.JournalSequenceRetrievalConfig
 import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile
 import org.apache.pekko.persistence.postgres.query.JournalSequenceActor.{GetMaxOrderingId, MaxOrderingId}
-import org.apache.pekko.persistence.postgres.query.dao.{FlatReadJournalDao, PartitionedReadJournalDao, TestProbeReadJournalDao}
+import org.apache.pekko.persistence.postgres.query.dao.{
+  FlatReadJournalDao,
+  PartitionedReadJournalDao,
+  TestProbeReadJournalDao
+}
 import org.apache.pekko.persistence.postgres.tag.{CachedTagIdResolver, SimpleTagDao}
 import org.apache.pekko.persistence.postgres.util.Schema.{NestedPartitions, Partitioned, Plain, SchemaType}
 import org.apache.pekko.serialization.SerializationExtension
