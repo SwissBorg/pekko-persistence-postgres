@@ -8,7 +8,6 @@ package org.apache.pekko.persistence.postgres.query
 import com.typesafe.config.ConfigValue
 import org.apache.pekko.actor.{ActorRef, ActorSystem, Props, Stash, Status}
 import org.apache.pekko.event.LoggingReceive
-import org.apache.pekko.persistence.{DeleteMessagesFailure, DeleteMessagesSuccess, PersistentActor}
 import org.apache.pekko.persistence.journal.Tagged
 import org.apache.pekko.persistence.postgres.SingleActorSystemPerTestSpec
 import org.apache.pekko.persistence.postgres.query.EventAdapterTest.{Event, TaggedAsyncEvent, TaggedEvent}
@@ -16,15 +15,15 @@ import org.apache.pekko.persistence.postgres.query.javadsl.PostgresReadJournal a
 import org.apache.pekko.persistence.postgres.query.scaladsl.PostgresReadJournal
 import org.apache.pekko.persistence.postgres.util.Schema.SchemaType
 import org.apache.pekko.persistence.query.{EventEnvelope, Offset, PersistenceQuery}
-import org.apache.pekko.stream.{Materializer, SystemMaterializer}
+import org.apache.pekko.persistence.{DeleteMessagesFailure, DeleteMessagesSuccess, PersistentActor}
 import org.apache.pekko.stream.scaladsl.Sink
 import org.apache.pekko.stream.testkit.TestSubscriber
 import org.apache.pekko.stream.testkit.javadsl.TestSink as JavaSink
 import org.apache.pekko.stream.testkit.scaladsl.TestSink
-import slick.jdbc.PostgresProfile.api.*
+import org.apache.pekko.stream.{Materializer, SystemMaterializer}
 
 import scala.concurrent.Future
-import scala.concurrent.duration.{FiniteDuration, *}
+import scala.concurrent.duration.{FiniteDuration, _}
 
 trait ReadJournalOperations {
   def withCurrentPersistenceIds(within: FiniteDuration = 60.second)(f: TestSubscriber.Probe[String] => Unit): Unit
