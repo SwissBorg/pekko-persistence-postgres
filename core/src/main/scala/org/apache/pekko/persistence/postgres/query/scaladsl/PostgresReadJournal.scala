@@ -108,15 +108,15 @@ class PostgresReadJournal(config: Config, configPath: String)(implicit val syste
     Source
       .repeat(0)
       .flatMapConcat(_ => delaySource.flatMapConcat(_ => currentPersistenceIds()))
-      .statefulMapConcat[String] { () =>
-        var knownIds = Set.empty[String]
-        def next(id: String): Iterable[String] = {
-          val xs = Set(id).diff(knownIds)
-          knownIds += id
-          xs
-        }
-        id => next(id)
-      }
+      .statefulMap(() => Set.empty[String])(
+        (knownIds, id) =>
+          if (knownIds.contains(id))
+            (knownIds + id, None)
+          else
+            (knownIds + id, Some(id)),
+        _ => None
+      )
+      .collect { case Some(elem) => elem }
 
   private def adaptEvents(repr: PersistentRepr): Seq[PersistentRepr] = {
     val adapter = eventAdapters.get(repr.payload.getClass)
