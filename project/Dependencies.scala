@@ -10,7 +10,7 @@ object Dependencies {
   val ScalaTestVersion = "3.2.18"
   val SlickVersion = "3.5.0"
   val SlickPgVersion = "0.22.1"
-  val LogbackVersion = "1.5.3"
+  val LogbackVersion = "1.5.4"
   val PostgresqlVersion = "42.7.3"
 
   val Libraries: Seq[ModuleID] = Seq(
