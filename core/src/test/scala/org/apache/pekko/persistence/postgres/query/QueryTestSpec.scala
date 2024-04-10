@@ -12,14 +12,14 @@ import org.apache.pekko.persistence.{DeleteMessagesFailure, DeleteMessagesSucces
 import org.apache.pekko.persistence.journal.Tagged
 import org.apache.pekko.persistence.postgres.SingleActorSystemPerTestSpec
 import org.apache.pekko.persistence.postgres.query.EventAdapterTest.{Event, TaggedAsyncEvent, TaggedEvent}
-import org.apache.pekko.persistence.postgres.query.javadsl.{PostgresReadJournal as JavaPostgresReadJournal}
+import org.apache.pekko.persistence.postgres.query.javadsl.PostgresReadJournal as JavaPostgresReadJournal
 import org.apache.pekko.persistence.postgres.query.scaladsl.PostgresReadJournal
 import org.apache.pekko.persistence.postgres.util.Schema.SchemaType
 import org.apache.pekko.persistence.query.{EventEnvelope, Offset, PersistenceQuery}
 import org.apache.pekko.stream.{Materializer, SystemMaterializer}
 import org.apache.pekko.stream.scaladsl.Sink
 import org.apache.pekko.stream.testkit.TestSubscriber
-import org.apache.pekko.stream.testkit.javadsl.{TestSink as JavaSink}
+import org.apache.pekko.stream.testkit.javadsl.TestSink as JavaSink
 import org.apache.pekko.stream.testkit.scaladsl.TestSink
 import slick.jdbc.PostgresProfile.api.*
 
