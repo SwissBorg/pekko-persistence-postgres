@@ -14,9 +14,9 @@ import org.apache.pekko.persistence.postgres.serialization.FlowPersistentReprSer
 import org.apache.pekko.persistence.postgres.tag.TagIdResolver
 import org.apache.pekko.stream.scaladsl.Source
 import slick.basic.DatabasePublisher
-import slick.jdbc.JdbcBackend._
+import slick.jdbc.JdbcBackend.*
 
-import scala.collection.immutable._
+import scala.collection.immutable.*
 import scala.concurrent.Future
 import scala.util.Try
 

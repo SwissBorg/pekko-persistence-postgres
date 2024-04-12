@@ -5,7 +5,7 @@
 
 package org.apache.pekko.persistence.postgres
 
-import org.apache.pekko.persistence.query._
+import org.apache.pekko.persistence.query.*
 
 import scala.language.implicitConversions
 

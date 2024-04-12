@@ -23,7 +23,7 @@ import org.apache.pekko.stream.testkit.scaladsl.TestSink
 import org.apache.pekko.stream.{Materializer, SystemMaterializer}
 
 import scala.concurrent.Future
-import scala.concurrent.duration.{FiniteDuration, _}
+import scala.concurrent.duration.{FiniteDuration, *}
 
 trait ReadJournalOperations {
   def withCurrentPersistenceIds(within: FiniteDuration = 60.second)(f: TestSubscriber.Probe[String] => Unit): Unit
