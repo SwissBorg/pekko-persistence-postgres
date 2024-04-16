@@ -11,7 +11,6 @@ import org.apache.pekko.persistence.postgres.snapshot.dao.SnapshotTables.Snapsho
 import org.apache.pekko.serialization.Serialization
 import org.apache.pekko.stream.Materializer
 import slick.jdbc.JdbcBackend
-import slick.jdbc.JdbcProfile
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}

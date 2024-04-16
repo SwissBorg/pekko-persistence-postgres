@@ -9,21 +9,15 @@ package query.dao
 import org.apache.pekko.NotUsed
 import org.apache.pekko.persistence.PersistentRepr
 import org.apache.pekko.persistence.postgres.config.ReadJournalConfig
-import org.apache.pekko.persistence.postgres.journal.dao.{
-  BaseJournalDaoWithReadMessages,
-  ByteArrayJournalSerializer,
-  JournalMetadataTable
-}
+import org.apache.pekko.persistence.postgres.journal.dao.BaseJournalDaoWithReadMessages
 import org.apache.pekko.persistence.postgres.serialization.FlowPersistentReprSerializer
-import org.apache.pekko.persistence.postgres.tag.{CachedTagIdResolver, SimpleTagDao, TagIdResolver}
-import org.apache.pekko.serialization.Serialization
-import org.apache.pekko.stream.Materializer
+import org.apache.pekko.persistence.postgres.tag.TagIdResolver
 import org.apache.pekko.stream.scaladsl.Source
 import slick.basic.DatabasePublisher
 import slick.jdbc.JdbcBackend.*
 
 import scala.collection.immutable.*
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 import scala.util.Try
 
 trait BaseByteArrayReadJournalDao extends ReadJournalDao with BaseJournalDaoWithReadMessages {

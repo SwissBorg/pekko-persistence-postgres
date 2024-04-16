@@ -5,8 +5,6 @@
 
 package org.apache.pekko.persistence.postgres.journal
 
-import scala.collection.immutable.Set
-
 package object dao {
   def encodeTags(tags: Set[String], separator: String): Option[String] =
     if (tags.isEmpty) None else Option(tags.mkString(separator))

@@ -21,7 +21,6 @@ import org.apache.pekko.stream.scaladsl.Sink
 import org.apache.pekko.stream.testkit.TestSubscriber
 import org.apache.pekko.stream.testkit.javadsl.TestSink as JavaSink
 import org.apache.pekko.stream.testkit.scaladsl.TestSink
-import slick.jdbc.PostgresProfile.api.*
 
 import scala.concurrent.Future
 import scala.concurrent.duration.{FiniteDuration, *}

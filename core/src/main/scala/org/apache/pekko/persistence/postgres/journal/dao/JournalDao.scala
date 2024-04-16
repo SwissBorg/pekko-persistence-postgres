@@ -7,7 +7,6 @@ package org.apache.pekko.persistence.postgres.journal.dao
 
 import org.apache.pekko.persistence.AtomicWrite
 
-import scala.collection.immutable.Seq
 import scala.concurrent.Future
 import scala.util.Try
 
