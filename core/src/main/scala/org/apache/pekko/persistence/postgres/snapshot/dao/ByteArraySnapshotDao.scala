@@ -20,7 +20,7 @@ class ByteArraySnapshotDao(db: JdbcBackend#Database, snapshotConfig: SnapshotCon
     ec: ExecutionContext,
     val mat: Materializer
 ) extends SnapshotDao {
-  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api._
+  import org.apache.pekko.persistence.postgres.db.ExtendedPostgresProfile.api.*
 
   val queries = new SnapshotQueries(snapshotConfig.snapshotTableConfiguration)
 
