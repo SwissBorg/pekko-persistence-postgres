@@ -22,6 +22,8 @@ jobs:
       uses: coursier/setup-action@v1
       with:
         jvm: ${{matrix.java}}
+    - name: Check docker compose
+      run: docker-compose --version
     - name: Start Postgres
       run: sh ./scripts/launch-postgres.sh
     - name: Run tests
