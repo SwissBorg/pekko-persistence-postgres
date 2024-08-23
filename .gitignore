@@ -12,3 +12,6 @@ target
 .metals/
 .vscode/
 .bsp/
+
+.bundle/
+vendor/
