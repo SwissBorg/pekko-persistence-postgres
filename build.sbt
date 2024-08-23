@@ -12,8 +12,13 @@ lazy val core = project
   .enablePlugins(MimaPlugin)
   .settings(
     name := "pekko-persistence-postgres",
-    libraryDependencies ++= Dependencies.Libraries,
-    mimaBinaryIssueFilters ++= Seq()
+    mimaBinaryIssueFilters ++= Seq(),
+    libraryDependencies ++= {
+      (CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((3, _)) => Dependencies.Libraries.scala3
+        case _            => Dependencies.Libraries.scala2
+      })
+    } ++ Dependencies.Libraries.testing
   )
 
 TaskKey[Unit]("verifyCodeFmt") := {

@@ -22,33 +22,10 @@ object ProjectAutoPlugin extends AutoPlugin {
       )
     )
 
-  override val projectSettings: Seq[Setting[_]] = Seq(
-    crossVersion := CrossVersion.binary,
-    crossScalaVersions := Dependencies.ScalaVersions,
-    scalaVersion := Dependencies.Scala213,
+  override val projectSettings: Seq[Setting[_]] = commonCrossCompileSettings ++ Seq(
     Test / fork := true,
     Test / parallelExecution := false,
     Test / logBuffered := true,
-    scalacOptions ++= Seq(
-      "-encoding",
-      "UTF-8",
-      "-deprecation",
-      "-feature",
-      "-unchecked",
-      "-language:implicitConversions",
-      "-language:reflectiveCalls",
-      "-language:higherKinds",
-      "-release:11"
-    ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, 13)) =>
-        List(
-          "-Xsource:3"
-        )
-      case Some((3, _)) =>
-        List("-source:3.0-migration")
-      case _ =>
-        Nil
-    }),
     Compile / doc / scalacOptions := scalacOptions.value ++ Seq(
       "-doc-title",
       "Pekko Persistence Postgres",
@@ -71,4 +48,33 @@ object ProjectAutoPlugin extends AutoPlugin {
     )
   )
 
+  private lazy val commonScalacOptions: Seq[String] = Seq(
+    "-encoding",
+    "UTF-8", // Specify character encoding used by source files.
+    "-feature", // Emit warning and location for usages of features that should be imported explicitly.
+    "-deprecation", // Emit warning and location for usages of deprecated APIs.
+    "-unchecked", // Enable additional warnings where generated code depends on assumptions.
+    "-language:implicitConversions",
+    "-language:reflectiveCalls",
+    "-language:higherKinds",
+    "-release:11"
+  )
+
+  private def commonCrossCompileSettings: Seq[Def.Setting[_]] = Seq(
+    scalaVersion := Dependencies.Scala3,
+    crossScalaVersions := Seq(Dependencies.Scala213, Dependencies.Scala3),
+    scalacOptions ++= {
+      (CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((3, _)) =>
+          commonScalacOptions ++ Seq(
+            // options dedicated for cross build / migration to Scala 3
+            "-source:3.0-migration"
+          )
+        case _ =>
+          commonScalacOptions ++ Seq(
+            "-Xsource:3"
+          )
+      })
+    }
+  )
 }
