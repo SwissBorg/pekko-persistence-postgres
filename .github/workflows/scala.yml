@@ -18,6 +18,11 @@ jobs:
         scala: [ 2.13.14, 3.3.3 ]
     steps:
     - uses: actions/checkout@v4
+    - name: Install Compose
+      uses: ndeloof/install-compose-action@v0.0.1
+      with:
+        legacy: true    # will also install in PATH as `docker-compose`
+    - run: docker-compose --version
     - name: Setup Scala and Java
       uses: coursier/setup-action@v1
       with:
