@@ -13,12 +13,7 @@ lazy val core = project
   .settings(
     name := "pekko-persistence-postgres",
     mimaBinaryIssueFilters ++= Seq(),
-    libraryDependencies ++= {
-      (CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((3, _)) => Dependencies.Libraries.scala3
-        case _            => Dependencies.Libraries.scala2
-      })
-    } ++ Dependencies.Libraries.testing
+    libraryDependencies ++= Dependencies.Libraries.core ++ Dependencies.Libraries.testing
   )
 
 TaskKey[Unit]("verifyCodeFmt") := {

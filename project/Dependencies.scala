@@ -7,7 +7,7 @@ object Dependencies {
 
   object Libraries {
     object Pekko {
-      private val Version = "1.0.1"
+      private val Version = "1.1.0"
 
       def slf4j = "org.apache.pekko" %% "pekko-slf4j" % Version
       def persistence = "org.apache.pekko" %% "pekko-persistence-query" % Version
@@ -28,9 +28,9 @@ object Dependencies {
       def postgresql = "org.postgresql" % "postgresql" % PostgresqlVersion
     }
 
-    sealed trait Slick {
-      protected val SlickVersion: String
-      protected val SlickPgVersion: String
+    object Slick {
+      private val SlickVersion = "3.5.1"
+      private val SlickPgVersion = "0.22.2"
 
       def slick = "com.typesafe.slick" %% "slick" % SlickVersion
       def slickHikariCP = "com.typesafe.slick" %% "slick-hikaricp" % SlickVersion
@@ -38,33 +38,13 @@ object Dependencies {
       def slickPgCirce = "com.github.tminglei" %% "slick-pg_circe-json" % SlickPgVersion
     }
 
-    object SlickForScala2 extends Slick {
-      override protected val SlickVersion = "3.4.1"
-      override protected val SlickPgVersion = "0.21.1"
-    }
-
-    object SlickForScala3 extends Slick {
-      override protected val SlickVersion = "3.5.1"
-      override protected val SlickPgVersion = "0.22.2"
-    }
-
-    private val common: Seq[ModuleID] = Seq(
+    val core: Seq[ModuleID] = Seq(
       Pekko.persistence % Provided,
-      Misc.scaffeine
-    )
-
-    val scala2: Seq[ModuleID] = common ++ Seq(
-      SlickForScala2.slick,
-      SlickForScala2.slickHikariCP,
-      SlickForScala2.slickPg,
-      SlickForScala2.slickPgCirce
-    )
-
-    val scala3: Seq[ModuleID] = common ++ Seq(
-      SlickForScala3.slick,
-      SlickForScala3.slickHikariCP,
-      SlickForScala3.slickPg,
-      SlickForScala3.slickPgCirce
+      Misc.scaffeine,
+      Slick.slick,
+      Slick.slickHikariCP,
+      Slick.slickPg,
+      Slick.slickPgCirce
     )
 
     val testing: Seq[ModuleID] = Seq(
