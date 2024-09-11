@@ -87,7 +87,7 @@ class PostgresReadJournal(config: Config, configPath: String)(implicit val syste
     s"$configPath.pekko-persistence-postgres-journal-sequence-actor"
   )
   private val delaySource =
-    Source.tick(readJournalConfig.refreshInterval, 0.seconds, 0).take(1)
+    Source.tick(readJournalConfig.refreshInterval, readJournalConfig.refreshInterval, 0).take(1)
 
   /** Same type of query as `persistenceIds` but the event stream is completed immediately when it reaches the end of
     * the "result set". Events that are stored after the query is completed are not included in the event stream.
