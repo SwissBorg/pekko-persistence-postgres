@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         java: ['temurin:1.11', 'temurin:1.17', 'temurin:1.21']
-        scala: [ 2.13.15, 3.3.3 ]
+        scala: [ 2.13.16, 3.3.3 ]
     steps:
     - uses: actions/checkout@v4
     - name: Install Compose
