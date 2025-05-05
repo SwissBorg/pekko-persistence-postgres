@@ -27,6 +27,7 @@ jobs:
       uses: coursier/setup-action@v1
       with:
         jvm: ${{matrix.java}}
+        apps: sbt
     - name: Start Postgres
       run: sh ./scripts/launch-postgres.sh
     - name: Run tests
