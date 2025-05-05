@@ -203,9 +203,8 @@ class PostgresReadJournal(config: Config, configPath: String)(implicit val syste
         .eventsByTag(tag, offset, math.min(offset + max, latestOrdering.maxOrdering), max)
         .mapAsync(1)(Future.fromTry)
         .mapConcat { case (repr, ordering) =>
-          adaptEvents(repr).map(r =>
-            EventEnvelope(Sequence(ordering), r.persistenceId, r.sequenceNr, r.payload, r.timestamp)
-          )
+          adaptEvents(repr)
+            .map(r => EventEnvelope(Sequence(ordering), r.persistenceId, r.sequenceNr, r.payload, r.timestamp))
         }
     }
   }
