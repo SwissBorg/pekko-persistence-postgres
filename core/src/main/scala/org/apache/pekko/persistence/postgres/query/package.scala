@@ -14,7 +14,7 @@ package object query {
     def value = that match {
       case Sequence(offsetValue) => offsetValue
       case NoOffset              => 0L
-      case _ =>
+      case _                     =>
         throw new IllegalArgumentException(
           "pekko-persistence-postgres does not support " + that.getClass.getName + " offsets"
         )
