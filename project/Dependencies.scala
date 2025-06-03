@@ -30,7 +30,7 @@ object Dependencies {
 
     object Slick {
       private val SlickVersion = "3.5.2"
-      private val SlickPgVersion = "0.22.2"
+      private val SlickPgVersion = "0.23.1"
 
       def slick = "com.typesafe.slick" %% "slick" % SlickVersion
       def slickHikariCP = "com.typesafe.slick" %% "slick-hikaricp" % SlickVersion
