@@ -219,8 +219,8 @@ trait BaseJournalDaoWithReadMessages extends JournalDaoWithReadMessages {
           }
 
           control match {
-            case Stop     => Future.successful(None)
-            case Continue => retrieveNextBatch()
+            case Stop            => Future.successful(None)
+            case Continue        => retrieveNextBatch()
             case ContinueDelayed =>
               val (delay, scheduler) = refreshInterval.get
               org.apache.pekko.pattern.after(delay, scheduler)(retrieveNextBatch())

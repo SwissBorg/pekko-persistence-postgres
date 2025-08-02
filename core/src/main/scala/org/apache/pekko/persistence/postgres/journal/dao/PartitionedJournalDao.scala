@@ -31,7 +31,7 @@ class PartitionedJournalDao(db: Database, journalConfig: JournalConfig, serializ
   override protected def writeJournalRows(xs: Seq[JournalRow]): Future[Unit] =
     xs match {
       case Nil => Future.successful(())
-      case _ =>
+      case _   =>
         val actions = for {
           ordered <- attachOrderingValues(xs)
           _ <- attachJournalPartition(ordered)

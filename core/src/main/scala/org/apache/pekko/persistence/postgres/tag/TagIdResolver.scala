@@ -21,7 +21,7 @@ class CachedTagIdResolver(dao: TagDao, config: TagsConfig)(implicit ctx: Executi
   private def findOrInsert(tagName: String, retryAttempts: Int): Future[Int] =
     dao.find(tagName).flatMap {
       case Some(id) => Future.successful(id)
-      case None =>
+      case None     =>
         dao.insert(tagName).recoverWith {
           case _ if retryAttempts > 0 => findOrInsert(tagName, retryAttempts - 1)
         }
@@ -33,7 +33,7 @@ class CachedTagIdResolver(dao: TagDao, config: TagsConfig)(implicit ctx: Executi
   override def lookupIdFor(tagName: String): Future[Option[Int]] =
     Future.sequence(cache.getIfPresent(tagName).toList).map(_.headOption).flatMap {
       case Some(tagId) => Future.successful(Some(tagId))
-      case _ =>
+      case _           =>
         val findRes = dao.find(tagName)
         findRes.onComplete {
           case Success(Some(tagId)) => cache.put(tagName, Future.successful(tagId))
