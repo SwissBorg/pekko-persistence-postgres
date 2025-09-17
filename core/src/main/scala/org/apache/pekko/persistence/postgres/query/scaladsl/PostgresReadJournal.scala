@@ -281,8 +281,8 @@ class PostgresReadJournal(config: Config, configPath: String)(implicit val syste
         }
 
         control match {
-          case Stop     => Future.successful(None)
-          case Continue => retrieveNextBatch()
+          case Stop            => Future.successful(None)
+          case Continue        => retrieveNextBatch()
           case ContinueDelayed =>
             org.apache.pekko.pattern.after(readJournalConfig.refreshInterval, system.scheduler)(retrieveNextBatch())
         }
