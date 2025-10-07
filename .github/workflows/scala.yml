@@ -15,7 +15,16 @@ jobs:
     strategy:
       matrix:
         java: ['temurin:1.11', 'temurin:1.17', 'temurin:1.21']
-        scala: [ 2.13.16, 3.3.5 ]
+        scala: [ 2.13.17, 3.3.6 ]
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: docker
+          POSTGRES_USER: docker
+          TZ: Europe/Amsterdam
+        ports:
+          - 5432:5432
     steps:
     - uses: actions/checkout@v4
     - name: Install Compose
@@ -28,7 +37,5 @@ jobs:
       with:
         jvm: ${{matrix.java}}
         apps: sbt
-    - name: Start Postgres
-      run: sh ./scripts/launch-postgres.sh
     - name: Run tests
       run: sbt ++${{ matrix.scala }} test
