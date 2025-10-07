@@ -1,13 +1,13 @@
 import sbt.*
 
 object Dependencies {
-  val Scala213 = "2.13.16"
+  val Scala213 = "2.13.17"
   val Scala3 = "3.3.6"
   val ScalaVersions = Seq(Scala213, Scala3)
 
   object Libraries {
     object Pekko {
-      private val Version = "1.1.5"
+      private val Version = "1.2.1"
 
       def slf4j = "org.apache.pekko" %% "pekko-slf4j" % Version
       def persistence = "org.apache.pekko" %% "pekko-persistence-query" % Version
@@ -18,7 +18,7 @@ object Dependencies {
 
     object Misc {
       private val ScaffeineVersion = "5.3.0"
-      private val LogbackVersion = "1.5.18"
+      private val LogbackVersion = "1.5.19"
       private val PostgresqlVersion = "42.7.8"
       private val ScalaTestVersion = "3.2.19"
 
@@ -29,8 +29,8 @@ object Dependencies {
     }
 
     object Slick {
-      private val SlickVersion = "3.5.2"
-      private val SlickPgVersion = "0.22.2"
+      private val SlickVersion = "3.6.1"
+      private val SlickPgVersion = "0.23.1"
 
       def slick = "com.typesafe.slick" %% "slick" % SlickVersion
       def slickHikariCP = "com.typesafe.slick" %% "slick-hikaricp" % SlickVersion
