@@ -15,20 +15,22 @@ jobs:
     strategy:
       matrix:
         java: ['temurin:1.11', 'temurin:1.17', 'temurin:1.21']
-        scala: [ 2.13.16, 3.3.5 ]
+        scala: [ 2.13.17, 3.3.6 ]
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: docker
+          POSTGRES_USER: docker
+          TZ: Europe/Amsterdam
+        ports:
+          - 5432:5432
     steps:
     - uses: actions/checkout@v4
-    - name: Install Compose
-      uses: ndeloof/install-compose-action@v0.0.1
-      with:
-        legacy: true    # will also install in PATH as `docker-compose`
-    - run: docker-compose --version
     - name: Setup Scala and Java
       uses: coursier/setup-action@v1
       with:
         jvm: ${{matrix.java}}
         apps: sbt
-    - name: Start Postgres
-      run: sh ./scripts/launch-postgres.sh
     - name: Run tests
       run: sbt ++${{ matrix.scala }} test
