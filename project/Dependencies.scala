@@ -7,7 +7,7 @@ object Dependencies {
 
   object Libraries {
     object Pekko {
-      private val Version = "1.2.1"
+      private val Version = "1.3.0"
 
       def slf4j = "org.apache.pekko" %% "pekko-slf4j" % Version
       def persistence = "org.apache.pekko" %% "pekko-persistence-query" % Version
