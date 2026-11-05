@@ -1,5 +1,5 @@
 [![License](https://img.shields.io/:license-Apache%202-red.svg)](https://www.apache.org/licenses/LICENSE-2.0.txt)
-[![Actions Status](https://github.com/SwissBorg/pekko-persistence-postgres/workflows/Scala%20CI/badge.svg)](https://github.com/SwissBorg/pekko-persistence-postgres/actions)
+[![CI Status](https://github.com/SwissBorg/pekko-persistence-postgres/actions/workflows/scala.yml/badge.svg)](https://github.com/SwissBorg/pekko-persistence-postgres/actions/workflows/scala.yml)
 
 The Pekko Persistence Postgres plugin allows for using [PostgreSQL](https://www.postgresql.org/) and [Amazon Aurora](https://aws.amazon.com/rds/aurora/) databases as backend for Pekko Persistence and Pekko Persistence Query.
 
