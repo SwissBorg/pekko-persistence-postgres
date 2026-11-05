@@ -13,7 +13,7 @@ jobs:
       - name: Setup Scala and Java
         uses: coursier/setup-action@v1
         with:
-          jvm: 'temurin:1.11'
+          jvm: 'temurin:1.17'
           apps: sbt
       - uses: olafurpg/setup-gpg@v3
       - name: Publish ${{ github.ref }}

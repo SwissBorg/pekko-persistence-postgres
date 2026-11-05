@@ -57,7 +57,7 @@ object ProjectAutoPlugin extends AutoPlugin {
     "-language:implicitConversions",
     "-language:reflectiveCalls",
     "-language:higherKinds",
-    "-release:11"
+    "-release:17"
   )
 
   private def commonCrossCompileSettings: Seq[Def.Setting[_]] = Seq(
