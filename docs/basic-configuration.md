@@ -28,7 +28,7 @@ Configure `pekko-persistence`:
 
 Configure `slick.db`:
  
-- setup [connection pool](https://scala-slick.org/doc/3.3.0/database.html#postgresql)
+- setup [connection pool](https://scala-slick.org/doc/3.6.1/database.html#postgresql)
 
 ## Database Schema
 
@@ -78,7 +78,7 @@ postgres-snapshot-store {
 
 ### DataSource lookup by JNDI name
 
-The plugin uses `Slick` as the database access library. Slick [supports jndi](https://scala-slick.org/doc/3.3.0/database.html#using-a-jndi-name) for looking up [DataSource](https://docs.oracle.com/en/java/javase/11/docs/api/java.sql/javax/sql/DataSource.html)s.
+The plugin uses `Slick` as the database access library. Slick [supports jndi](https://scala-slick.org/doc/3.6.1/database.html#using-a-jndi-name) for looking up [DataSource](https://docs.oracle.com/en/java/javase/17/docs/api/java.sql/javax/sql/DataSource.html)s.
 
 To enable the JNDI lookup, you must add the following to your application.conf:
 
