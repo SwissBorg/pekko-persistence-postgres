@@ -134,7 +134,7 @@ abstract class JournalDaoStreamMessagesMemoryTest(val schemaType: SchemaType)
               case Failure(exception) =>
                 log.error("Failure when reading messages.", exception)
             }
-            .runWith(TestSink.probe)
+            .runWith(TestSink.apply())
 
         probe.request(10)
         probe.within(20.seconds) {
