@@ -14,7 +14,7 @@ jobs:
     name: Test with Scala ${{ matrix.scala }} and Java ${{ matrix.java }})
     strategy:
       matrix:
-        java: ['temurin:1.17', 'temurin:1.21']
+        java: ['temurin:1.17', 'temurin:1.21', 'temurin:1.25']
         scala: [ 2.13.18, 3.9.0 ]
     services:
       postgres:
