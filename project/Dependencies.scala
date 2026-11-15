@@ -18,7 +18,7 @@ object Dependencies {
 
     object Misc {
       private val ScaffeineVersion = "5.3.0"
-      private val LogbackVersion = "1.6.6"
+      private val LogbackVersion = "1.6.7"
       private val PostgresqlVersion = "42.7.14"
       private val ScalaTestVersion = "3.2.20"
 
